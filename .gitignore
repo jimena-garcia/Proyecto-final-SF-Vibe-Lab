@@ -147,3 +147,15 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+   # Secretos (nunca subir)
+   .env
+   .env.*
+   *.key
+   *.pem
+   secrets*
+   stripe*.txt
+
+   # Salesforce CLI local
+   .sfdx/
+   .sf/
