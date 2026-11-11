@@ -120,3 +120,15 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Sondeo fijo de 2 s durante el primer minuto.
   - `FOR UPDATE` en el webhook y en la verificación para no duplicar el comprobante.
 - **Decisión del equipo:** se cambió el proceso de confirmación (antes intocable) con aprobación explícita. Queda documentado en `docs/seguridad.md`.
+- **Hallazgo posterior (medido con los logs de Salesforce del usuario invitado):** el tiempo restante no depende de nosotros, sino de la **redirección de Stripe Checkout**, que es intermitente.
+
+  | Donación | Monto | Del pago confirmado a la página de gracias |
+  |---|---|---|
+  | DON-00008 | $1,000 | < 2 s |
+  | DON-00009 | $35,000 | 120 s exactos |
+  | DON-00010 | $2,000 | < 1 s |
+
+  - Salesforce confirmó cada pago en menos de 1 s y respondió la página en menos de 0.1 s.
+  - El monto no influye.
+  - La hipótesis es un tiempo de espera de la página de Stripe o del navegador (por ejemplo, una extensión que bloquea peticiones de Stripe).
+  - **Pendiente:** confirmarla en un navegador sin extensiones. Si persiste, evaluar Stripe Embedded Checkout.
