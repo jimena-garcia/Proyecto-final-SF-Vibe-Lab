@@ -17,23 +17,23 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 
 | # | Prompt | Historias |
 |---|---|---|
-| P01 | [Análisis del proyecto y plan de implementación](P01-analisis-y-plan.md) | Todas |
-| P02 | [Evaluación de pasarelas de pago para México](P02-evaluacion-pasarelas.md) | HU-03, HU-13, HU-16, HU-17 |
-| P03 | [Conectar una app React con Salesforce](P03-react-y-salesforce.md) | HU-11 |
-| P04 | [Metadata del modelo de datos y permisos](P04-metadata-modelo.md) | HU-01…HU-09 |
-| P05 | [Apex del portal y Checkout de Stripe](P05-apex-portal-stripe.md) | HU-03, HU-04, HU-13 |
-| P06 | [Empaquetar React como static resource](P06-empaquetado-react.md) | HU-11 |
-| P07 | [Webhook de Stripe: autenticidad e idempotencia](P07-webhook-stripe.md) | HU-14…HU-17 |
-| P08 | [Desplegar a la Developer Edition y correr los tests](P08-despliegue-tests.md) | Todas |
-| P09 | [Publicar el Salesforce Site con mínimo privilegio](P09-sitio-publico.md) | HU-11, HU-12 |
-| P10 | [Prueba de punta a punta como visitante anónimo](P10-prueba-punta-a-punta.md) | HU-03, HU-13 |
-| P11 | [Diagnosticar un pago que no pasa a Pagada](P11-eventos-thin.md) | HU-14, HU-16 |
-| P12 | [Auditoría y rediseño UX/UI tipo Kickstarter](P12-rediseno-ux-ui.md) | HU-01, HU-04, HU-05, HU-11 (UX) |
-| P13 | [Portada de descubrimiento con destacada y recomendadas](P13-portada-descubrimiento.md) | HU-01 (RF-D1a), HU-11 |
-| P14 | [Confirmación más rápida del pago](P14-confirmacion-rapida.md) | HU-04, HU-14, HU-16 |
-| P15 | [Portal de administración y alta del equipo](P15-portal-admin.md) | HU-07, HU-08, HU-09, HU-15 |
-| P16 | [Roles del equipo y registro en Salesforce](P16-roles-equipo.md) | HU-07, HU-08, HU-09, HU-15 |
-| P17 | [Marca de la plataforma y diseño claro](P17-marca-plataforma.md) | HU-01, HU-04, HU-05, HU-11 |
+| P01 | [Análisis del proyecto y plan de implementación](dilian/P01-analisis-y-plan.md) | Todas |
+| P02 | [Evaluación de pasarelas de pago para México](dilian/P02-evaluacion-pasarelas.md) | HU-03, HU-13, HU-16, HU-17 |
+| P03 | [Conectar una app React con Salesforce](dilian/P03-react-y-salesforce.md) | HU-11 |
+| P04 | [Metadata del modelo de datos y permisos](dilian/P04-metadata-modelo.md) | HU-01…HU-09 |
+| P05 | [Apex del portal y Checkout de Stripe](dilian/P05-apex-portal-stripe.md) | HU-03, HU-04, HU-13 |
+| P06 | [Empaquetar React como static resource](dilian/P06-empaquetado-react.md) | HU-11 |
+| P07 | [Webhook de Stripe: autenticidad e idempotencia](dilian/P07-webhook-stripe.md) | HU-14…HU-17 |
+| P08 | [Desplegar a la Developer Edition y correr los tests](dilian/P08-despliegue-tests.md) | Todas |
+| P09 | [Publicar el Salesforce Site con mínimo privilegio](dilian/P09-sitio-publico.md) | HU-11, HU-12 |
+| P10 | [Prueba de punta a punta como visitante anónimo](dilian/P10-prueba-punta-a-punta.md) | HU-03, HU-13 |
+| P11 | [Diagnosticar un pago que no pasa a Pagada](dilian/P11-eventos-thin.md) | HU-14, HU-16 |
+| P12 | [Auditoría y rediseño UX/UI tipo Kickstarter](dilian/P12-rediseno-ux-ui.md) | HU-01, HU-04, HU-05, HU-11 (UX) |
+| P13 | [Portada de descubrimiento con destacada y recomendadas](dilian/P13-portada-descubrimiento.md) | HU-01 (RF-D1a), HU-11 |
+| P14 | [Confirmación más rápida del pago](dilian/P14-confirmacion-rapida.md) | HU-04, HU-14, HU-16 |
+| P15 | [Portal de administración y alta del equipo](dilian/P15-portal-admin.md) | HU-07, HU-08, HU-09, HU-15 |
+| P16 | [Roles del equipo y registro en Salesforce](dilian/P16-roles-equipo.md) | HU-07, HU-08, HU-09, HU-15 |
+| P17 | [Marca de la plataforma y diseño claro](dilian/P17-marca-plataforma.md) | HU-01, HU-04, HU-05, HU-11 |
 
 ## Plantilla para un prompt nuevo
 

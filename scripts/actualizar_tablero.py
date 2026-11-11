@@ -27,7 +27,7 @@ if 'Acceptance criteria' not in f:
 f = campos()
 opt = lambda campo, nombre: next(o['id'] for o in f[campo]['options'] if o['name'] == nombre)
 
-# ---- Historias desde docs/historias_de_usuario.md ----
+# ---- Historias desde docs/requisitos/historias_de_usuario.md ----
 texto = open(HU_MD, encoding='utf-8').read()
 bloques = re.split(r'\n### ', texto)[1:]
 historias = []

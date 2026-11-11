@@ -2,7 +2,7 @@
 
 **Historias:** Todas
 
-> **Versión estructurada.** El pedido original se hizo en conversación con Claude Code. Aquí se reescribe con estructura de prompt engineering (rol, contexto, tarea, restricciones, salida, verificación) para que sea reutilizable. El contenido refleja lo que realmente se pidió; el resultado y los errores están en [`../bitacora_ia.md`](../bitacora_ia.md).
+> **Versión estructurada.** El pedido original se hizo en conversación con Claude Code. Aquí se reescribe con estructura de prompt engineering (rol, contexto, tarea, restricciones, salida, verificación) para que sea reutilizable. El contenido refleja lo que realmente se pidió; el resultado y los errores están en [`../bitacora_ia.md`](../../bitacora_ia.md).
 
 ## Rol
 
@@ -11,7 +11,7 @@ Senior Salesforce architect y consultor técnico.
 ## Contexto
 
 - Proyecto final SF Vibe Lab: portal público de donaciones para que alumnos asistan a Mexico Dreamin 2026.
-- Insumos: guía del profesor (pegada como texto), `docs/historias_de_usuario.md` (HU-01 a HU-17) y las prácticas previas del equipo.
+- Insumos: guía del profesor (pegada como texto), `docs/requisitos/historias_de_usuario.md` (HU-01 a HU-17) y las prácticas previas del equipo.
 - Entrega 1: 10 nov 2026. Entrega 2: 17 nov 2026.
 
 ## Tarea

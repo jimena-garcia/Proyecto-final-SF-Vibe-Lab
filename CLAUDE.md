@@ -14,7 +14,7 @@ Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asista
 - **M3:** ninguna clave (`sk_…`, `rk_…`, `whsec_…`) en código, metadata, capturas, bitácora ni prompts. La secret key vive en la External Credential `Stripe_Credential`; el signing secret, en el custom setting protegido `Stripe_Config__c`.
 - Org: Salesforce Developer Edition. Costo cero: no proponer paquetes ni servicios de pago.
 - Sin IDs hard-coded. Sin SOQL ni DML dentro de ciclos. Cada clase Apex nueva lleva tests.
-- Las historias de usuario (`docs/historias_de_usuario.md`) dicen *qué* y *por qué*; el *cómo* vive en el código. RF-S3 (confirmación manual) fue retirada por el cliente.
+- Las historias de usuario (`docs/requisitos/historias_de_usuario.md`) dicen *qué* y *por qué*; el *cómo* vive en el código. RF-S3 (confirmación manual) fue retirada por el cliente.
 
 ## Arquitectura
 
@@ -54,5 +54,5 @@ cd portal-react && npm run build:sf   # reconstruye el static resource
 
 - Toda salida de la IA se verifica contra la documentación oficial o contra la org antes de subirla.
 - Cada uso relevante se registra en `docs/bitacora_ia.md` en el momento, con todos los campos y marcando los errores de la IA.
-- Cada pedido a la IA se guarda como prompt estructurado (rol, contexto, tarea, restricciones, salida, verificación) en `docs/prompts/Pxx-*.md`, usando la plantilla de `docs/prompts/README.md`.
+- Cada pedido a la IA se guarda como prompt estructurado (rol, contexto, tarea, restricciones, salida, verificación) en `docs/prompts/<tu-nombre>/Pxx-*.md`, usando la plantilla de `docs/prompts/README.md`.
 - Ante una duda de negocio, preguntar al cliente y registrarlo en `docs/preguntas_y_reportes.md`. No inventar requisitos.

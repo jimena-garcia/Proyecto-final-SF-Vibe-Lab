@@ -7,7 +7,7 @@ Board: <[link to the project](https://github.com/users/jimena-garcia/projects/1)
 
 ## Avance
 
-Una historia cuenta como **cumplida** solo si todos sus criterios se demuestran con evidencia (video, demo o captura) sin romper los mínimos M1–M3. RF-S3 (HU-10) fue retirada por el cliente en clase (ver `docs/historias_de_usuario.md`), por lo que el cálculo principal es **sin RF-S3**; también se reporta con RF-S3.
+Una historia cuenta como **cumplida** solo si todos sus criterios se demuestran con evidencia (video, demo o captura) sin romper los mínimos M1–M3. RF-S3 (HU-10) fue retirada por el cliente en clase (ver `docs/requisitos/historias_de_usuario.md`), por lo que el cálculo principal es **sin RF-S3**; también se reporta con RF-S3.
 
 | HU | RF | Entrega | Estado | Evidencia |
 |---|---|---|---|---|
@@ -48,12 +48,14 @@ URL: https://orgfarm-0cda6e4c00-dev-ed.develop.my.salesforce-sites.com/ (Stripe 
 |---|---|
 | `force-app/` | Metadata de Salesforce (objetos, Apex, página, permission sets) |
 | `portal-react/` | Sitio público en React (`npm run dev` con datos ficticios, `npm run build:sf` para Salesforce) |
-| `docs/historias_de_usuario.md` | Backlog con criterios de aceptación |
-| `docs/setup_org.md` | Puesta en marcha: org, Stripe, sitio y webhook |
+| `docs/requisitos/historias_de_usuario.md` | Backlog con criterios de aceptación |
+| `docs/tecnico/setup_org.md` | Puesta en marcha: org, Stripe, sitio y webhook |
 | `docs/seguridad.md` | Prueba del visitante, permisos, secretos y datos personales |
 | `docs/bitacora_ia.md` · `docs/contribucion.md` · `docs/preguntas_y_reportes.md` | Bitácoras |
-| `docs/prompts/` | Biblioteca de prompts estructurados (uno por entrada de la bitácora) |
-| `CLAUDE.md` | Archivo de contexto para la IA |
+| `docs/prompts/` | Prompts estructurados, una carpeta por integrante |
+| `docs/equipo/` | Tareas y evidencia de cada integrante, y el prompt para su agente de IA |
+| `docs/README.md` | Mapa de la documentación |
+| `AGENTS.md` · `CLAUDE.md` · `GEMINI.md` | Contexto para los agentes de IA |
 
 ## Reglas del repo
 - Ninguna clave de Stripe en el repo. Activen el hook una vez por clon: `git config core.hooksPath .githooks`.

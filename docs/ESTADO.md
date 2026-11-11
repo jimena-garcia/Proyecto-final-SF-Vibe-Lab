@@ -13,7 +13,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 | Org | Salesforce **Developer Edition** (no es sandbox). Alias local recomendado: `donacionesOrg` |
 | App de Salesforce | App Launcher → "Donaciones Mexico Dreamin" (pestañas Panel, Campañas, Donaciones, Avisos de pasarela, Equipo) |
 | Backlog (tablero) | https://github.com/users/jimena-garcia/projects/1 (se actualiza con `scripts/actualizar_tablero.py`) |
-| Historias de usuario | `docs/historias_de_usuario.md` |
+| Historias de usuario | `docs/requisitos/historias_de_usuario.md` |
 | Avance por historia | Tabla en `README.md` |
 | Stripe | Cuenta del equipo en **modo de prueba**. Webhook → `/services/apexrest/stripe/webhook` |
 

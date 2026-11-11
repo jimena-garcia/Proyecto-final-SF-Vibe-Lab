@@ -1,7 +1,7 @@
 /**
  * Llamadas salientes a la API de Stripe (modo de prueba).
  * La clave secreta NUNCA está en el código: la inyecta la Named Credential "Stripe_API"
- * (External Credential "Stripe_Credential") como header Authorization. Ver docs/setup_org.md.
+ * (External Credential "Stripe_Credential") como header Authorization. Ver docs/tecnico/setup_org.md.
  */
 public with sharing class StripeService {
     public static final String NAMED_CREDENTIAL = 'callout:Stripe_API';

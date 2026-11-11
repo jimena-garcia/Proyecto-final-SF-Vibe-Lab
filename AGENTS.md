@@ -5,9 +5,9 @@ Este archivo lo leen Claude Code, Codex, Cursor, Gemini/Antigravity, Copilot y o
 ## 0. Lectura obligatoria, en este orden
 Antes de proponer o cambiar **cualquier** cosa, lee:
 1. `docs/ESTADO.md`: qué funciona hoy, URLs, problemas abiertos y próximos pasos.
-2. `docs/historias_de_usuario.md`: el backlog (HU-01 a HU-17) con sus criterios. Ahí está qué se pide.
+2. `docs/requisitos/historias_de_usuario.md`: el backlog (HU-01 a HU-17) con sus criterios. Ahí está qué se pide.
 3. `README.md`: avance por historia y cómo se calcula.
-4. `docs/setup_org.md`: cómo desplegar y configurar la org.
+4. `docs/tecnico/setup_org.md`: cómo desplegar y configurar la org.
 5. `docs/seguridad.md`: reglas de seguridad y prueba del visitante.
 6. `docs/bitacora_ia.md` (últimas entradas) y `docs/prompts/README.md`: qué se ha hecho con IA y el formato de los prompts.
 
@@ -64,7 +64,7 @@ python scripts/prueba_seguridad.py <IdDonacionPagada> <TokenPublico> <IdCampana>
 # Respaldo de metadata (semanal y antes de cada entrega)
 sf project retrieve start -x manifest/package.xml
 ```
-Pasos manuales de la org (Stripe, Site, correo): `docs/setup_org.md`.
+Pasos manuales de la org (Stripe, Site, correo): `docs/tecnico/setup_org.md`.
 
 ## 4. Registro obligatorio de cada uso de IA (cuenta para la calificación C3)
 Cada vez que la IA ayude en algo relevante:
@@ -78,9 +78,10 @@ Cada vez que la IA ayude en algo relevante:
    - Qué se corrigió.
    - Aceleración estimada.
 2. Si la IA se equivocó, márcalo con **⚠** y explica cómo se detectó.
-3. Crea el prompt estructurado en `docs/prompts/Pxx-*.md` con la plantilla de `docs/prompts/README.md`.
+3. Crea el prompt estructurado en `docs/prompts/<tu-nombre>/Pxx-*.md` con la plantilla de `docs/prompts/README.md`.
 4. Si hubo un problema o una pregunta al profesor, registra una entrada en `docs/preguntas_y_reportes.md` con sus 5 partes.
-5. Al terminar, actualiza `docs/ESTADO.md` y, si cambia el estado de una historia, la tabla del `README.md` y el tablero.
+5. Actualiza el archivo de la persona en `docs/equipo/<nombre>.md` y su fila en `docs/contribucion.md`. Los 4 archivos de la raíz de `docs/` tienen la ruta fija de la guía; no se mueven (ver `docs/README.md`). Para documentar el trabajo de un integrante, usa `docs/equipo/PROMPT_PARA_AGENTE.md`.
+6. Al terminar, actualiza `docs/ESTADO.md` y, si cambia el estado de una historia, la tabla del `README.md` y el tablero.
 
 ## 5. Commits
 - Cada persona hace commit con **su propia cuenta**: la contribución individual se evalúa contra el historial del repo (C9).
