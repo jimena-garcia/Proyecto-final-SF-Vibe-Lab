@@ -1,14 +1,37 @@
-<!-- Página de error del sitio público: mensaje entendible, sin detalles técnicos ni datos. -->
-<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" title="Donaciones Mexico Dreamin">
+<!--
+  Página de error del sitio público (A6). Usa la misma hoja de estilos del portal
+  (static resource PortalReact) para conservar la identidad visual. Sin detalles técnicos.
+-->
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" title="Donaciones · Mexico Dreamin">
     <html lang="es">
-        <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Donaciones · Mexico Dreamin</title></head>
-        <body style="font-family:system-ui,sans-serif;background:#f6f7fb;color:#1d2433;margin:0;padding:48px 16px;">
-            <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #dfe3ec;border-radius:12px;padding:28px;">
-                <h1 style="margin-top:0;font-size:1.4rem;">Esta página no está disponible</h1>
-                <p>No pudimos mostrar lo que buscabas. Regresa al inicio para ver las campañas.</p>
-                <p style="color:#5b6478;font-size:.85rem;">Código: {!$Site.ErrorMessage}</p>
-                <a href="/" style="display:inline-block;background:#0b5cab;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;">Ir a las campañas</a>
-            </div>
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Página no disponible · Ruta a Mexico Dreamin</title>
+            <link rel="stylesheet" href="{!URLFOR($Resource.PortalReact, 'assets/index.css')}" />
+        </head>
+        <body>
+            <header class="header">
+                <div class="contenedor header__barra">
+                    <a class="marca" href="/">
+                        <span class="marca__texto">Ruta a Mexico Dreamin<small>SF Vibe Lab · UADY</small></span>
+                    </a>
+                </div>
+            </header>
+            <main class="estado">
+                <div class="contenedor">
+                    <div class="estado__tarjeta">
+                        <div class="estado__icono estado__icono--neutro">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5v5.5M12 16.2v.3" /></svg>
+                        </div>
+                        <h1>Esta página no está disponible</h1>
+                        <p class="estado__texto">Puede que el enlace esté incompleto o que el sitio esté en mantenimiento. Tus donaciones registradas no se ven afectadas.</p>
+                        <div class="estado__acciones">
+                            <a class="btn btn--primario" href="/">Ir a las campañas</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </body>
     </html>
 </apex:page>

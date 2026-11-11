@@ -26,7 +26,8 @@ Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asista
 
 ## Modelo de datos
 
-- `Campana__c`: Meta, Activa, Montos_Sugeridos (`200;500;1000`), Recaudado (roll-up de las Pagadas), Avance.
+- `Campana__c`: Meta (meta final), Activa, Destacada (la portada), Ilustracion (picklist), Montos_Sugeridos (`200;500;1000`), Recaudado (roll-up de las Pagadas), Donaciones_Pagadas (roll-up COUNT de las Pagadas), Avance.
+- `Hito__c` (master-detail de Campaña): metas escalonadas y **acumulativas** (Name = título, Monto, Descripción). La portada es la campaña Destacada, tipo Kickstarter: una sola campaña ("Mexico Dreamin 2026") con 3 metas. Las demás campañas activas se listan debajo (RF-D1a exige soportar ≥ 2).
 - `Donacion__c` (master-detail de `Campana__c`):
   - Datos del donante y del pago: Monto, Estado (Pendiente/Pagada/Cancelada), Modalidad (Anonima/Credito/Factura), Nombre, Email, RFC, Solicita_Factura (fórmula).
   - Referencias de Stripe y token: Token_Publico, Stripe_Session_Id, Stripe_Payment_Intent.

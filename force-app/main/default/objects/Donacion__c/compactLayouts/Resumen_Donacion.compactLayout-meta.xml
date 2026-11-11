@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resumen_Donacion</fullName>
+    <fields>Name</fields>
+    <fields>Estado__c</fields>
+    <fields>Monto__c</fields>
+    <fields>Modalidad__c</fields>
+    <fields>Campana__c</fields>
+    <fields>Confirmada_Por__c</fields>
+    <label>Resumen de donación</label>
+</CompactLayout>

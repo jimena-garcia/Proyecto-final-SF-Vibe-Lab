@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Destacada__c</fullName>
+    <defaultValue>false</defaultValue><inlineHelpText>La campaña destacada aparece en gran formato al inicio del sitio. Si ninguna está marcada, se destaca la de mayor avance.</inlineHelpText><label>Destacada</label><trackHistory>false</trackHistory><type>Checkbox</type>
+</CustomField>

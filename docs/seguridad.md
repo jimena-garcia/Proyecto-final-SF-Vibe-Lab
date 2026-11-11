@@ -71,6 +71,9 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 | Token público | No | Sí | Referencia del pago sin exponer el Id | El donante (en su URL) y staff |
 | IP o dispositivo del visitante | Sí | No | No se necesita | — |
 
+### Datos públicos agregados en el rediseño (E2)
+`getCampanas` ahora también devuelve: metas (`Hito__c`: título, monto, descripción), ilustración, la marca de destacada y el **número** de donaciones pagadas (roll-up COUNT). Ninguno es dato personal; el reconocimiento sigue limitado a nombre y monto de donaciones **con crédito y pagadas**. El guest sigue sin permisos de objeto, incluido `Hito__c`.
+
 ## 5. Riesgos conocidos
 
 - **Spam en el formulario público.** Cualquiera puede crear donaciones Pendientes falsas. No se califica (guía, sección 3). Mitigaciones posibles: CAPTCHA, límite por IP o limpieza de pendientes viejas.

@@ -22,6 +22,13 @@ public without sharing class PortalDonacionesController {
         public Decimal monto;
     }
 
+    /** Hito de financiación configurado por staff. Datos públicos por diseño. */
+    public class HitoDTO {
+        public String titulo;
+        public String descripcion;
+        public Decimal monto;
+    }
+
     public class CampanaDTO {
         public String id;
         public String nombre;
@@ -30,6 +37,10 @@ public without sharing class PortalDonacionesController {
         public Decimal recaudado;
         public List<Decimal> montosSugeridos = new List<Decimal>();
         public List<DonanteDTO> donantes = new List<DonanteDTO>();
+        public List<HitoDTO> hitos = new List<HitoDTO>();
+        public String ilustracion;
+        public Boolean destacada;
+        public Integer donacionesPagadas;
     }
 
     public class DonacionInput {
@@ -70,6 +81,10 @@ public without sharing class PortalDonacionesController {
                 Meta__c,
                 Recaudado__c,
                 Montos_Sugeridos__c,
+                Ilustracion__c,
+                Destacada__c,
+                Donaciones_Pagadas__c,
+                (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC LIMIT 10),
                 (
                     SELECT Nombre__c, Monto__c
                     FROM Donaciones__r
@@ -89,6 +104,16 @@ public without sharing class PortalDonacionesController {
             dto.meta = c.Meta__c;
             dto.recaudado = c.Recaudado__c == null ? 0 : c.Recaudado__c;
             dto.montosSugeridos = parsearMontos(c.Montos_Sugeridos__c);
+            dto.ilustracion = String.isBlank(c.Ilustracion__c) ? 'General' : c.Ilustracion__c;
+            dto.destacada = c.Destacada__c;
+            dto.donacionesPagadas = c.Donaciones_Pagadas__c == null ? 0 : c.Donaciones_Pagadas__c.intValue();
+            for (Hito__c h : c.Hitos__r) {
+                HitoDTO hito = new HitoDTO();
+                hito.titulo = h.Name;
+                hito.descripcion = h.Descripcion__c;
+                hito.monto = h.Monto__c;
+                dto.hitos.add(hito);
+            }
             for (Donacion__c d : c.Donaciones__r) {
                 DonanteDTO donante = new DonanteDTO();
                 donante.nombre = d.Nombre__c;

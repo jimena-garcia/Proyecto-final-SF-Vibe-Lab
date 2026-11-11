@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Canceladas</fullName>
+    <columns>NAME</columns>
+    <columns>Campana__c</columns>
+    <columns>Monto__c</columns>
+    <columns>Modalidad__c</columns>
+    <columns>Motivo_Cancelacion__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Estado__c</field>
+        <operation>equals</operation>
+        <value>Cancelada</value>
+    </filters>
+    <label>Canceladas</label>
+</ListView>

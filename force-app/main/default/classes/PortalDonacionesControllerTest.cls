@@ -38,6 +38,29 @@ private class PortalDonacionesControllerTest {
         Assert.areEqual(500, cs[0].donantes[0].monto);
         // Montos inválidos escritos por staff se ignoran
         Assert.areEqual(new List<Decimal>{ 200, 500, 1000 }, cs[0].montosSugeridos);
+        // Conteo de pagadas (todas las modalidades), sin datos personales
+        Assert.areEqual(3, cs[0].donacionesPagadas);
+        Assert.areEqual('General', cs[0].ilustracion, 'Sin ilustración elegida se usa General');
+    }
+
+    @IsTest
+    static void hitosOrdenadosPorMonto() {
+        Campana__c c = activa();
+        insert new List<Hito__c>{
+            new Hito__c(Campana__c = c.Id, Name = 'Todo el grupo', Monto__c = 10000),
+            new Hito__c(Campana__c = c.Id, Name = 'Primeros boletos', Monto__c = 3000, Descripcion__c = 'Cuatro boletos')
+        };
+        PortalDonacionesController.CampanaDTO dto = PortalDonacionesController.getCampanas()[0];
+        Assert.areEqual(2, dto.hitos.size());
+        Assert.areEqual('Primeros boletos', dto.hitos[0].titulo);
+        Assert.areEqual(3000, dto.hitos[0].monto);
+        Assert.areEqual('Cuatro boletos', dto.hitos[0].descripcion);
+    }
+
+    @IsTest
+    static void hitoNoPuedeSuperarLaMeta() {
+        Database.SaveResult sr = Database.insert(new Hito__c(Campana__c = activa().Id, Name = 'Imposible', Monto__c = 999999), false);
+        Assert.isFalse(sr.isSuccess());
     }
 
     @IsTest

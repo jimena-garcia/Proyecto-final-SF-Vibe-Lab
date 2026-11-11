@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donaciones_Pagadas__c</fullName>
+    <inlineHelpText>Número de donaciones pagadas (todas las modalidades). Es solo un conteo: no expone datos personales.</inlineHelpText><label>Donaciones pagadas</label><summaryFilterItems><field>Donacion__c.Estado__c</field><operation>equals</operation><value>Pagada</value></summaryFilterItems><summaryForeignKey>Donacion__c.Campana__c</summaryForeignKey><summaryOperation>count</summaryOperation><trackHistory>false</trackHistory><type>Summary</type>
+</CustomField>

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   Tokens del sistema de diseño — Portal Mexico Dreamin
+   Identidad propia (no Salesforce): tinta + papel cálido, achiote como única
+   acción principal, jade para progreso y pagos confirmados.
+   ========================================================================== */
+:root {
+  /* Color */
+  --tinta: #14213d;
+  --tinta-2: #23325a;
+  --papel: #faf7f2;
+  --papel-2: #f3eee5;
+  --superficie: #ffffff;
+  --texto: #14213d;
+  --texto-2: #4b5563;
+  --texto-3: #6b7280;
+  --linea: #e7e2d9;
+  --linea-fuerte: #d6cfc2;
+
+  --achiote: #c2410c;          /* acción principal: 5.2:1 con blanco */
+  --achiote-hover: #9a3412;
+  --achiote-suave: #fdebdd;
+
+  --jade: #0f766e;             /* progreso, alcanzado, pagada */
+  --jade-suave: #ccfbf1;
+  --sol: #b45309;              /* pendiente / atención */
+  --sol-suave: #fef3c7;
+  --error: #b91c1c;
+  --error-suave: #fee2e2;
+
+  /* Tipografía */
+  --fuente-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --fuente-ui: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --t-xs: 0.8125rem;  /* 13 */
+  --t-sm: 0.875rem;   /* 14 */
+  --t-md: 1rem;       /* 16 */
+  --t-lg: 1.25rem;    /* 20 */
+  --t-xl: 1.5625rem;  /* 25 */
+  --t-2xl: 1.9375rem; /* 31 */
+  --t-3xl: 2.4375rem; /* 39 */
+  --t-4xl: 3.0625rem; /* 49 */
+
+  /* Espaciado (base 4) */
+  --e-1: 4px;
+  --e-2: 8px;
+  --e-3: 12px;
+  --e-4: 16px;
+  --e-5: 24px;
+  --e-6: 32px;
+  --e-7: 48px;
+  --e-8: 64px;
+  --e-9: 96px;
+
+  /* Forma */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-full: 999px;
+  --sombra: 0 1px 2px rgb(20 33 61 / 0.06), 0 8px 24px rgb(20 33 61 / 0.08);
+
+  --ancho: 1120px;
+  --ancho-lectura: 68ch;
+  --foco: 0 0 0 3px var(--papel), 0 0 0 5px var(--achiote);
+}
