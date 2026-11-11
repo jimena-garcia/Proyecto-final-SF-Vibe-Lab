@@ -23,14 +23,11 @@ export function Encabezado({ conNav = true }) {
           </a>
           {conNav && (
             <nav className="header__nav" aria-label="Secciones">
-              <a href={`${urlInicio()}#metas`} onClick={alClicInterno(urlInicio(), 'metas')}>
-                Metas
+              <a href={`${urlInicio()}#campanas`} onClick={alClicInterno(urlInicio(), 'campanas')}>
+                Explorar
               </a>
               <a href={`${urlInicio()}#como-funciona`} onClick={alClicInterno(urlInicio(), 'como-funciona')}>
                 Cómo funciona
-              </a>
-              <a className="header__donar" href={`${urlInicio()}#donar`} onClick={alClicInterno(urlInicio(), 'donar')}>
-                Donar
               </a>
             </nav>
           )}

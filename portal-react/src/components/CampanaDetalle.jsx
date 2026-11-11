@@ -11,7 +11,7 @@ export default function CampanaDetalle({ id, estado, reintentar }) {
   const volver = (
     <div className="contenedor" style={{ paddingTop: 20 }}>
       <a className="enlace-volver" href={urlInicio()} onClick={alClicInterno(urlInicio())}>
-        <Icono nombre="volver" tam={18} /> Inicio
+        <Icono nombre="volver" tam={18} /> Todas las campañas
       </a>
     </div>
   );
@@ -51,7 +51,7 @@ export default function CampanaDetalle({ id, estado, reintentar }) {
   return (
     <>
       {volver}
-      <Proyecto campana={campana} />
+      <Proyecto campana={campana} principal={Boolean(campana.destacada)} />
     </>
   );
 }

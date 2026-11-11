@@ -38,6 +38,28 @@ const campanas = [
     ilustracion: 'Transporte',
     montosSugeridos: [300, 800, 1500],
     donantes: []
+  },
+  {
+    id: 'a01DEMO00000000003',
+    nombre: '[DEMO] Viáticos en la CDMX',
+    descripcion: 'Comidas y transporte local durante los días del evento.',
+    meta: 15000,
+    recaudado: 9200,
+    donacionesPagadas: 14,
+    ilustracion: 'Hospedaje',
+    montosSugeridos: [150, 300, 600],
+    donantes: []
+  },
+  {
+    id: 'a01DEMO00000000004',
+    nombre: '[DEMO] Seguro de viaje',
+    descripcion: 'Seguro de gastos médicos para cada alumno durante el viaje.',
+    meta: 8000,
+    recaudado: 800,
+    donacionesPagadas: 3,
+    ilustracion: 'Boletos',
+    montosSugeridos: [100, 250, 500],
+    donantes: []
   }
 ];
 
