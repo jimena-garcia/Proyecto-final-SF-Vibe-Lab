@@ -1,12 +1,24 @@
 /**
- * Alta de personas del equipo (coordinación / tesorería) con correo y contraseña.
- * Cada persona es un usuario de la org con licencia Salesforce Platform y el permission set
- * Staff_Donaciones. Solo quien tenga el permiso "Gestionar usuarios" (el dueño de la org) puede
- * usar esta clase: se valida en el servidor, no basta con ocultar el botón.
- * La contraseña nunca se guarda en objetos ni se escribe en logs.
+ * Alta y roles del equipo (coordinación / tesorería) con correo y contraseña.
+ * Cada persona es un usuario de la org con licencia Salesforce Platform y:
+ *   - Staff_Donaciones (acceso base al panel) +
+ *   - Rol_Coordinacion (HU-08) y/o Rol_Tesoreria (HU-07, HU-09, HU-15).
+ * Solo quien tiene "Gestionar usuarios" (el dueño de la org) puede dar de alta, cambiar
+ * roles o desactivar: se valida en el servidor. La contraseña nunca se guarda ni se registra.
+ * Cada alta queda registrada en Miembro_Equipo__c (pestaña "Equipo" de Salesforce).
  */
 public with sharing class EquipoController {
-    public static final String PERMISO_STAFF = 'Staff_Donaciones';
+    public static final String PERMISO_BASE = 'Staff_Donaciones';
+    public static final Map<String, List<String>> PERMISOS_POR_ROL = new Map<String, List<String>>{
+        'coordinacion' => new List<String>{ 'Rol_Coordinacion' },
+        'tesoreria' => new List<String>{ 'Rol_Tesoreria' },
+        'ambos' => new List<String>{ 'Rol_Coordinacion', 'Rol_Tesoreria' }
+    };
+    private static final Map<String, String> ROL_A_PICKLIST = new Map<String, String>{
+        'coordinacion' => 'Coordinacion',
+        'tesoreria' => 'Tesoreria',
+        'ambos' => 'Ambos'
+    };
     public static final String SUFIJO = '.mxdreamin';
     private static final String EMAIL_REGEX = '^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}$';
 
@@ -25,6 +37,7 @@ public with sharing class EquipoController {
         public Boolean activo;
         public Datetime ultimoAcceso;
         public Boolean esTu;
+        public String rol; // coordinacion | tesoreria | ambos | sin-rol
     }
 
     public class Equipo {
@@ -39,6 +52,7 @@ public with sharing class EquipoController {
         public String apellido;
         public String correo;
         public String password;
+        public String rol;
     }
 
     public class ResultadoAlta {
@@ -48,8 +62,7 @@ public with sharing class EquipoController {
         public String enlaceAcceso;
     }
 
-    @TestVisible
-    private static Boolean puedeGestionar() {
+    public static Boolean puedeGestionar() {
         return [
                 SELECT COUNT()
                 FROM PermissionSetAssignment
@@ -62,6 +75,7 @@ public with sharing class EquipoController {
         return URL.getOrgDomainUrl().toExternalForm() + '/apex/PanelAdmin';
     }
 
+    // ------------------------------------------------------------------ consultar
     @RemoteAction
     public static Equipo getEquipo() {
         Equipo e = new Equipo();
@@ -72,10 +86,22 @@ public with sharing class EquipoController {
         e.enlaceAcceso = enlaceAcceso();
         List<UserLicense> lic = [SELECT TotalLicenses, UsedLicenses FROM UserLicense WHERE Name = 'Salesforce Platform' LIMIT 1];
         e.licenciasLibres = lic.isEmpty() ? 0 : lic[0].TotalLicenses - lic[0].UsedLicenses;
+
+        Map<Id, Set<String>> permisos = new Map<Id, Set<String>>();
+        for (PermissionSetAssignment a : [
+            SELECT AssigneeId, PermissionSet.Name
+            FROM PermissionSetAssignment
+            WHERE PermissionSet.Name IN ('Staff_Donaciones', 'Rol_Coordinacion', 'Rol_Tesoreria')
+        ]) {
+            if (!permisos.containsKey(a.AssigneeId)) {
+                permisos.put(a.AssigneeId, new Set<String>());
+            }
+            permisos.get(a.AssigneeId).add(a.PermissionSet.Name);
+        }
         for (User u : [
             SELECT Id, Name, Username, Email, IsActive, LastLoginDate
             FROM User
-            WHERE Id IN (SELECT AssigneeId FROM PermissionSetAssignment WHERE PermissionSet.Name = :PERMISO_STAFF)
+            WHERE Id IN :permisos.keySet()
             ORDER BY IsActive DESC, Name ASC
             LIMIT 50
         ]) {
@@ -87,11 +113,19 @@ public with sharing class EquipoController {
             p.activo = u.IsActive;
             p.ultimoAcceso = u.LastLoginDate;
             p.esTu = u.Id == UserInfo.getUserId();
+            p.rol = rolDe(permisos.get(u.Id));
             e.personas.add(p);
         }
         return e;
     }
 
+    private static String rolDe(Set<String> ps) {
+        Boolean c = ps.contains('Rol_Coordinacion');
+        Boolean t = ps.contains('Rol_Tesoreria');
+        return c && t ? 'ambos' : c ? 'coordinacion' : t ? 'tesoreria' : 'sin-rol';
+    }
+
+    // ------------------------------------------------------------------ alta
     @RemoteAction
     public static ResultadoAlta darDeAlta(String datosJson) {
         ResultadoAlta r = new ResultadoAlta();
@@ -134,9 +168,9 @@ public with sharing class EquipoController {
                 r.mensaje = traducirError(sr.getErrors()[0]);
                 return r;
             }
-            PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = :PERMISO_STAFF LIMIT 1];
-            insert new PermissionSetAssignment(AssigneeId = u.Id, PermissionSetId = ps.Id);
+            asignarRol(u.Id, e.rol);
             fijarPassword(u.Id, e.password);
+            sincronizarMiembro(u.Id, e.nombre.trim() + ' ' + e.apellido.trim(), correo, ROL_A_PICKLIST.get(e.rol));
 
             r.ok = true;
             r.usuario = u.Username;
@@ -152,6 +186,82 @@ public with sharing class EquipoController {
         return r;
     }
 
+    // ------------------------------------------------------------------ rol
+    @RemoteAction
+    public static ResultadoAlta cambiarRol(String userId, String rol) {
+        ResultadoAlta r = new ResultadoAlta();
+        if (!puedeGestionar()) {
+            r.mensaje = 'Solo el administrador de la org puede cambiar roles.';
+            return r;
+        }
+        if (!PERMISOS_POR_ROL.containsKey(rol)) {
+            r.mensaje = 'Elige un rol válido.';
+            return r;
+        }
+        Id uid;
+        try {
+            uid = Id.valueOf(userId);
+        } catch (Exception ex) {
+            r.mensaje = 'Usuario inválido.';
+            return r;
+        }
+        List<User> us = [SELECT Id, Name, Email FROM User WHERE Id = :uid LIMIT 1];
+        if (us.isEmpty()) {
+            r.mensaje = 'No encontramos a esa persona.';
+            return r;
+        }
+        try {
+            asignarRol(uid, rol);
+            sincronizarMiembro(uid, us[0].Name, us[0].Email, ROL_A_PICKLIST.get(rol));
+            r.ok = true;
+            r.mensaje = 'Rol actualizado. Se aplica la próxima vez que esa persona recargue el panel.';
+        } catch (Exception ex) {
+            r.mensaje = 'No se pudo cambiar el rol: ' + ex.getMessage();
+        }
+        return r;
+    }
+
+    /** Asegura el acceso base y deja exactamente los permisos del rol indicado. */
+    private static void asignarRol(Id userId, String rol) {
+        Set<String> nombres = new Set<String>{ 'Rol_Coordinacion', 'Rol_Tesoreria', PERMISO_BASE };
+        Map<String, Id> ids = new Map<String, Id>();
+        for (PermissionSet ps : [SELECT Id, Name FROM PermissionSet WHERE Name IN :nombres]) {
+            ids.put(ps.Name, ps.Id);
+        }
+        delete [
+            SELECT Id
+            FROM PermissionSetAssignment
+            WHERE AssigneeId = :userId AND PermissionSet.Name IN ('Rol_Coordinacion', 'Rol_Tesoreria')
+        ];
+        List<PermissionSetAssignment> nuevas = new List<PermissionSetAssignment>();
+        for (String nombre : PERMISOS_POR_ROL.get(rol)) {
+            nuevas.add(new PermissionSetAssignment(AssigneeId = userId, PermissionSetId = ids.get(nombre)));
+        }
+        // El acceso base siempre debe existir (también al cambiar el rol de alguien que no lo tenía).
+        Boolean tieneBase = [SELECT COUNT() FROM PermissionSetAssignment WHERE AssigneeId = :userId AND PermissionSet.Name = :PERMISO_BASE] > 0;
+        if (!tieneBase) {
+            nuevas.add(new PermissionSetAssignment(AssigneeId = userId, PermissionSetId = ids.get(PERMISO_BASE)));
+        }
+        insert nuevas;
+    }
+
+    /**
+     * Registro visible en la pestaña "Equipo" de Salesforce. Va en otra transacción porque
+     * Salesforce no permite guardar usuarios/permisos y registros normales en la misma (MIXED_DML).
+     */
+    @future
+    public static void sincronizarMiembro(Id userId, String nombre, String correo, String rolPicklist) {
+        List<Miembro_Equipo__c> existentes = [SELECT Id FROM Miembro_Equipo__c WHERE Usuario__c = :userId LIMIT 1];
+        Miembro_Equipo__c m = existentes.isEmpty()
+            ? new Miembro_Equipo__c(Usuario__c = userId, Alta__c = Datetime.now())
+            : existentes[0];
+        m.Name = nombre.abbreviate(80);
+        m.Correo__c = correo;
+        m.Rol__c = rolPicklist;
+        upsert m;
+    }
+
+    // ------------------------------------------------------------------ desactivar
     @RemoteAction
     public static ResultadoAlta desactivar(String userId) {
         ResultadoAlta r = new ResultadoAlta();
@@ -181,6 +291,9 @@ public with sharing class EquipoController {
         }
         if (!Pattern.matches(EMAIL_REGEX, correo) || correo.length() > 70) {
             return 'Escribe un correo válido.';
+        }
+        if (e.rol == null || !PERMISOS_POR_ROL.containsKey(e.rol)) {
+            return 'Elige el rol: coordinación, tesorería o ambos.';
         }
         String p = e.password == null ? '' : e.password;
         if (p.length() < 8 || !Pattern.matches('.*[A-Za-z].*', p) || !Pattern.matches('.*[0-9].*', p)) {

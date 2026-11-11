@@ -78,7 +78,9 @@ En Stripe, en modo de prueba, ve a Developers → API keys y copia la **Secret k
 
 1. Asigna el permission set **Staff Donaciones** a tu usuario (`sf org assign permset -n Staff_Donaciones`).
 2. En la app **Donaciones Mexico Dreamin**, abre la pestaña **Panel** y luego la sección **Equipo**.
-3. Captura nombre, apellido, correo y una contraseña (8 o más caracteres, letras y números) y pulsa **Dar de alta**.
+3. Captura nombre, apellido, correo, una contraseña (8 o más caracteres, letras y números) y el **rol** (Coordinación, Tesorería o ambos), y pulsa **Dar de alta**. El rol se puede cambiar después en la misma lista.
+   - Para que tú (dueño) veas todo y la pestaña **Equipo** en Salesforce: `sf org assign permset -n Rol_Coordinacion -n Rol_Tesoreria -n Dueno_Portal`.
+   - Para migrar a quien ya tenía acceso antes de los roles: `sf apex run -f scripts/apex/backfill_equipo.apex`.
 4. Comparte con esa persona:
    - El enlace `https://<mydomain>.my.salesforce.com/apex/PanelAdmin`.
    - El usuario que muestra la pantalla (normalmente su correo).

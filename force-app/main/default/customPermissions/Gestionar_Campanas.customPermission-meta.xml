@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Coordinación (HU-08): crear y editar campañas, metas y actualizaciones desde el portal de administración.</description>
+    <isLicensed>false</isLicensed>
+    <label>Gestionar campañas</label>
+</CustomPermission>

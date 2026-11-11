@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Ver en Salesforce el registro del equipo con acceso al portal de administración. Solo para quien administra la org.</description>
+    <fieldPermissions><editable>false</editable><field>Miembro_Equipo__c.Correo__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Miembro_Equipo__c.Usuario__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Miembro_Equipo__c.Rol__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Miembro_Equipo__c.Activo__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Miembro_Equipo__c.Alta__c</field><readable>true</readable></fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Dueño del portal</label>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Miembro_Equipo__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <tabSettings><tab>Miembro_Equipo__c</tab><visibility>Visible</visibility></tabSettings>
+</PermissionSet>

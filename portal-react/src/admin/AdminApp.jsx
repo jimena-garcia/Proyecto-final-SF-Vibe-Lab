@@ -16,9 +16,10 @@ function leerRuta() {
 
 export default function AdminApp() {
   const [ruta, setRuta] = useState(leerRuta);
-  const [equipo] = useCarga(() => api.getEquipo(), []);
+  const [permisos] = useCarga(() => api.getPermisos(), []);
   const [resumen] = useCarga(() => api.getResumen(), []);
-  const puedeGestionar = equipo.datos?.puedeGestionar;
+  const p = permisos.datos || {};
+  const puedeGestionar = p.equipo;
 
   useEffect(() => {
     const cambiar = () => {
@@ -31,28 +32,25 @@ export default function AdminApp() {
 
   const secciones = [
     { id: 'resumen', texto: 'Resumen' },
-    { id: 'campanas', texto: 'Campañas' },
-    { id: 'donaciones', texto: 'Donaciones' },
-    { id: 'avisos', texto: 'Avisos de Stripe' },
+    ...(p.coordinacion ? [{ id: 'campanas', texto: 'Campañas' }] : []),
+    ...(p.tesoreria ? [{ id: 'donaciones', texto: 'Donaciones' }, { id: 'avisos', texto: 'Avisos de Stripe' }] : []),
     ...(puedeGestionar ? [{ id: 'equipo', texto: 'Equipo' }] : [])
   ];
 
+  // La sección solo se muestra si el rol la permite; el servidor vuelve a validarlo.
   let contenido;
-  switch (ruta.seccion) {
-    case 'campanas':
-      contenido = <Campanas sub={ruta.sub} />;
-      break;
-    case 'donaciones':
-      contenido = <Donaciones filtro={ruta.sub || 'todas'} />;
-      break;
-    case 'avisos':
-      contenido = <Avisos soloRechazados={ruta.sub === 'rechazados'} />;
-      break;
-    case 'equipo':
-      contenido = puedeGestionar ? <Equipo /> : <Resumen />;
-      break;
-    default:
-      contenido = <Resumen />;
+  if (!permisos.datos) {
+    contenido = <div className="esqueleto" style={{ height: 120 }} aria-busy="true" />;
+  } else if (ruta.seccion === 'campanas' && p.coordinacion) {
+    contenido = <Campanas sub={ruta.sub} />;
+  } else if (ruta.seccion === 'donaciones' && p.tesoreria) {
+    contenido = <Donaciones filtro={ruta.sub || 'todas'} />;
+  } else if (ruta.seccion === 'avisos' && p.tesoreria) {
+    contenido = <Avisos soloRechazados={ruta.sub === 'rechazados'} />;
+  } else if (ruta.seccion === 'equipo' && puedeGestionar) {
+    contenido = <Equipo />;
+  } else {
+    contenido = <Resumen permisos={p} />;
   }
 
   return (
@@ -77,7 +75,12 @@ export default function AdminApp() {
           </ul>
         </nav>
         <div className="adm-nav__pie">
-          {resumen.datos?.usuario && <p className="adm-nav__usuario">{resumen.datos.usuario}</p>}
+          {p.usuario && (
+            <p className="adm-nav__usuario">
+              {p.usuario}
+              <small>{puedeGestionar ? 'Administración' : p.coordinacion && p.tesoreria ? 'Coordinación y tesorería' : p.coordinacion ? 'Coordinación' : p.tesoreria ? 'Tesorería' : 'Sin rol asignado'}</small>
+            </p>
+          )}
           {resumen.datos?.portalUrl && (
             <a href={resumen.datos.portalUrl} target="_blank" rel="noreferrer">
               Ver sitio público ↗

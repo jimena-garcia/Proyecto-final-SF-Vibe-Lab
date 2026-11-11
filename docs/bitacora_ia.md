@@ -23,6 +23,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 13 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 11 | [P13](prompts/P13-portada-descubrimiento.md) | ⚠ | ~4 h → 45 min |
 | 14 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-04, HU-14, HU-16 | [P14](prompts/P14-confirmacion-rapida.md) | ⚠ | ~3 h → 30 min |
 | 15 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P15](prompts/P15-portal-admin.md) | ⚠ | ~12 h → 2 h |
+| 16 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P16](prompts/P16-roles-equipo.md) | ⚠ | ~6 h → 1 h |
 
 ---
 
@@ -149,3 +150,23 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - `curl` sin sesión a `/apex/PanelAdmin` en el sitio público: 401.
   - Métodos ejecutados con los datos reales de la org.
 - **Pendiente:** prueba del usuario con una persona real (alta y login en incógnito). La CLI no puede abrir sesión de navegador en Visualforce.
+
+### 16 · Roles del equipo y registro en Salesforce — [P16](prompts/P16-roles-equipo.md)
+- **Qué obtuvimos:**
+  - Roles **Coordinación**, **Tesorería** y **Ambos** con permission sets y custom permissions.
+  - Selector de rol al dar de alta y cambio de rol en el panel.
+  - Navegación del panel según el rol.
+  - Objeto `Miembro_Equipo__c` con la pestaña **Equipo** en la app de Salesforce, con vistas Activos, Coordinación y Tesorería.
+  - Vista "Pagos de hoy" en Donaciones.
+  - Script de migración para quien ya tenía acceso.
+- **⚠ Errores de la IA:**
+  1. El permission set de Tesorería no tenía lectura de Campaña. Salesforce lo exige por la relación master-detail con Donación, y el despliegue falló.
+  2. Una condición redundante al asignar el acceso base (`(a || !b) && !b`) se detectó en la revisión y se simplificó.
+- **Qué verificamos y cómo:**
+  - 41 tests en verde, con usuarios reales de cada rol (`System.runAs`):
+    - Coordinación no ve donaciones ni avisos.
+    - Tesorería no edita campañas.
+    - Ningún rol crea usuarios ni cambia roles.
+  - Capturas del alta con rol y de la vista de Coordinación.
+  - Consulta de `Miembro_Equipo__c` tras la migración.
+- **Detalle técnico:** el registro en `Miembro_Equipo__c` se guarda con `@future`, porque Salesforce no permite guardar usuarios o permisos y registros normales en la misma transacción (MIXED_DML).

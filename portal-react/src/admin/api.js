@@ -22,6 +22,7 @@ function invocar(accion, ...args) {
 
 const api = enSalesforce
   ? {
+      getPermisos: () => invocar('getPermisos'),
       getResumen: () => invocar('getResumen'),
       getCampanas: () => invocar('getCampanas'),
       guardarCampana: (datos) => invocar('guardarCampana', JSON.stringify(datos)),
@@ -30,6 +31,7 @@ const api = enSalesforce
       getEquipo: () => invocar('getEquipo'),
       darDeAlta: (datos) => invocar('darDeAlta', JSON.stringify(datos)),
       desactivar: (id) => invocar('desactivar', id),
+      cambiarRol: (id, rol) => invocar('cambiarRol', id, rol),
       salir: window.ADMIN_CONFIG.salir
     }
   : { ...mock, salir: '#' };

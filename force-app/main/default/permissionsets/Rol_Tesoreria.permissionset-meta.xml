@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPermissions><enabled>true</enabled><name>Ver_Donaciones</name></customPermissions>
+    <description>HU-07, HU-09, HU-15: consultar todas las donaciones (incluidos correo y RFC para facturas) y los avisos de Stripe. Solo lectura.</description>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Monto__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Estado__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Nombre__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Email__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.RFC__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Confirmada_Por__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Fecha_Pago__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Motivo_Cancelacion__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Solicita_Factura__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Token_Publico__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Stripe_Session_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Stripe_Payment_Intent__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Donacion__c.Comprobante_Enviado__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Event_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Clave_Unica__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Tipo__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Resultado__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Motivo__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Recibido__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Donacion__c</field><readable>true</readable></fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Rol Tesorería</label>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Campana__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Aviso_Pasarela__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Donacion__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <tabSettings><tab>Aviso_Pasarela__c</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Donacion__c</tab><visibility>Visible</visibility></tabSettings>
+</PermissionSet>

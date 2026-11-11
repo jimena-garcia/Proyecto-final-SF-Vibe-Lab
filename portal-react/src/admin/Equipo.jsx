@@ -4,13 +4,20 @@ import { Cabecera, EstadoCarga, fecha, useCarga } from './comun.jsx';
 import { Alerta, Boton } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
 
+export const ROLES = [
+  { valor: 'coordinacion', titulo: 'Coordinación', puede: 'Crea y edita campañas y sus metas (HU-08). Ve el avance, no los datos de donantes.' },
+  { valor: 'tesoreria', titulo: 'Tesorería', puede: 'Ve todas las donaciones con correo y RFC, facturas por atender y avisos de Stripe (HU-07, HU-09, HU-15). Campañas solo lectura.' },
+  { valor: 'ambos', titulo: 'Coordinación y tesorería', puede: 'Todo lo anterior.' }
+];
+const tituloRol = (r) => ROLES.find((x) => x.valor === r)?.titulo || 'Sin rol';
+
 /**
  * Alta de personas del equipo (solo para quien administra la org).
  * Cada persona entra con su correo y la contraseña que se capture aquí.
  */
 export default function Equipo() {
   const [estado, recargar] = useCarga(() => api.getEquipo(), []);
-  const [datos, setDatos] = useState({ nombre: '', apellido: '', correo: '', password: '' });
+  const [datos, setDatos] = useState({ nombre: '', apellido: '', correo: '', password: '', rol: '' });
   const [verPass, setVerPass] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [resultado, setResultado] = useState(null);
@@ -21,7 +28,7 @@ export default function Equipo() {
     { ok: /[A-Za-z]/.test(datos.password) && /\d/.test(datos.password), texto: 'Letras y números' },
     { ok: datos.password && !datos.password.toLowerCase().includes(datos.correo.split('@')[0].toLowerCase() || '\u0000'), texto: 'Que no contenga el correo' }
   ];
-  const listo = datos.nombre.trim() && datos.apellido.trim() && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datos.correo) && reglas.every((r) => r.ok);
+  const listo = datos.nombre.trim() && datos.apellido.trim() && datos.rol && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datos.correo) && reglas.every((r) => r.ok);
   const set = (k) => (e) => setDatos((d) => ({ ...d, [k]: e.target.value }));
 
   async function alta(e) {
@@ -33,7 +40,7 @@ export default function Equipo() {
       const r = await api.darDeAlta(datos);
       setResultado({ ...r, password: r.ok ? datos.password : null, nombre: datos.nombre });
       if (r.ok) {
-        setDatos({ nombre: '', apellido: '', correo: '', password: '' });
+        setDatos({ nombre: '', apellido: '', correo: '', password: '', rol: '' });
         recargar();
       }
     } catch (err) {
@@ -41,6 +48,13 @@ export default function Equipo() {
     } finally {
       setEnviando(false);
     }
+  }
+
+  async function cambiarRol(p, rol) {
+    if (rol === p.rol) return;
+    const r = await api.cambiarRol(p.id, rol);
+    if (!r.ok) window.alert(r.mensaje);
+    recargar();
   }
 
   async function desactivar(p) {
@@ -52,7 +66,7 @@ export default function Equipo() {
 
   return (
     <>
-      <Cabecera titulo="Equipo" descripcion="Da de alta a coordinación y tesorería. Cada persona entra con su correo y su contraseña." />
+      <Cabecera titulo="Equipo" descripcion="Da de alta a coordinación y tesorería, asigna su rol y compárteles su acceso. Cada persona entra con su correo y su contraseña." />
       <EstadoCarga estado={estado} reintentar={recargar}>
         {eq && (
           <div className="adm-form">
@@ -89,7 +103,22 @@ export default function Equipo() {
                     ))}
                   </ul>
                 </div>
-                <p className="campo__ayuda">Licencias disponibles: {eq.licenciasLibres}. Cada persona usa una.</p>
+                <fieldset className="paso" style={{ marginTop: 16 }}>
+                  <legend className="campo__label">Rol</legend>
+                  <div className="opciones" style={{ marginTop: 8 }}>
+                    {ROLES.map((r) => (
+                      <label key={r.valor} className={`opcion ${datos.rol === r.valor ? 'opcion--activa' : ''}`}>
+                        <input type="radio" name="rol" value={r.valor} checked={datos.rol === r.valor} onChange={set('rol')} />
+                        <span className="opcion__radio" aria-hidden="true" />
+                        <span className="opcion__titulo">{r.titulo}</span>
+                        <span className="opcion__publico">{r.puede}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <p className="campo__ayuda" style={{ marginTop: 12 }}>
+                  Licencias disponibles: {eq.licenciasLibres}. Cada persona usa una. Solo tú puedes dar de alta personas y cambiar roles.
+                </p>
                 <Boton type="submit" cargando={enviando} disabled={!listo || eq.licenciasLibres <= 0} style={{ marginTop: 16 }}>
                   Dar de alta
                 </Boton>
@@ -115,6 +144,23 @@ export default function Equipo() {
                         </p>
                         <p className="adm-texto-2">{p.usuario}</p>
                         <p className="adm-texto-2">{p.activo ? `Último acceso: ${fecha(p.ultimoAcceso)}` : 'Desactivado'}</p>
+                        {p.esTu ? (
+                          <p className="adm-texto-2">Administración (todo, incluido el equipo)</p>
+                        ) : (
+                          p.activo && (
+                            <label className="adm-rol">
+                              <span className="sr-only">Rol de {p.nombre}</span>
+                              <select className="input adm-rol__select" value={p.rol === 'sin-rol' ? '' : p.rol} onChange={(e) => cambiarRol(p, e.target.value)}>
+                                {p.rol === 'sin-rol' && <option value="">Sin rol</option>}
+                                {ROLES.map((r) => (
+                                  <option key={r.valor} value={r.valor}>
+                                    {r.titulo}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          )
+                        )}
                       </div>
                       {p.activo && !p.esTu && (
                         <button type="button" className="btn btn--texto" onClick={() => desactivar(p)}>

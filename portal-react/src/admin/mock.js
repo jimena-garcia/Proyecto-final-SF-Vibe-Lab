@@ -64,8 +64,22 @@ const avisos = [
 ];
 
 let equipo = [
-  { id: 'u0', nombre: 'Administración', usuario: 'admin@demo', email: 'admin@example.com', activo: true, ultimoAcceso: hace(1), esTu: true }
+  { id: 'u0', nombre: 'Administración', usuario: 'admin@demo', email: 'admin@example.com', activo: true, ultimoAcceso: hace(1), esTu: true, rol: 'ambos' },
+  { id: 'u1', nombre: 'Coordinación Demo', usuario: 'coordinacion@demo', email: 'coord@example.com', activo: true, ultimoAcceso: hace(90), esTu: false, rol: 'coordinacion' }
 ];
+
+// Simula otro rol en desarrollo: ?rol=coordinacion | ?rol=tesoreria
+const rolDemo = new URLSearchParams(window.location.search).get('rol');
+
+export async function getPermisos() {
+  await esperar(150);
+  return {
+    usuario: 'Administración (demo)',
+    coordinacion: rolDemo !== 'tesoreria',
+    tesoreria: rolDemo !== 'coordinacion',
+    equipo: !rolDemo
+  };
+}
 
 export async function getResumen() {
   await esperar(300);
@@ -79,6 +93,7 @@ export async function getResumen() {
     pendientes: donaciones.filter((d) => d.estado === 'Pendiente').length,
     facturasPorAtender: donaciones.filter((d) => d.solicitaFactura && d.estado === 'Pagada').length,
     avisosRechazados7d: avisos.filter((a) => a.resultado === 'Rechazado').length,
+    verDonaciones: rolDemo !== 'coordinacion',
     campanas: structuredClone(campanas)
   };
 }
@@ -125,8 +140,14 @@ export async function getEquipo() {
 export async function darDeAlta(datos) {
   await esperar(600);
   const usuario = datos.correo.toLowerCase();
-  equipo = [...equipo, { id: `u${Date.now()}`, nombre: `${datos.nombre} ${datos.apellido}`, usuario, email: usuario, activo: true, ultimoAcceso: null, esTu: false }];
+  equipo = [...equipo, { id: `u${Date.now()}`, nombre: `${datos.nombre} ${datos.apellido}`, usuario, email: usuario, activo: true, ultimoAcceso: null, esTu: false, rol: datos.rol }];
   return { ok: true, usuario, enlaceAcceso: 'https://tu-org.my.salesforce.com/apex/PanelAdmin', mensaje: `Listo. Comparte el enlace, el usuario y la contraseña con ${datos.nombre}.` };
+}
+
+export async function cambiarRol(id, rol) {
+  await esperar(300);
+  equipo = equipo.map((p) => (p.id === id ? { ...p, rol } : p));
+  return { ok: true, mensaje: 'Rol actualizado.' };
 }
 
 export async function desactivar(id) {

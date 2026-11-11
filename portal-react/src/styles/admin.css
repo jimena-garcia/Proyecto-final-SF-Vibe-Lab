@@ -152,3 +152,9 @@ a.adm-enlace-fuerte:hover { text-decoration: underline; }
 .adm-credenciales dt { font-size: var(--t-xs); color: var(--texto-2); }
 .adm-credenciales dd { margin: 0; font-size: var(--t-sm); }
 .adm-tabla .nowrap { white-space: nowrap; }
+
+.adm-nav__usuario small { display: block; color: #b9c2d6; font-weight: 500; font-size: var(--t-xs); }
+.adm-rol { display: block; margin-top: var(--e-2); }
+.adm-rol__select { min-height: 36px; padding: 0 var(--e-3); font-size: var(--t-sm); max-width: 260px; }
+div.adm-kpi { cursor: default; }
+div.adm-kpi:hover { border-color: var(--linea); }

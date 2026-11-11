@@ -15,5 +15,6 @@
     <tabs>Campana__c</tabs>
     <tabs>Donacion__c</tabs>
     <tabs>Aviso_Pasarela__c</tabs>
+    <tabs>Miembro_Equipo__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

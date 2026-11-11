@@ -18,6 +18,7 @@
             <script>
                 window.ADMIN_CONFIG = {
                     acciones: {
+                        getPermisos: '{!$RemoteAction.AdminPortalController.getPermisos}',
                         getResumen: '{!$RemoteAction.AdminPortalController.getResumen}',
                         getCampanas: '{!$RemoteAction.AdminPortalController.getCampanas}',
                         guardarCampana: '{!$RemoteAction.AdminPortalController.guardarCampana}',
@@ -25,7 +26,8 @@
                         getAvisos: '{!$RemoteAction.AdminPortalController.getAvisos}',
                         getEquipo: '{!$RemoteAction.EquipoController.getEquipo}',
                         darDeAlta: '{!$RemoteAction.EquipoController.darDeAlta}',
-                        desactivar: '{!$RemoteAction.EquipoController.desactivar}'
+                        desactivar: '{!$RemoteAction.EquipoController.desactivar}',
+                        cambiarRol: '{!$RemoteAction.EquipoController.cambiarRol}'
                     },
                     salir: '/secur/logout.jsp'
                 };

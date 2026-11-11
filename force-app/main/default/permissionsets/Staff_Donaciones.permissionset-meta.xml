@@ -3,45 +3,21 @@
     <applicationVisibilities><application>Donaciones_MD</application><visible>true</visible></applicationVisibilities>
     <classAccesses><apexClass>AdminPortalController</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>EquipoController</apexClass><enabled>true</enabled></classAccesses>
-    <description>Staff del programa (coordinación y tesorería): administra campañas y consulta donaciones y avisos de la pasarela.</description>
-    <fieldPermissions><editable>true</editable><field>Campana__c.Activa__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Campana__c.Descripcion__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Campana__c.Montos_Sugeridos__c</field><readable>true</readable></fieldPermissions>
+    <description>Acceso base al portal de administración: entrar al panel y ver campañas. Los permisos de cada rol se agregan con Rol Coordinación o Rol Tesorería.</description>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Activa__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Descripcion__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Montos_Sugeridos__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Recaudado__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Avance__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Monto__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Estado__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Donacion__c.Nombre__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Donacion__c.Email__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Donacion__c.RFC__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Confirmada_Por__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Fecha_Pago__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Motivo_Cancelacion__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Solicita_Factura__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Token_Publico__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Stripe_Session_Id__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Stripe_Payment_Intent__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Donacion__c.Comprobante_Enviado__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Event_Id__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Clave_Unica__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Tipo__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Resultado__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Motivo__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Recibido__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Aviso_Pasarela__c.Donacion__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Campana__c.Ilustracion__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Campana__c.Destacada__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Ilustracion__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Destacada__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Donaciones_Pagadas__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Hito__c.Descripcion__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Hito__c.Descripcion__c</field><readable>true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>Staff Donaciones</label>
-    <objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Campana__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
-    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Donacion__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
-    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Aviso_Pasarela__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
-    <objectPermissions><allowCreate>true</allowCreate><allowDelete>true</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Hito__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <label>Staff Donaciones (acceso base)</label>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Campana__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Hito__c</object><viewAllRecords>true</viewAllRecords></objectPermissions>
     <pageAccesses><apexPage>PanelAdmin</apexPage><enabled>true</enabled></pageAccesses>
     <tabSettings><tab>Panel_Admin</tab><visibility>Visible</visibility></tabSettings>
     <tabSettings><tab>Campana__c</tab><visibility>Visible</visibility></tabSettings>
-    <tabSettings><tab>Donacion__c</tab><visibility>Visible</visibility></tabSettings>
-    <tabSettings><tab>Aviso_Pasarela__c</tab><visibility>Visible</visibility></tabSettings>
 </PermissionSet>

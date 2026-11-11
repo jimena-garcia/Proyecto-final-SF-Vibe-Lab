@@ -7,6 +7,41 @@
  * Staff no puede cambiar el estado ni el monto de una donación (los define la pasarela).
  */
 public with sharing class AdminPortalController {
+    public static final String PERM_CAMPANAS = 'Gestionar_Campanas'; // Rol Coordinación (HU-08)
+    public static final String PERM_DONACIONES = 'Ver_Donaciones'; // Rol Tesorería (HU-07, HU-09, HU-15)
+
+    public class SinPermisoException extends Exception {
+    }
+
+    /** Qué secciones puede usar quien entra. La UI las oculta; el servidor las vuelve a validar. */
+    public class Permisos {
+        public String usuario;
+        public Boolean coordinacion;
+        public Boolean tesoreria;
+        public Boolean equipo;
+    }
+
+    @TestVisible
+    private static Boolean tiene(String permiso) {
+        return FeatureManagement.checkPermission(permiso);
+    }
+
+    private static void exigir(String permiso) {
+        if (!tiene(permiso)) {
+            throw new SinPermisoException('No tienes permiso para esta sección. Pide a la administración que revise tu rol.');
+        }
+    }
+
+    @RemoteAction
+    public static Permisos getPermisos() {
+        Permisos p = new Permisos();
+        p.usuario = UserInfo.getName();
+        p.coordinacion = tiene(PERM_CAMPANAS);
+        p.tesoreria = tiene(PERM_DONACIONES);
+        p.equipo = EquipoController.puedeGestionar();
+        return p;
+    }
+
     // ------------------------------------------------------------------ DTOs
     public class Resumen {
         public String usuario;
@@ -17,6 +52,7 @@ public with sharing class AdminPortalController {
         public Integer pendientes = 0;
         public Integer facturasPorAtender = 0;
         public Integer avisosRechazados7d = 0;
+        public Boolean verDonaciones = false;
         public List<CampanaAdmin> campanas = new List<CampanaAdmin>();
     }
 
@@ -90,6 +126,10 @@ public with sharing class AdminPortalController {
                 r.donacionesPagadas += c.donacionesPagadas;
             }
         }
+        r.verDonaciones = tiene(PERM_DONACIONES);
+        if (!r.verDonaciones) {
+            return r; // Coordinación ve el avance de las campañas, no los datos de tesorería
+        }
         r.pendientes = [SELECT COUNT() FROM Donacion__c WHERE Estado__c = 'Pendiente' WITH USER_MODE];
         r.facturasPorAtender = [
             SELECT COUNT() FROM Donacion__c WHERE Solicita_Factura__c = TRUE AND Estado__c = 'Pagada' WITH USER_MODE
@@ -141,6 +181,10 @@ public with sharing class AdminPortalController {
     @RemoteAction
     public static Resultado guardarCampana(String datosJson) {
         Resultado r = new Resultado();
+        if (!tiene(PERM_CAMPANAS)) {
+            r.mensaje = 'Tu rol no permite crear ni editar campañas.';
+            return r;
+        }
         CampanaAdmin e;
         try {
             e = (CampanaAdmin) JSON.deserialize(datosJson, CampanaAdmin.class);
@@ -220,6 +264,7 @@ public with sharing class AdminPortalController {
 
     @RemoteAction
     public static List<DonacionAdmin> getDonaciones(String filtro, String busqueda) {
+        exigir(PERM_DONACIONES);
         String condicion = FILTROS.containsKey(filtro) ? FILTROS.get(filtro) : '';
         Map<String, Object> binds = new Map<String, Object>();
         if (String.isNotBlank(busqueda)) {
@@ -257,6 +302,7 @@ public with sharing class AdminPortalController {
     // ------------------------------------------------------------------ Avisos de la pasarela (HU-15, HU-17)
     @RemoteAction
     public static List<AvisoAdmin> getAvisos(Boolean soloRechazados) {
+        exigir(PERM_DONACIONES);
         List<Aviso_Pasarela__c> filas = soloRechazados == true
             ? [
                   SELECT Id, Name, Recibido__c, Tipo__c, Resultado__c, Motivo__c, Event_Id__c, Donacion__r.Name

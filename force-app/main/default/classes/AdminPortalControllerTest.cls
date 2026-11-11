@@ -10,6 +10,14 @@ private class AdminPortalControllerTest {
         insert new Aviso_Pasarela__c(Resultado__c = 'Rechazado', Motivo__c = 'Firma inválida', Recibido__c = Datetime.now());
     }
 
+    static User coordinacion() {
+        return EquipoControllerTest.crearStaff('coord', new List<String>{ 'Rol_Coordinacion' });
+    }
+
+    static User tesoreria() {
+        return EquipoControllerTest.crearStaff('tesor', new List<String>{ 'Rol_Tesoreria' });
+    }
+
     static String campanaJson(String id, String nombre, Decimal meta, List<Decimal> metas) {
         AdminPortalController.CampanaAdmin e = new AdminPortalController.CampanaAdmin();
         e.id = id;
@@ -29,71 +37,112 @@ private class AdminPortalControllerTest {
     }
 
     @IsTest
-    static void resumenCuentaPorEstado() {
-        AdminPortalController.Resumen r = AdminPortalController.getResumen();
-        Assert.areEqual(1, r.campanasActivas);
-        Assert.areEqual(300, r.recaudadoActivas);
-        Assert.areEqual(1, r.pendientes);
-        Assert.areEqual(1, r.facturasPorAtender);
-        Assert.areEqual(1, r.avisosRechazados7d);
-        Assert.areEqual('https://portal.ejemplo.test', r.portalUrl);
+    static void permisosPorRol() {
+        System.runAs(coordinacion()) {
+            AdminPortalController.Permisos p = AdminPortalController.getPermisos();
+            Assert.isTrue(p.coordinacion);
+            Assert.isFalse(p.tesoreria);
+            Assert.isFalse(p.equipo);
+        }
+        System.runAs(tesoreria()) {
+            AdminPortalController.Permisos p = AdminPortalController.getPermisos();
+            Assert.isFalse(p.coordinacion);
+            Assert.isTrue(p.tesoreria);
+        }
     }
 
     @IsTest
-    static void creaYEditaCampanaConMetas() {
-        AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'Viáticos', 15000, new List<Decimal>{ 5000, 15000 }));
-        Assert.isTrue(r.ok, r.mensaje);
-        Campana__c c = [SELECT Destacada__c, Montos_Sugeridos__c, (SELECT Monto__c FROM Hitos__r) FROM Campana__c WHERE Id = :r.id];
-        Assert.areEqual(2, c.Hitos__r.size());
-        Assert.areEqual('100;200', c.Montos_Sugeridos__c);
-        Assert.areEqual(1, [SELECT COUNT() FROM Campana__c WHERE Destacada__c = TRUE], 'Solo una destacada');
+    static void tesoreriaVeElResumenCompleto() {
+        System.runAs(tesoreria()) {
+            AdminPortalController.Resumen r = AdminPortalController.getResumen();
+            Assert.isTrue(r.verDonaciones);
+            Assert.areEqual(1, r.campanasActivas);
+            Assert.areEqual(300, r.recaudadoActivas);
+            Assert.areEqual(1, r.pendientes);
+            Assert.areEqual(1, r.facturasPorAtender);
+            Assert.areEqual(1, r.avisosRechazados7d);
+            Assert.areEqual('https://portal.ejemplo.test', r.portalUrl);
+        }
+    }
 
-        // Editar reemplaza las metas
-        AdminPortalController.Resultado r2 = AdminPortalController.guardarCampana(campanaJson(r.id, 'Viáticos CDMX', 20000, new List<Decimal>{ 20000 }));
-        Assert.isTrue(r2.ok, r2.mensaje);
-        Assert.areEqual(1, [SELECT COUNT() FROM Hito__c WHERE Campana__c = :r.id]);
+    @IsTest
+    static void coordinacionVeAvancePeroNoDatosDeDonantes() {
+        System.runAs(coordinacion()) {
+            AdminPortalController.Resumen r = AdminPortalController.getResumen();
+            Assert.isFalse(r.verDonaciones);
+            Assert.areEqual(300, r.recaudadoActivas, 'El avance viene del roll-up de la campaña');
+            Assert.areEqual(0, r.pendientes, 'Sin datos de tesorería');
+            try {
+                AdminPortalController.getDonaciones('todas', null);
+                Assert.fail('Coordinación no debe ver donaciones');
+            } catch (AdminPortalController.SinPermisoException e) {
+                Assert.isTrue(e.getMessage().contains('permiso'));
+            }
+            try {
+                AdminPortalController.getAvisos(false);
+                Assert.fail('Coordinación no debe ver avisos');
+            } catch (AdminPortalController.SinPermisoException e) {
+                Assert.isNotNull(e.getMessage());
+            }
+        }
+    }
+
+    @IsTest
+    static void coordinacionCreaYEditaCampanaConMetas() {
+        System.runAs(coordinacion()) {
+            AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'Viáticos', 15000, new List<Decimal>{ 5000, 15000 }));
+            Assert.isTrue(r.ok, r.mensaje);
+            Campana__c c = [SELECT Destacada__c, Montos_Sugeridos__c, (SELECT Monto__c FROM Hitos__r) FROM Campana__c WHERE Id = :r.id];
+            Assert.areEqual(2, c.Hitos__r.size());
+            Assert.areEqual('100;200', c.Montos_Sugeridos__c);
+            Assert.areEqual(1, [SELECT COUNT() FROM Campana__c WHERE Destacada__c = TRUE], 'Solo una destacada');
+
+            AdminPortalController.Resultado r2 = AdminPortalController.guardarCampana(campanaJson(r.id, 'Viáticos CDMX', 20000, new List<Decimal>{ 20000 }));
+            Assert.isTrue(r2.ok, r2.mensaje);
+            Assert.areEqual(1, [SELECT COUNT() FROM Hito__c WHERE Campana__c = :r.id]);
+        }
+    }
+
+    @IsTest
+    static void tesoreriaNoPuedeEditarCampanas() {
+        Integer antes = [SELECT COUNT() FROM Campana__c];
+        System.runAs(tesoreria()) {
+            AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'No permitida', 1000, new List<Decimal>()));
+            Assert.isFalse(r.ok);
+            Assert.isTrue(r.mensaje.contains('rol'), r.mensaje);
+        }
+        Assert.areEqual(antes, [SELECT COUNT() FROM Campana__c]);
     }
 
     @IsTest
     static void rechazaMetaMayorALaFinalSinGuardarNada() {
         Integer antes = [SELECT COUNT() FROM Campana__c];
-        AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'Mala', 1000, new List<Decimal>{ 5000 }));
-        Assert.isFalse(r.ok);
-        Assert.isTrue(r.mensaje.contains('meta'), r.mensaje);
+        System.runAs(coordinacion()) {
+            AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'Mala', 1000, new List<Decimal>{ 5000 }));
+            Assert.isFalse(r.ok);
+            Assert.isTrue(r.mensaje.contains('meta'), r.mensaje);
+            Assert.isFalse(AdminPortalController.guardarCampana(campanaJson(null, '', 1000, new List<Decimal>())).ok);
+            Assert.isFalse(AdminPortalController.guardarCampana(campanaJson(null, 'Sin meta', 0, new List<Decimal>())).ok);
+            Assert.isFalse(AdminPortalController.guardarCampana('{roto').ok);
+        }
         Assert.areEqual(antes, [SELECT COUNT() FROM Campana__c], 'Todo o nada');
-        Assert.isFalse(AdminPortalController.guardarCampana(campanaJson(null, '', 1000, new List<Decimal>())).ok);
-        Assert.isFalse(AdminPortalController.guardarCampana(campanaJson(null, 'Sin meta', 0, new List<Decimal>())).ok);
-        Assert.isFalse(AdminPortalController.guardarCampana('{roto').ok);
     }
 
     @IsTest
-    static void filtrosDeDonacionesYPrivacidad() {
-        Assert.areEqual(3, AdminPortalController.getDonaciones('todas', null).size());
-        Assert.areEqual(1, AdminPortalController.getDonaciones('pendientes', null).size());
-        Assert.areEqual(1, AdminPortalController.getDonaciones('pagadas', null).size());
-        Assert.areEqual(1, AdminPortalController.getDonaciones('canceladas', null).size());
-        List<AdminPortalController.DonacionAdmin> facturas = AdminPortalController.getDonaciones('factura', null);
-        Assert.areEqual(1, facturas.size());
-        Assert.areEqual('GODE561231GR8', facturas[0].rfc);
-        Assert.areEqual(0, AdminPortalController.getDonaciones('pasarela', null).size());
-        Assert.isNull(AdminPortalController.getDonaciones('pendientes', null)[0].nombre, 'Anónima sin nombre');
-        Assert.areEqual(3, AdminPortalController.getDonaciones('todas', 'Mexico').size(), 'Busca por campaña');
-        Assert.areEqual(3, AdminPortalController.getDonaciones('inexistente', null).size());
-    }
-
-    @IsTest
-    static void avisos() {
-        Assert.areEqual(1, AdminPortalController.getAvisos(true).size());
-        Assert.areEqual(1, AdminPortalController.getAvisos(false).size());
-    }
-
-    @IsTest
-    static void staffConPermisoUsaElPortal() {
-        User staff = EquipoControllerTest.crearStaff('staffpo');
-        System.runAs(staff) {
-            Assert.areEqual(1, AdminPortalController.getResumen().campanasActivas);
-            Assert.isTrue(AdminPortalController.guardarCampana(campanaJson(null, 'Desde staff', 5000, new List<Decimal>{ 5000 })).ok);
+    static void tesoreriaFiltraDonacionesYVeDatosDeFactura() {
+        System.runAs(tesoreria()) {
             Assert.areEqual(3, AdminPortalController.getDonaciones('todas', null).size());
+            Assert.areEqual(1, AdminPortalController.getDonaciones('pendientes', null).size());
+            Assert.areEqual(1, AdminPortalController.getDonaciones('pagadas', null).size());
+            Assert.areEqual(1, AdminPortalController.getDonaciones('canceladas', null).size());
+            List<AdminPortalController.DonacionAdmin> facturas = AdminPortalController.getDonaciones('factura', null);
+            Assert.areEqual(1, facturas.size());
+            Assert.areEqual('GODE561231GR8', facturas[0].rfc);
+            Assert.areEqual(0, AdminPortalController.getDonaciones('pasarela', null).size());
+            Assert.isNull(AdminPortalController.getDonaciones('pendientes', null)[0].nombre, 'Anónima sin nombre');
+            Assert.areEqual(3, AdminPortalController.getDonaciones('todas', 'Mexico').size(), 'Busca por campaña');
+            Assert.areEqual(1, AdminPortalController.getAvisos(true).size());
+            Assert.areEqual(1, AdminPortalController.getAvisos(false).size());
         }
     }
 }

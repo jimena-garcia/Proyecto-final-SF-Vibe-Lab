@@ -53,6 +53,17 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 | `EquipoController` (alta de personas) | Solo quien tiene **Gestionar usuarios** (el dueño de la org) | El permiso se valida en el servidor. La contraseña se fija con `System.setPassword`; no se guarda en objetos, logs ni en el navegador después de mostrarse una vez. |
 | Login | Cada persona con su correo y contraseña | Login nativo de Salesforce (bloqueo por intentos, expiración de sesión). Licencia Salesforce Platform: máximo 6 personas. |
 
+### Roles del equipo (mínimo privilegio)
+| Permission set | Quién | Puede | No puede |
+|---|---|---|---|
+| `Staff_Donaciones` (base) | Todo el equipo | Entrar al panel y ver campañas (lectura) | Ver datos de donantes |
+| `Rol_Coordinacion` + custom permission `Gestionar_Campanas` | Coordinación (HU-08) | Crear y editar campañas y metas | Ver donaciones, correos, RFC ni avisos |
+| `Rol_Tesoreria` + custom permission `Ver_Donaciones` | Tesorería (HU-07, HU-09, HU-15) | Ver donaciones (con correo y RFC), facturas y avisos, solo lectura | Editar campañas |
+| `Dueno_Portal` | Solo quien administra la org | Ver la pestaña **Equipo** (`Miembro_Equipo__c`) en Salesforce | — |
+
+- **Doble validación:** cada método de `AdminPortalController` valida la custom permission en el servidor (`FeatureManagement.checkPermission`), y además USER_MODE aplica CRUD y FLS.
+- **Alta y roles:** dar de alta, cambiar roles y desactivar exige el permiso del sistema *Gestionar usuarios*, que solo tiene el dueño. Un test con usuarios reales de cada rol lo comprueba.
+
 ## 3. Claves de la pasarela (M3)
 
 | Secreto | Dónde vive | Dónde NO está |

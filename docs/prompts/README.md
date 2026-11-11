@@ -32,6 +32,7 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 | P13 | [Portada de descubrimiento con destacada y recomendadas](P13-portada-descubrimiento.md) | HU-01 (RF-D1a), HU-11 |
 | P14 | [Confirmación más rápida del pago](P14-confirmacion-rapida.md) | HU-04, HU-14, HU-16 |
 | P15 | [Portal de administración y alta del equipo](P15-portal-admin.md) | HU-07, HU-08, HU-09, HU-15 |
+| P16 | [Roles del equipo y registro en Salesforce](P16-roles-equipo.md) | HU-07, HU-08, HU-09, HU-15 |
 
 ## Plantilla para un prompt nuevo
 
