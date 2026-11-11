@@ -1,0 +1,10 @@
+#!/bin/sh
+# M3: bloquea commits que contengan claves de Stripe. Activar una vez por clon:
+#   git config core.hooksPath .githooks
+PATRON='(sk|rk)_(test|live)_[0-9A-Za-z]{8,}|whsec_[0-9A-Za-z]{8,}'
+if git diff --cached -U0 --no-color | grep -E '^\+' | grep -Eq "$PATRON"; then
+  echo "ERROR: el commit contiene algo que parece una clave de Stripe (sk_/rk_/whsec_)."
+  echo "Quítala del archivo. Las claves van solo en Setup de Salesforce (ver docs/setup_org.md)."
+  exit 1
+fi
+exit 0

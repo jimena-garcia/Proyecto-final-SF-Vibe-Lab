@@ -159,3 +159,10 @@ vite.config.ts.timestamp-*
    # Salesforce CLI local
    .sfdx/
    .sf/
+
+# Proyecto: Salesforce DX y portal React
+.sf/
+.sfdx/
+.localdevserver/
+portal-react/dist/
+portal-react/node_modules/

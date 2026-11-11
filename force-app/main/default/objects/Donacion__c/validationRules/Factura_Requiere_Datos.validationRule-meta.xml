@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Factura_Requiere_Datos</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(Modalidad__c, &quot;Factura&quot;), OR(ISBLANK(Nombre__c), ISBLANK(RFC__c)))</errorConditionFormula>
+    <errorDisplayField>RFC__c</errorDisplayField>
+    <errorMessage>Para solicitar factura se requieren nombre y RFC.</errorMessage>
+</ValidationRule>

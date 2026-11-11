@@ -1,0 +1,32 @@
+<!--
+  Página pública del portal de donaciones (Salesforce Site, usuario invitado).
+  Solo carga la app React empaquetada en el static resource PortalReact y le pasa
+  los nombres de las acciones remotas. No contiene datos ni secretos.
+-->
+<apex:page controller="PortalDonacionesController" showHeader="false" sidebar="false"
+           standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false"
+           docType="html-5.0" title="Donaciones Mexico Dreamin">
+    <html lang="es">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Donaciones · Mexico Dreamin</title>
+            <link rel="stylesheet" href="{!URLFOR($Resource.PortalReact, 'assets/index.css')}" />
+        </head>
+        <body>
+            <div id="root"></div>
+            <script>
+                window.PORTAL_CONFIG = {
+                    acciones: {
+                        getCampanas: '{!$RemoteAction.PortalDonacionesController.getCampanas}',
+                        crearDonacion: '{!$RemoteAction.PortalDonacionesController.crearDonacion}',
+                        iniciarPago: '{!$RemoteAction.PortalDonacionesController.iniciarPago}',
+                        getEstado: '{!$RemoteAction.PortalDonacionesController.getEstado}',
+                        cancelar: '{!$RemoteAction.PortalDonacionesController.cancelar}'
+                    }
+                };
+            </script>
+            <script type="module" src="{!URLFOR($Resource.PortalReact, 'assets/index.js')}"></script>
+        </body>
+    </html>
+</apex:page>

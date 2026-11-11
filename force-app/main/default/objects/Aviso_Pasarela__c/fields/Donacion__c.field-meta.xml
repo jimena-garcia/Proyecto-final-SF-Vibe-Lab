@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donacion__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint><label>Donación</label><referenceTo>Donacion__c</referenceTo><relationshipLabel>Avisos de pasarela</relationshipLabel><relationshipName>Avisos</relationshipName><required>false</required><trackHistory>false</trackHistory><type>Lookup</type>
+</CustomField>

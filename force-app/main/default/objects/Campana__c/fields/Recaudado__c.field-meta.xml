@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recaudado__c</fullName>
+    <inlineHelpText>Suma de donaciones pagadas. Las pendientes y canceladas no cuentan.</inlineHelpText><label>Recaudado</label><summarizedField>Donacion__c.Monto__c</summarizedField><summaryFilterItems><field>Donacion__c.Estado__c</field><operation>equals</operation><value>Pagada</value></summaryFilterItems><summaryForeignKey>Donacion__c.Campana__c</summaryForeignKey><summaryOperation>sum</summaryOperation><trackHistory>false</trackHistory><type>Summary</type>
+</CustomField>

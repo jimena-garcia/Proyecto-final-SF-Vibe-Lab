@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types><members>*</members><name>ApexClass</name></types>
+    <types><members>*</members><name>ApexTrigger</name></types>
+    <types><members>*</members><name>ApexPage</name></types>
+    <types><members>*</members><name>StaticResource</name></types>
+    <types><members>Campana__c</members><members>Donacion__c</members><members>Aviso_Pasarela__c</members><members>Stripe_Config__c</members><name>CustomObject</name></types>
+    <types><members>*</members><name>CustomTab</name></types>
+    <types><members>Donaciones_MD</members><name>CustomApplication</name></types>
+    <types><members>Staff_Donaciones</members><members>Portal_Guest</members><name>PermissionSet</name></types>
+    <types><members>*</members><name>ExternalCredential</name></types>
+    <types><members>*</members><name>NamedCredential</name></types>
+    <types><members>*</members><name>CustomSite</name></types>
+    <types><members>*</members><name>Layout</name></types>
+    <version>66.0</version>
+</Package>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pendientes</fullName>
+    <columns>NAME</columns>
+    <columns>Campana__c</columns>
+    <columns>Monto__c</columns>
+    <columns>Estado__c</columns>
+    <columns>Modalidad__c</columns>
+    <columns>Confirmada_Por__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Estado__c</field>
+        <operation>equals</operation>
+        <value>Pendiente</value>
+    </filters>
+    <label>Pendientes de pago</label>
+</ListView>

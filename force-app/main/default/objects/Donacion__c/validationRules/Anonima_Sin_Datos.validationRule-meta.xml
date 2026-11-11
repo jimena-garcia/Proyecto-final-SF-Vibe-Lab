@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Anonima_Sin_Datos</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(Modalidad__c, &quot;Anonima&quot;), OR(NOT(ISBLANK(RFC__c)), NOT(ISBLANK(Nombre__c))))</errorConditionFormula>
+    <errorDisplayField>Modalidad__c</errorDisplayField>
+    <errorMessage>Una donación anónima no lleva nombre ni RFC (la modalidad anónima no permite factura).</errorMessage>
+</ValidationRule>

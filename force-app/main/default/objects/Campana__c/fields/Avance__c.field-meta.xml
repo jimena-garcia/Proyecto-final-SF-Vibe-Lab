@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Avance__c</fullName>
+    <formula>IF(Meta__c &gt; 0, Recaudado__c / Meta__c, 0)</formula><formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs><label>Avance</label><precision>5</precision><scale>1</scale><trackHistory>false</trackHistory><type>Percent</type>
+</CustomField>
