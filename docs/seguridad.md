@@ -44,6 +44,15 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 2. Nunca aceptan Id ni estado desde el navegador.
 3. Exigen un token aleatorio para consultar una donación.
 
+## 2b. Portal de administración (coordinación y tesorería)
+
+| Elemento | Quién accede | Cómo se protege |
+|---|---|---|
+| Página `PanelAdmin` | Usuarios internos con el permission set `Staff_Donaciones` | No está en el Site público. El guest recibe 401 y la página de error (probado con `curl` a `/apex/PanelAdmin` y `/PanelAdmin` en el dominio del sitio, sin sesión). |
+| `AdminPortalController` | Staff | `with sharing` + `WITH USER_MODE` + DML `as user`: respeta los permisos del usuario. Staff no edita estado ni monto de donaciones. |
+| `EquipoController` (alta de personas) | Solo quien tiene **Gestionar usuarios** (el dueño de la org) | El permiso se valida en el servidor. La contraseña se fija con `System.setPassword`; no se guarda en objetos, logs ni en el navegador después de mostrarse una vez. |
+| Login | Cada persona con su correo y contraseña | Login nativo de Salesforce (bloqueo por intentos, expiración de sesión). Licencia Salesforce Platform: máximo 6 personas. |
+
 ## 3. Claves de la pasarela (M3)
 
 | Secreto | Dónde vive | Dónde NO está |

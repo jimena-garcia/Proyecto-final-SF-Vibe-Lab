@@ -23,7 +23,7 @@ Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asista
   4. En `?gracias`, `verificarPago(token)` consulta la sesión a Stripe y confirma al instante si está pagada. El webhook es el respaldo; ambos usan `FOR UPDATE` para no duplicar el comprobante.
 - Webhook: `StripeWebhookResource` → `StripeWebhookService`. Verifica la firma HMAC, registra `Aviso_Pasarela__c` (Aceptado / Rechazado / Duplicado / Ignorado) y pone la donación en Pagada.
 - `DonacionTriggerHandler`: al pasar a Pagada fija `Confirmada_Por__c` y `Fecha_Pago__c` y envía un solo comprobante (`ComprobanteService`).
-- Staff: Lightning App "Donaciones Mexico Dreamin" con el permission set `Staff_Donaciones`.
+- Staff: **portal de administración** React (`portal-react/src/admin/`, entrada `admin.html` → `assets/admin.js`), servido por `pages/PanelAdmin.page`. Usa `AdminPortalController` (with sharing, USER_MODE) y `EquipoController` (alta de personas; exige Gestionar usuarios). Acceso: `…my.salesforce.com/apex/PanelAdmin` o la pestaña **Panel** de la Lightning App "Donaciones Mexico Dreamin". Cada persona es un usuario Salesforce Platform con el permission set `Staff_Donaciones`.
 
 ## Modelo de datos
 

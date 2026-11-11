@@ -11,6 +11,7 @@
     <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
     <label>Donaciones Mexico Dreamin</label>
     <navType>Standard</navType>
+    <tabs>Panel_Admin</tabs>
     <tabs>Campana__c</tabs>
     <tabs>Donacion__c</tabs>
     <tabs>Aviso_Pasarela__c</tabs>

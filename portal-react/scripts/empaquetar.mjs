@@ -8,8 +8,8 @@ const raiz = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const dist = path.join(raiz, 'dist');
 const destino = path.join(raiz, '..', 'force-app', 'main', 'default', 'staticresources', 'PortalReact.resource');
 
-if (!existsSync(path.join(dist, 'assets', 'index.js'))) {
-  console.error('No existe dist/assets/index.js. Corre primero "vite build".');
+if (!existsSync(path.join(dist, 'assets', 'index.js')) || !existsSync(path.join(dist, 'assets', 'admin.js'))) {
+  console.error('Faltan dist/assets/index.js o admin.js. Corre primero "vite build".');
   process.exit(1);
 }
 const zip = new AdmZip();

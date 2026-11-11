@@ -22,6 +22,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 12 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 04, 05, 11 | [P12](prompts/P12-rediseno-ux-ui.md) | ⚠ | ~16 h → 3 h |
 | 13 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 11 | [P13](prompts/P13-portada-descubrimiento.md) | ⚠ | ~4 h → 45 min |
 | 14 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-04, HU-14, HU-16 | [P14](prompts/P14-confirmacion-rapida.md) | ⚠ | ~3 h → 30 min |
+| 15 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P15](prompts/P15-portal-admin.md) | ⚠ | ~12 h → 2 h |
 
 ---
 
@@ -132,3 +133,19 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - El monto no influye.
   - La hipótesis es un tiempo de espera de la página de Stripe o del navegador (por ejemplo, una extensión que bloquea peticiones de Stripe).
   - **Pendiente:** confirmarla en un navegador sin extensiones. Si persiste, evaluar Stripe Embedded Checkout.
+
+### 15 · Portal de administración y alta del equipo — [P15](prompts/P15-portal-admin.md)
+- **Qué obtuvimos:**
+  - Un portal React con el mismo diseño del sitio, con las secciones Resumen, Campañas y metas, Donaciones (6 filtros y búsqueda), Avisos y Equipo.
+  - Página `PanelAdmin` y pestaña **Panel** en la app de Salesforce.
+  - `AdminPortalController`, `with sharing` y USER_MODE.
+  - `EquipoController`: alta de personas con correo y contraseña (licencia Platform y permiso Staff), que exige Gestionar usuarios.
+- **⚠ Errores de la IA:**
+  1. El heredoc de bash cortó un archivo de test a la mitad; se reescribió con la herramienta de archivos.
+  2. El enlace de acceso usaba `/?startURL=…` y la prueba con `sf org open -p` mostró "Invalid Page Redirection". Se cambió al flujo nativo `/apex/PanelAdmin`, donde Salesforce manda al login y regresa solo (verificado con `curl`).
+- **Qué verificamos y cómo:**
+  - 40 tests en verde, incluido un usuario de staff real (`System.runAs`) que **no** puede dar de alta personas.
+  - Capturas del panel a 1440 y 375 px.
+  - `curl` sin sesión a `/apex/PanelAdmin` en el sitio público: 401.
+  - Métodos ejecutados con los datos reales de la org.
+- **Pendiente:** prueba del usuario con una persona real (alta y login en incógnito). La CLI no puede abrir sesión de navegador en Visualforce.

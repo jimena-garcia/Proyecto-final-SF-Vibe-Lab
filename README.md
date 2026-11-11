@@ -17,7 +17,7 @@ URL: https://orgfarm-0cda6e4c00-dev-ed.develop.my.salesforce-sites.com/ (Stripe 
 - **Sitio público sin login:** Salesforce Site → página Visualforce `Portal` → app React (`portal-react/`, empaquetada como static resource).
 - **Backend:** Apex en Salesforce Developer Edition (`force-app/`). El visitante no tiene permisos de objeto; todo pasa por `PortalDonacionesController`.
 - **Pagos:** Stripe Checkout en modo de prueba. Aviso de pago (webhook) firmado en `/services/apexrest/stripe/webhook`.
-- **Staff:** Lightning App "Donaciones Mexico Dreamin".
+- **Staff:** portal de administración propio (mismo diseño), en `…my.salesforce.com/apex/PanelAdmin` o la pestaña **Panel** de la app de Salesforce. El dueño da de alta al equipo con correo y contraseña desde **Panel → Equipo**.
 
 ## Estructura
 | Ruta | Contenido |

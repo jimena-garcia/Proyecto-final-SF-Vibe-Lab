@@ -1,0 +1,36 @@
+<!--
+  Portal de administración (coordinación y tesorería). NO está en el Site público:
+  solo usuarios internos con el permission set Staff_Donaciones pueden abrirlo.
+  Carga la app React de administración (assets/admin.js) del static resource PortalReact.
+-->
+<apex:page controller="AdminPortalController" extensions="EquipoController" showHeader="false" sidebar="false"
+           standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
+           title="Panel · Ruta a Mexico Dreamin" lightningStylesheets="false">
+    <html lang="es">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Panel de administración · Ruta a Mexico Dreamin</title>
+            <link rel="stylesheet" href="{!URLFOR($Resource.PortalReact, 'assets/index.css')}" />
+        </head>
+        <body class="admin-body">
+            <div id="root"></div>
+            <script>
+                window.ADMIN_CONFIG = {
+                    acciones: {
+                        getResumen: '{!$RemoteAction.AdminPortalController.getResumen}',
+                        getCampanas: '{!$RemoteAction.AdminPortalController.getCampanas}',
+                        guardarCampana: '{!$RemoteAction.AdminPortalController.guardarCampana}',
+                        getDonaciones: '{!$RemoteAction.AdminPortalController.getDonaciones}',
+                        getAvisos: '{!$RemoteAction.AdminPortalController.getAvisos}',
+                        getEquipo: '{!$RemoteAction.EquipoController.getEquipo}',
+                        darDeAlta: '{!$RemoteAction.EquipoController.darDeAlta}',
+                        desactivar: '{!$RemoteAction.EquipoController.desactivar}'
+                    },
+                    salir: '/secur/logout.jsp'
+                };
+            </script>
+            <script type="module" src="{!URLFOR($Resource.PortalReact, 'assets/admin.js')}"></script>
+        </body>
+    </html>
+</apex:page>

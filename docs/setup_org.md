@@ -74,6 +74,19 @@ En Stripe, en modo de prueba, ve a Developers → API keys y copia la **Secret k
 - Dona con `4242 4242 4242 4242`, cualquier fecha futura y cualquier CVC.
 - En la app de staff, la donación aparece **Pendiente** con `Stripe Checkout Session` lleno. En Stripe → Payments, el pago tiene `client_reference_id` igual al `Token público`.
 
+## 7b. Portal de administración y alta del equipo
+
+1. Asigna el permission set **Staff Donaciones** a tu usuario (`sf org assign permset -n Staff_Donaciones`).
+2. En la app **Donaciones Mexico Dreamin**, abre la pestaña **Panel** y luego la sección **Equipo**.
+3. Captura nombre, apellido, correo y una contraseña (8 o más caracteres, letras y números) y pulsa **Dar de alta**.
+4. Comparte con esa persona:
+   - El enlace `https://<mydomain>.my.salesforce.com/apex/PanelAdmin`.
+   - El usuario que muestra la pantalla (normalmente su correo).
+   - La contraseña que capturaste.
+
+   Al abrir el enlace, Salesforce pide el login y después muestra el panel.
+5. Para quitarle el acceso: Equipo → **Desactivar** (libera la licencia).
+
 ## 8. Respaldo semanal de metadata
 
 ```bash

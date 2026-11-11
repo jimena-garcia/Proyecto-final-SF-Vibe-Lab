@@ -11,9 +11,11 @@ export default defineConfig({
     emptyOutDir: true,
     cssCodeSplit: false,
     rollupOptions: {
+      // Dos entradas: portal de donantes (index) y portal de administración (admin).
+      input: { index: 'index.html', admin: 'admin.html' },
       output: {
-        entryFileNames: 'assets/index.js',
-        chunkFileNames: 'assets/[name].js',
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/comun-[name].js',
         assetFileNames: (a) => (a.names?.[0] ?? a.name ?? '').endsWith('.css') ? 'assets/index.css' : 'assets/[name][extname]'
       }
     }
