@@ -24,6 +24,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 14 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-04, HU-14, HU-16 | [P14](prompts/P14-confirmacion-rapida.md) | ⚠ | ~3 h → 30 min |
 | 15 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P15](prompts/P15-portal-admin.md) | ⚠ | ~12 h → 2 h |
 | 16 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P16](prompts/P16-roles-equipo.md) | ⚠ | ~6 h → 1 h |
+| 17 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-05, HU-11 (UX) | [P17](prompts/P17-marca-plataforma.md) | ⚠ | ~8 h → 1.5 h |
 
 ---
 
@@ -170,3 +171,21 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Capturas del alta con rol y de la vista de Coordinación.
   - Consulta de `Miembro_Equipo__c` tras la migración.
 - **Detalle técnico:** el registro en `Miembro_Equipo__c` se guarda con `@future`, porque Salesforce no permite guardar usuarios o permisos y registros normales en la misma transacción (MIXED_DML).
+
+### 17 · Marca de la plataforma y diseño claro (Fase B) — [P17](prompts/P17-marca-plataforma.md)
+- **Qué obtuvimos:**
+  - Marca propia de la plataforma ("Impulso Vibe Lab", provisional, en `src/marca.js`) separada de la de las campañas.
+  - Paleta clara con un solo verde, con contraste AA medido.
+  - Header blanco con buscador de campañas y "Acceso del equipo".
+  - Portada: titular, banner del programa, destacada y recomendadas con barra de avance bajo la imagen.
+  - Página de campaña: cifras, franja de confianza, pestañas, tarjeta del organizador y preguntas frecuentes.
+  - Footer con espacios para los logos de UADY y Salesforce.
+- **Insumo del usuario:** capturas de Kickstarter (`proyectofinal/ejemplos/`), usadas como referencia funcional. No se copiaron marca, logos ni contenido.
+- **⚠ Errores de la IA:**
+  1. En la página de campaña, las cifras salían con la etiqueta encima del número (`column-reverse` sobre un orden ya invertido); se vio en la captura.
+  2. El sitio oficial de Mexico Dreamin bloquea bots; la IA no esquivó la protección y pidió al equipo el logo y capturas.
+  3. Un `cd` repetido hizo que los ajustes del panel no se aplicaran en el primer intento; se detectó porque `grep` no encontró el cambio.
+- **Qué verificamos y cómo:**
+  - Contraste calculado: acción 5.36:1, progreso 3.49:1, texto secundario 6.69:1.
+  - Capturas a 1440 y 375 px y del sitio real ($74,000, 6 donaciones, 74%).
+- **Pendiente:** confirmar el nombre de la plataforma y recibir los logos oficiales.

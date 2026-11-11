@@ -5,12 +5,12 @@
 -->
 <apex:page controller="AdminPortalController" extensions="EquipoController" showHeader="false" sidebar="false"
            standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
-           title="Panel · Ruta a Mexico Dreamin" lightningStylesheets="false">
+           title="Panel · Impulso Vibe Lab" lightningStylesheets="false">
     <html lang="es">
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <title>Panel de administración · Ruta a Mexico Dreamin</title>
+            <title>Panel de administración · Impulso Vibe Lab</title>
             <link rel="stylesheet" href="{!URLFOR($Resource.PortalReact, 'assets/index.css')}" />
         </head>
         <body class="admin-body">

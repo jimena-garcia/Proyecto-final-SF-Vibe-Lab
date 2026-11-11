@@ -27,11 +27,12 @@ export default function App() {
   const ruta = useRuta();
   const necesitaCampanas = ruta.vista === 'inicio' || ruta.vista === 'campana';
   const [estado, recargar] = useCampanas(necesitaCampanas);
+  const [busqueda, setBusqueda] = useState('');
 
   if (ruta.vista === 'gracias' || ruta.vista === 'cancelado') {
     return (
       <>
-        <Encabezado conNav={false} />
+        <Encabezado conBuscador={false} />
         {ruta.vista === 'gracias' ? <Gracias token={ruta.token} /> : <Cancelado token={ruta.token} />}
         <Pie />
       </>
@@ -40,12 +41,12 @@ export default function App() {
 
   return (
     <>
-      <Encabezado />
+      <Encabezado busqueda={busqueda} setBusqueda={setBusqueda} />
       <main id="contenido">
         {ruta.vista === 'campana' ? (
           <CampanaDetalle id={ruta.id} estado={estado} reintentar={recargar} />
         ) : (
-          <Inicio estado={estado} reintentar={recargar} />
+          <Inicio estado={estado} reintentar={recargar} busqueda={busqueda} limpiarBusqueda={() => setBusqueda('')} />
         )}
       </main>
       <Pie />

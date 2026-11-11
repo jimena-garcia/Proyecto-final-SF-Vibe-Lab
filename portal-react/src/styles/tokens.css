@@ -1,43 +1,53 @@
 /* ==========================================================================
-   Tokens del sistema de diseño — Portal Mexico Dreamin
-   Identidad propia (no Salesforce): tinta + papel cálido, achiote como única
-   acción principal, jade para progreso y pagos confirmados.
+   Tokens — plataforma "Impulso Vibe Lab" (SF Vibe Lab · UADY × Salesforce)
+   Paleta clara inspirada funcionalmente en plataformas de crowdfunding:
+   fondo blanco, texto casi negro y UN solo verde propio para acción y progreso.
+   Los nombres de variables se conservan (achiote = acción, jade = progreso) para que
+   todos los componentes —públicos y del panel— tomen la nueva paleta sin reescribirse.
+   Contraste medido sobre blanco: acción 5.36:1 (AA texto), progreso 3.49:1 (≥3:1 gráficos),
+   texto secundario 6.69:1.
    ========================================================================== */
 :root {
-  /* Color */
-  --tinta: #14213d;
-  --tinta-2: #23325a;
-  --papel: #faf7f2;
-  --papel-2: #f3eee5;
+  /* Superficies y texto */
+  --tinta: #1a1a1a;            /* texto principal y navegación del panel */
+  --tinta-2: #2b2b2b;
+  --papel: #ffffff;            /* fondo general */
+  --papel-2: #f3f3f1;          /* superficies suaves, pistas de progreso */
+  --crema: #f6f2ea;            /* franja de confianza */
   --superficie: #ffffff;
-  --texto: #14213d;
-  --texto-2: #4b5563;
-  --texto-3: #6b7280;
-  --linea: #e7e2d9;
-  --linea-fuerte: #d6cfc2;
+  --texto: #1a1a1a;
+  --texto-2: #5c5c5c;
+  --texto-3: #6b6b6b;
+  --linea: #e6e6e3;
+  --linea-fuerte: #cfcfca;
 
-  --achiote: #c2410c;          /* acción principal: 5.2:1 con blanco */
-  --achiote-hover: #9a3412;
-  --achiote-suave: #fdebdd;
+  /* Acción principal (verde de la plataforma) */
+  --achiote: #0b7a52;          /* botones primarios, enlaces de acción: 5.36:1 */
+  --achiote-hover: #0a6e4a;
+  --achiote-suave: #e3f4ec;
 
-  --jade: #0f766e;             /* progreso, alcanzado, pagada */
-  --jade-suave: #ccfbf1;
-  --sol: #b45309;              /* pendiente / atención */
+  /* Progreso y estados */
+  --jade: #0f9d63;             /* barras de progreso, metas alcanzadas: 3.49:1 */
+  --jade-suave: #dff3e9;
+  --sol: #b45309;              /* pendiente / atención: 5.02:1 */
   --sol-suave: #fef3c7;
   --error: #b91c1c;
   --error-suave: #fee2e2;
 
-  /* Tipografía */
-  --fuente-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  /* Acento de campaña: cada campaña puede redefinirlo (tema por campaña) */
+  --acento-campana: var(--achiote);
+
+  /* Tipografía: Inter en toda la plataforma (clara, legible, sobria) */
+  --fuente-display: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fuente-ui: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --t-xs: 0.8125rem;  /* 13 */
-  --t-sm: 0.875rem;   /* 14 */
-  --t-md: 1rem;       /* 16 */
-  --t-lg: 1.25rem;    /* 20 */
-  --t-xl: 1.5625rem;  /* 25 */
-  --t-2xl: 1.9375rem; /* 31 */
-  --t-3xl: 2.4375rem; /* 39 */
-  --t-4xl: 3.0625rem; /* 49 */
+  --t-xs: 0.8125rem;
+  --t-sm: 0.875rem;
+  --t-md: 1rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.5rem;
+  --t-2xl: 1.875rem;
+  --t-3xl: 2.375rem;
+  --t-4xl: 3rem;
 
   /* Espaciado (base 4) */
   --e-1: 4px;
@@ -50,14 +60,14 @@
   --e-8: 64px;
   --e-9: 96px;
 
-  /* Forma */
+  /* Forma: radios moderados, sombras mínimas */
   --r-sm: 6px;
-  --r-md: 10px;
-  --r-lg: 14px;
+  --r-md: 8px;
+  --r-lg: 12px;
   --r-full: 999px;
-  --sombra: 0 1px 2px rgb(20 33 61 / 0.06), 0 8px 24px rgb(20 33 61 / 0.08);
+  --sombra: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.06);
 
-  --ancho: 1120px;
+  --ancho: 1200px;
   --ancho-lectura: 68ch;
   --foco: 0 0 0 3px var(--papel), 0 0 0 5px var(--achiote);
 }

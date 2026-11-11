@@ -7,6 +7,7 @@ import Campanas from './Campanas.jsx';
 import Donaciones from './Donaciones.jsx';
 import Avisos from './Avisos.jsx';
 import Equipo from './Equipo.jsx';
+import { MARCA } from '../marca.js';
 
 // Navegación por hash: #/resumen, #/campanas, #/campanas/nueva, #/campanas/<id>, #/donaciones/<filtro>, #/avisos, #/equipo
 function leerRuta() {
@@ -59,7 +60,7 @@ export default function AdminApp() {
         <div className="adm-nav__marca">
           <Icono nombre="ruta" tam={26} />
           <span>
-            Ruta a Mexico Dreamin
+            {MARCA.nombre}
             <small>Panel de administración</small>
           </span>
         </div>

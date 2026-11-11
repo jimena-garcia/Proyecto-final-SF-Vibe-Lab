@@ -1,18 +1,44 @@
 import { useEffect } from 'react';
-import Ilustracion from '../ui/Ilustracion.jsx';
 import Icono from '../ui/Icono.jsx';
 import { pesos } from '../ui/basicos.jsx';
 import RutaProgreso from './RutaProgreso.jsx';
 import DonarForm from './DonarForm.jsx';
+import { ImagenCampana } from './CampanaCard.jsx';
 import { EVENTO, construirParadas, diasPara, faltante, iniciales } from '../lib/progreso.js';
+import { MARCA } from '../marca.js';
+
+const PREGUNTAS = [
+  {
+    p: '¿Se cobra dinero real?',
+    r: 'No. Es un sitio de práctica del programa: los pagos usan Stripe en modo de prueba con tarjetas de prueba.'
+  },
+  {
+    p: '¿Cuándo cuenta mi donación en el avance?',
+    r: 'Cuando la pasarela confirma el pago. Las donaciones pendientes o canceladas no suman al avance.'
+  },
+  {
+    p: '¿Qué datos míos se publican?',
+    r: 'Solo si eliges "Con reconocimiento": tu nombre y el monto. Las donaciones anónimas y con factura nunca muestran datos. Tu correo y RFC nunca se publican.'
+  },
+  {
+    p: '¿Recibo comprobante?',
+    r: 'Sí, al correo que registras, cuando el pago queda confirmado. No es un comprobante fiscal.'
+  },
+  {
+    p: '¿Puedo pedir factura?',
+    r: 'Puedes registrar tu solicitud con nombre y RFC; tesorería la ve marcada. En este sitio de práctica no se emiten CFDI.'
+  },
+  {
+    p: '¿Qué pasa si cancelo en la pantalla de pago?',
+    r: 'No se te cobra nada y la donación queda cancelada. Puedes intentarlo de nuevo cuando quieras.'
+  }
+];
 
 /**
- * Página de proyecto (inspirada funcionalmente en Kickstarter): cabecera con el propósito,
- * bloque de cifras con una sola acción, y debajo la historia, las metas escalonadas, los
- * donantes y el panel de donación. Se usa para la campaña principal (portada) y para el
- * detalle de cualquier otra campaña.
+ * Página de campaña (patrón de proyecto de crowdfunding): título, imagen + cifras con una sola
+ * acción, franja de confianza, pestañas de contenido y panel de donación con el organizador.
  */
-export default function Proyecto({ campana, principal = false }) {
+export default function Proyecto({ campana }) {
   const parrafos = (campana.descripcion || '').split(/\n\s*\n/).filter(Boolean);
   const [resumen, ...historia] = parrafos;
   const falta = faltante(campana.recaudado, campana.meta);
@@ -22,8 +48,8 @@ export default function Proyecto({ campana, principal = false }) {
   const tituloId = `proyecto-${campana.id}`;
 
   useEffect(() => {
-    if (!principal) document.title = `${campana.nombre} · Ruta a Mexico Dreamin`;
-  }, [campana.nombre, principal]);
+    document.title = `${campana.nombre} · ${MARCA.nombre}`;
+  }, [campana.nombre]);
 
   const irADonar = (e) => {
     e.preventDefault();
@@ -35,59 +61,75 @@ export default function Proyecto({ campana, principal = false }) {
   return (
     <article className="proyecto con-barra" aria-labelledby={tituloId}>
       <header className="proyecto__cabecera contenedor">
-        <p className="eyebrow">
-          {principal ? 'Campaña del programa SF Vibe Lab · UADY' : 'Campaña'} · {EVENTO.nombre}, 20 de noviembre, CDMX
-        </p>
         <h1 id={tituloId}>{campana.nombre}</h1>
         {resumen && <p className="proyecto__resumen">{resumen}</p>}
       </header>
 
       <div className="contenedor proyecto__top">
-        <div className="marco-ilustracion proyecto__imagen">
-          <Ilustracion tipo={campana.ilustracion} />
-        </div>
+        <ImagenCampana campana={campana} className="imagen-campana--grande proyecto__imagen" />
 
         <div className="proyecto__cifras">
           <RutaProgreso campana={campana} grande />
           <dl className="proyecto__datos">
             <div>
-              <dt className="sr-only">Donaciones confirmadas</dt>
               <dd className="cifra">{campana.donacionesPagadas ?? 0}</dd>
-              <p>{campana.donacionesPagadas === 1 ? 'donación confirmada' : 'donaciones confirmadas'}</p>
+              <dt>{campana.donacionesPagadas === 1 ? 'donación confirmada' : 'donaciones confirmadas'}</dt>
             </div>
             <div>
-              <dt className="sr-only">Días para el evento</dt>
               <dd className="cifra">{dias > 0 ? dias : '—'}</dd>
-              <p>{dias === 1 ? 'día para el evento' : dias > 0 ? 'días para el evento' : 'el evento ya ocurrió'}</p>
+              <dt>{dias === 1 ? `día para ${EVENTO.nombre}` : dias > 0 ? `días para ${EVENTO.nombre}` : 'el evento ya ocurrió'}</dt>
             </div>
           </dl>
-          <a className="btn btn--primario btn--lg btn--bloque" href="#donar" onClick={irADonar}>
+          <a className="btn btn--primario btn--lg btn--bloque btn--cuadrado" href="#donar" onClick={irADonar}>
             Donar a esta campaña
           </a>
-          <p className="proyecto__confianza">
-            <Icono nombre="candado" tam={16} /> Pago seguro con Stripe (modo de prueba). Eliges si tu nombre aparece o no.
+          <p className="proyecto__nota">
+            Solo cuentan los pagos confirmados por la pasarela. Eliges si tu nombre aparece o no.
           </p>
         </div>
       </div>
 
+      <section className="confianza" aria-label="Cómo protegemos tu donación">
+        <div className="contenedor confianza__grid">
+          <p>
+            <Icono nombre="candado" tam={22} /> Pagas en Stripe; nunca vemos ni guardamos tu tarjeta.
+          </p>
+          <p>
+            <Icono nombre="escudo" tam={22} /> El avance solo suma pagos confirmados por la pasarela.
+          </p>
+          <p>
+            <Icono nombre="usuarios" tam={22} /> Tú decides: anónima, con reconocimiento o con factura.
+          </p>
+        </div>
+      </section>
+
+      <nav className="pestanas" aria-label="Secciones de la campaña">
+        <div className="contenedor pestanas__lista">
+          <a href="#historia">Campaña</a>
+          <a href="#metas">Metas</a>
+          <a href="#apoyan">
+            Quiénes apoyan <span className="pestanas__num cifra">{donantes.length}</span>
+          </a>
+          <a href="#preguntas">Preguntas frecuentes</a>
+        </div>
+      </nav>
+
       <div className="contenedor proyecto__cuerpo">
         <div className="proyecto__principal">
-          {historia.length > 0 && (
-            <section className="bloque bloque--primero" aria-labelledby="historia-titulo">
-              <h2 id="historia-titulo">La historia</h2>
-              {historia.map((p, i) => (
-                <p key={i} className="detalle__historia" style={{ marginTop: 12 }}>
-                  {p}
-                </p>
-              ))}
-            </section>
-          )}
+          <section className="bloque bloque--primero" id="historia" aria-labelledby="historia-titulo">
+            <h2 id="historia-titulo">La historia</h2>
+            {(historia.length ? historia : [resumen]).filter(Boolean).map((p, i) => (
+              <p key={i} className="detalle__historia">
+                {p}
+              </p>
+            ))}
+          </section>
 
-          <section className={`bloque ${historia.length ? '' : 'bloque--primero'}`} id="metas" aria-labelledby="metas-titulo" tabIndex={-1}>
+          <section className="bloque" id="metas" aria-labelledby="metas-titulo" tabIndex={-1}>
             <h2 id="metas-titulo">{(campana.hitos || []).length > 1 ? 'Metas de la campaña' : 'Meta de la campaña'}</h2>
             <p className="bloque__sub">
               {(campana.hitos || []).length > 1
-                ? 'Las metas son acumulativas: cada una se alcanza cuando el total recaudado llega a su monto. Solo cuentan los pagos confirmados.'
+                ? 'Son acumulativas: cada una se alcanza cuando el total recaudado llega a su monto.'
                 : 'Solo cuentan los pagos confirmados por la pasarela.'}
             </p>
             <div style={{ marginTop: 20 }}>
@@ -95,7 +137,7 @@ export default function Proyecto({ campana, principal = false }) {
             </div>
           </section>
 
-          <section className="bloque" aria-labelledby="donantes-titulo">
+          <section className="bloque" id="apoyan" aria-labelledby="donantes-titulo">
             <h2 id="donantes-titulo">Quiénes apoyan</h2>
             <p className="bloque__sub">
               Personas que eligieron aparecer con su nombre. Las donaciones anónimas y con factura también suman, pero no se listan.
@@ -116,9 +158,33 @@ export default function Proyecto({ campana, principal = false }) {
               </ul>
             )}
           </section>
+
+          <section className="bloque" id="preguntas" aria-labelledby="preguntas-titulo">
+            <h2 id="preguntas-titulo">Preguntas frecuentes</h2>
+            <div className="preguntas">
+              {PREGUNTAS.map((q) => (
+                <details key={q.p}>
+                  <summary>{q.p}</summary>
+                  <p>{q.r}</p>
+                </details>
+              ))}
+            </div>
+          </section>
         </div>
 
-        <aside className="detalle__lateral" aria-label="Donar a esta campaña">
+        <aside className="detalle__lateral" aria-label="Organizador y donación">
+          <div className="organizador">
+            <span className="organizador__avatar" aria-hidden="true">
+              SV
+            </span>
+            <div>
+              <p className="organizador__nombre">{MARCA.organizador}</p>
+              <p className="organizador__sub">
+                {MARCA.aliados} · {MARCA.ciudad}
+              </p>
+            </div>
+            <p className="organizador__desc">{MARCA.descripcionOrganizador}</p>
+          </div>
           <div className="panel" id="donar" tabIndex={-1}>
             <DonarForm campana={campana} />
           </div>

@@ -7,14 +7,14 @@
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <title>Página no disponible · Ruta a Mexico Dreamin</title>
+            <title>Página no disponible · Impulso Vibe Lab</title>
             <link rel="stylesheet" href="{!URLFOR($Resource.PortalReact, 'assets/index.css')}" />
         </head>
         <body>
             <header class="header">
                 <div class="contenedor header__barra">
                     <a class="marca" href="/">
-                        <span class="marca__texto">Ruta a Mexico Dreamin<small>SF Vibe Lab · UADY</small></span>
+                        <span class="marca__texto">Impulso Vibe Lab<small>SF Vibe Lab · UADY</small></span>
                     </a>
                 </div>
             </header>
