@@ -25,6 +25,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 15 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P15](prompts/dilian/P15-portal-admin.md) | ⚠ | ~12 h → 2 h |
 | 16 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P16](prompts/dilian/P16-roles-equipo.md) | ⚠ | ~6 h → 1 h |
 | 17 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-05, HU-11 (UX) | [P17](prompts/dilian/P17-marca-plataforma.md) | ⚠ | ~8 h → 1.5 h |
+| 18 | 2026-11-10 | Jimena | GitHub Copilot | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 | [P01](prompts/jimena/J01-guion-video-entrega1.md) | — | ~45 min → 10 min |
 
 ---
 
@@ -189,3 +190,8 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Contraste calculado: acción 5.36:1, progreso 3.49:1, texto secundario 6.69:1.
   - Capturas a 1440 y 375 px y del sitio real ($74,000, 6 donaciones, 74%).
 - **Pendiente:** confirmar el nombre de la plataforma y recibir los logos oficiales.
+
+### 18 · Guion de video demo de Entrega 1 — [J01](prompts/jimena/J01-guion-video-entrega1.md)
+- **Qué obtuvimos:** un guion de máximo cinco minutos con pantallas, acciones y narración para el sitio público y el panel.
+- **Qué verificamos y cómo:** comprobación con PowerShell de los requisitos explícitos, la duración final, 11 escenas y ausencia de patrones de claves `sk_`, `rk_` y `whsec_`.
+- **Qué corregimos:** se ajustó la validación para leer el Markdown como UTF-8 y reconocer correctamente acentos y el separador de tiempo.
