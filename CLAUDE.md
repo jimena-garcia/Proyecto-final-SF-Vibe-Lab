@@ -1,5 +1,10 @@
 # Contexto del proyecto para asistentes de IA
 
+@AGENTS.md
+@docs/ESTADO.md
+
+> Lo de arriba (AGENTS.md y ESTADO.md) es obligatorio y manda. Lo de abajo es detalle técnico adicional.
+
 Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asistan a Mexico Dreamin 2026 (20 nov 2026, CDMX). Es un proyecto académico: **dinero simulado, Stripe en modo de prueba y datos ficticios**.
 
 ## Reglas que no se negocian

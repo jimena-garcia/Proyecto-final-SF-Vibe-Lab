@@ -1,5 +1,7 @@
 # Proyecto-final-SF-Vibe-Lab
 Portal de donaciones para Mexico Dreamin (SF Vibe Lab, UADY × Salesforce)
+
+> **¿Eres del equipo o usas un asistente de IA?** Empieza por [`docs/ESTADO.md`](docs/ESTADO.md) (qué funciona hoy y qué falta) y [`AGENTS.md`](AGENTS.md) (reglas, arquitectura, despliegue y registro de IA). Claude Code, Gemini, Codex, Cursor y Copilot los cargan solos.
 ## Backlog
 Board: <[link to the project](https://github.com/users/jimena-garcia/projects/1)>
 
