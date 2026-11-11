@@ -28,6 +28,7 @@ URL: https://orgfarm-0cda6e4c00-dev-ed.develop.my.salesforce-sites.com/ (Stripe 
 | `docs/setup_org.md` | Puesta en marcha: org, Stripe, sitio y webhook |
 | `docs/seguridad.md` | Prueba del visitante, permisos, secretos y datos personales |
 | `docs/bitacora_ia.md` · `docs/contribucion.md` · `docs/preguntas_y_reportes.md` | Bitácoras |
+| `docs/prompts/` | Biblioteca de prompts estructurados (uno por entrada de la bitácora) |
 | `CLAUDE.md` | Archivo de contexto para la IA |
 
 ## Reglas del repo

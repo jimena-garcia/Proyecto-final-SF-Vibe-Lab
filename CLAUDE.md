@@ -27,7 +27,7 @@ Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asista
 ## Modelo de datos
 
 - `Campana__c`: Meta (meta final), Activa, Destacada (la portada), Ilustracion (picklist), Montos_Sugeridos (`200;500;1000`), Recaudado (roll-up de las Pagadas), Donaciones_Pagadas (roll-up COUNT de las Pagadas), Avance.
-- `Hito__c` (master-detail de Campaña): metas escalonadas y **acumulativas** (Name = título, Monto, Descripción). La portada es la campaña Destacada, tipo Kickstarter: una sola campaña ("Mexico Dreamin 2026") con 3 metas. Las demás campañas activas se listan debajo (RF-D1a exige soportar ≥ 2).
+- `Hito__c` (master-detail de Campaña): metas escalonadas y **acumulativas** (Name = título, Monto, Descripción). Mexico Dreamin es el **evento**; el cliente es la coordinación de SF Vibe Lab (no hay empresa). La portada es de descubrimiento, tipo Kickstarter: banner con cifras, campaña Destacada ("Mexico Dreamin 2026", 3 metas acumulativas), Recomendadas (ordenadas por avance, sin personalización) y Explorar. Cada campaña abre su página de proyecto (`?campana=<Id>`). RF-D1a exige soportar ≥ 2 campañas.
 - `Donacion__c` (master-detail de `Campana__c`):
   - Datos del donante y del pago: Monto, Estado (Pendiente/Pagada/Cancelada), Modalidad (Anonima/Credito/Factura), Nombre, Email, RFC, Solicita_Factura (fórmula).
   - Referencias de Stripe y token: Token_Publico, Stripe_Session_Id, Stripe_Payment_Intent.
@@ -48,4 +48,5 @@ cd portal-react && npm run build:sf   # reconstruye el static resource
 
 - Toda salida de la IA se verifica contra la documentación oficial o contra la org antes de subirla.
 - Cada uso relevante se registra en `docs/bitacora_ia.md` en el momento, con todos los campos y marcando los errores de la IA.
+- Cada pedido a la IA se guarda como prompt estructurado (rol, contexto, tarea, restricciones, salida, verificación) en `docs/prompts/Pxx-*.md`, usando la plantilla de `docs/prompts/README.md`.
 - Ante una duda de negocio, preguntar al cliente y registrarlo en `docs/preguntas_y_reportes.md`. No inventar requisitos.

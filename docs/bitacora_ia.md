@@ -1,26 +1,107 @@
 # Bitácora de IA
 
-Una entrada por uso relevante, escrita en el momento. **⚠ Error de la IA** marca las entradas donde la IA se equivocó, cómo se detectó y cómo se corrigió.
+Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza al prompt estructurado que la originó en [`docs/prompts/`](prompts/README.md). El contexto base de la IA está en [`CLAUDE.md`](../CLAUDE.md).
 
-Archivo de contexto que usamos con la IA: [`CLAUDE.md`](../CLAUDE.md).
+**Leyenda:** ⚠ = la IA se equivocó (cómo se detectó y cómo se corrigió en la misma entrada).
 
-| # | Fecha | Autor | Herramienta | HU | Qué pedimos | Qué obtuvimos | Qué verificamos y cómo | Qué corregimos | Aceleración estimada |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | Todas | Leer la guía del proyecto, el backlog y las prácticas previas, y proponer arquitectura y plan. El enlace a la guía era un Claude Doc. | Un plan: Salesforce Site + React embebido en Visualforce, Apex como única puerta del guest, Stripe Checkout y webhook firmado. **⚠ Error de la IA:** no pudo abrir el Claude Doc de la guía y lo dijo explícitamente; no inventó su contenido. | Pegamos el texto completo de la guía y revisamos que el plan cubriera RF-D1 a RF-V3b y M1–M3. | Ajustamos el plan a lo que dice la guía: Stripe obligatorio, Developer Edition y fechas reales (Entrega 1 = 10 nov). | ~4 h → 40 min |
-| 2 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-13, HU-16, HU-17 | Evaluar pasarelas de pago para México: Stripe, Mercado Pago y Openpay. | Tabla comparativa: Stripe tiene firma HMAC verificable en Apex y modo de prueba inmediato; Openpay no firma sus webhooks con HMAC. | Revisamos la documentación de webhooks de cada pasarela (búsqueda web) y la guía (sección 6: "Pasarela: Stripe en modo de prueba, únicamente"). | La guía ya obligaba a usar Stripe; la comparación queda como justificación técnica. | ~2 h → 15 min |
-| 3 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11 | ¿Podemos usar React como en la práctica 1, ya "conectado" a Salesforce? | **⚠ Supuesto incorrecto (nuestro, no de la IA):** creíamos que la app React de la práctica 1 se conectaba a Salesforce. La IA revisó el código y encontró que usaba `Account_Sample_Data.json` local. | Se leyó `practica1/react-account-explorer/src` y no hay ninguna llamada a Salesforce. | Se diseñó la conexión real: Visualforce Remoting desde React dentro de un Salesforce Site, sin hosting externo. | ~3 h → 30 min |
-| 4 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01…HU-09 | Generar la metadata: objetos, campos, validation rules, list views, app y permission sets. | 3 objetos, 1 custom setting, 5 validation rules, list views "Solicitan factura" y "Avisos rechazados", 2 permission sets. **⚠ Error de la IA:** el primer script de generación con heredocs de bash falló (`unexpected EOF`) por las comillas en los mensajes. | El script falló al ejecutarse. | Se reescribió el generador en Python, que escapa el XML correctamente. Pendiente: confirmar el despliegue en la org. | ~5 h → 1 h |
-| 5 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | Apex del portal: registrar la donación y crear la sesión de Stripe Checkout. | `PortalDonacionesController` y `StripeService`. **⚠ Error de la IA (detectado en su autorrevisión):** usó `e.campanaId instanceof Id` sobre un String, que no compila en Apex. | Revisión del código antes de desplegar. | Se cambió por `Id.valueOf` dentro de try/catch. Diseño: dos llamadas (`crearDonacion` y `iniciarPago`), porque Apex no permite un callout después de un DML en la misma transacción. | ~4 h → 1 h |
-| 6 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11 | Empaquetar React como static resource con nombres fijos. | Configuración de Vite y script `build:sf`. **⚠ Error de la IA:** Vite nombró el CSS `style.css`, pero la página Visualforce lo buscaba como `assets/index.css`. | Se revisó la salida de `npm run build:sf` y la lista de archivos del zip. | Se fijó `assetFileNames` para que el CSS salga como `index.css`. | ~1.5 h → 20 min |
-| 7 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-14…HU-17 (E2) | Webhook de Stripe con firma, tolerancia, idempotencia y comprobante único. | `StripeWebhookService`, `DonacionTriggerHandler`, `ComprobanteService` y tests. | Pendiente: `sf apex run test` en la org y "Send test webhook" desde Stripe. | — | ~6 h → 1.5 h |
-| 8 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | Todas | Desplegar a la Developer Edition y correr los tests. | **⚠ Error de la IA:** el primer despliegue falló en 17 componentes. Iconos de pestaña con formato inválido (`Custom20` en vez de `Custom20: Airplane`), `caseSensitive` en un campo no único, `externalSharingModel` inválido con master-detail y una descripción de más de 255 caracteres. | Leímos la tabla de errores de `sf project deploy start`. | Corregimos los 4 problemas; el segundo despliegue salió bien. 21/21 tests pasan, 91% de cobertura. | ~2 h → 15 min |
-| 9 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11 | Crear el Salesforce Site por metadata. | Sitio creado y guest con permission set. **⚠ Diagnóstico equivocado de la IA:** el sitio respondía "en mantenimiento" (503) y la IA supuso que faltaba aceptar los términos de Sites. En realidad era propagación: a los minutos respondió 200. | `curl` a varias rutas del sitio; revisamos Setup → Sites (activo). | Se agregó la página `SitioError` para que los errores sean entendibles. Lección: esperar y volver a probar antes de cambiar configuración. | ~1.5 h → 30 min |
-| 10 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-13 | Probar la donación de punta a punta como visitante anónimo (llamando al remoting sin sesión). | Dos fallos. 1) `You don't have read permissions on the User External Credential object`. 2) **⚠ Error de la IA:** dio acceso al principal por CLI y luego redesplegó el permission set, que lo borró. | El motivo quedó en `Motivo_Cancelacion__c` y la donación pasó a Cancelada con mensaje entendible: el manejo de errores (C6) funcionó. | Se agregó al permission set la lectura de `UserExternalCredential` y `externalCredentialPrincipalAccesses` en metadata. DON-00003 quedó Pendiente con su sesión de Stripe (MXN). | ~3 h → 40 min |
+## Resumen
 
-| 11 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-14, HU-16 | Diagnosticar por qué un pago de prueba no pasaba a Pagada. | El aviso llegó con firma válida, pero en estilo "Resumen" (thin, `v1.checkout.session.completed`), sin datos de la sesión, y se registró como Ignorado. **⚠ Error de la IA:** primero indicó elegir "Instantánea" en Stripe, pero el destino ya se había creado con "Resumen", y el código no soportaba ese formato. | Consultamos `Aviso_Pasarela__c` (AV-00002 Ignorado). Tras el cambio, reenviamos el evento desde Stripe: AV-00003 Aceptado, DON-00005 Pagada (Pasarela) y la campaña subió a $500. | El código ahora acepta eventos thin: con el id, consulta la sesión a Stripe (`GET /v1/checkout/sessions/{id}`), que es la fuente de verdad. 2 tests nuevos. | ~2 h → 20 min |
-| 12 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-05, HU-11 (UX) | Auditoría UX/UI y rediseño profesional inspirado en Kickstarter, en dos fases: primero plan aprobado, luego implementación. | Sistema de diseño propio (tokens, Fraunces + Inter empaquetadas, ilustraciones SVG), página de proyecto, metas escalonadas, formulario por pasos accesible y estados de pago honestos. **⚠ Errores de la IA:** 1) la primera versión era un listado de campañas, pero el equipo quería **una sola campaña con 3 metas** (Kickstarter); se corrigió con `Hito__c`, sin rehacer el backend. 2) Un desborde a 320 px que no se veía en desktop. 3) El generador insertó saltos de línea reales en un string JS (error de sintaxis). | Capturas reales con Chrome headless a 320, 375 y 1440 px (iframe con el ancho exacto) y del Site desplegado; `node --check`; 28 tests Apex en verde. | Se agregaron `minmax(0,1fr)`, el padding corregido y el string escapado. RF-D1a se cumple manteniendo el soporte de varias campañas. | ~16 h → 3 h |
+| # | Fecha | Autor | Herramienta | HU | Prompt | Errores de la IA | Aceleración estimada |
+|---|---|---|---|---|---|---|---|
+| 1 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | Todas | [P01](prompts/P01-analisis-y-plan.md) | ⚠ | ~4 h → 40 min |
+| 2 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, 13, 16, 17 | [P02](prompts/P02-evaluacion-pasarelas.md) | — | ~2 h → 15 min |
+| 3 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11 | [P03](prompts/P03-react-y-salesforce.md) | (supuesto nuestro) | ~3 h → 30 min |
+| 4 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01…09 | [P04](prompts/P04-metadata-modelo.md) | ⚠ | ~5 h → 1 h |
+| 5 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, 04, 13 | [P05](prompts/P05-apex-portal-stripe.md) | ⚠ | ~4 h → 1 h |
+| 6 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11 | [P06](prompts/P06-empaquetado-react.md) | ⚠ | ~1.5 h → 20 min |
+| 7 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-14…17 | [P07](prompts/P07-webhook-stripe.md) | — | ~6 h → 1.5 h |
+| 8 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | Todas | [P08](prompts/P08-despliegue-tests.md) | ⚠ | ~2 h → 15 min |
+| 9 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-11, 12 | [P09](prompts/P09-sitio-publico.md) | ⚠ | ~1.5 h → 30 min |
+| 10 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, 13 | [P10](prompts/P10-prueba-punta-a-punta.md) | ⚠ | ~3 h → 40 min |
+| 11 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-14, 16 | [P11](prompts/P11-eventos-thin.md) | ⚠ | ~2 h → 20 min |
+| 12 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 04, 05, 11 | [P12](prompts/P12-rediseno-ux-ui.md) | ⚠ | ~16 h → 3 h |
+| 13 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 11 | [P13](prompts/P13-portada-descubrimiento.md) | ⚠ | ~4 h → 45 min |
 
-## Prompts reutilizables
+---
 
-- **Revisión de seguridad:** "Revisa esta clase Apex suponiendo que la llama un visitante sin login: ¿puede leer o modificar datos de otro donante? ¿Devuelve algún campo fuera de la lista blanca? ¿Acepta Id o estado desde el navegador?"
-- **Historias de usuario:** "¿Esta historia describe un *cómo*? ¿Sus criterios Dado/Cuando/Entonces se pueden verificar con una demo? Propón un caso negativo."
+## Entradas
+
+### 1 · Análisis del proyecto y plan — [P01](prompts/P01-analisis-y-plan.md)
+- **Qué obtuvimos:** un plan con Salesforce Site + React embebido en Visualforce, Apex como única puerta del guest, Stripe Checkout y webhook firmado.
+- **⚠ Error / límite de la IA:** no pudo abrir el Claude Doc de la guía. Lo dijo explícitamente y no inventó su contenido.
+- **Qué verificamos y cómo:** pegamos el texto completo de la guía y revisamos que el plan cubriera de RF-D1 a RF-V3b y los mínimos M1–M3.
+- **Qué corregimos:** ajustamos el plan a la guía (Stripe obligatorio, Developer Edition, Entrega 1 el 10 nov).
+
+### 2 · Evaluación de pasarelas — [P02](prompts/P02-evaluacion-pasarelas.md)
+- **Qué obtuvimos:** una tabla Stripe vs Mercado Pago vs Openpay. Stripe tiene firma HMAC verificable en Apex; Openpay no firma sus webhooks con HMAC.
+- **Qué verificamos y cómo:** la documentación de webhooks de cada pasarela (búsqueda web) y la sección 6 de la guía ("Stripe en modo de prueba, únicamente").
+- **Qué corregimos:** nada. La comparación queda como justificación técnica.
+
+### 3 · Conectar React con Salesforce — [P03](prompts/P03-react-y-salesforce.md)
+- **Qué obtuvimos:** la decisión de usar Visualforce Remoting desde React dentro de un Salesforce Site, sin hosting externo.
+- **Supuesto incorrecto (nuestro, no de la IA):** creíamos que la app React de la práctica 1 ya se conectaba a Salesforce. La IA leyó el código y encontró que usaba `Account_Sample_Data.json` local.
+- **Qué verificamos y cómo:** revisamos `practica1/react-account-explorer/src`; no hay llamadas a Salesforce.
+
+### 4 · Metadata del modelo — [P04](prompts/P04-metadata-modelo.md)
+- **Qué obtuvimos:** 3 objetos, 1 custom setting, 5 validation rules, las list views de factura y avisos rechazados, y 2 permission sets.
+- **⚠ Error de la IA:** el primer generador con heredocs de bash falló (`unexpected EOF`) por las comillas en los mensajes.
+- **Qué verificamos y cómo:** el script falló al ejecutarse; después, despliegue en la org (entrada 8).
+- **Qué corregimos:** reescribimos el generador en Python, que escapa el XML.
+
+### 5 · Apex del portal y Stripe — [P05](prompts/P05-apex-portal-stripe.md)
+- **Qué obtuvimos:** `PortalDonacionesController` y `StripeService`. El flujo usa dos llamadas porque Apex no permite un callout después de un DML.
+- **⚠ Error de la IA (detectado en su autorrevisión):** usó `instanceof Id` sobre un String, algo que no compila en Apex.
+- **Qué verificamos y cómo:** revisamos el código antes de desplegar y luego corrimos los tests en la org.
+- **Qué corregimos:** `Id.valueOf` dentro de try/catch.
+
+### 6 · Empaquetado de React — [P06](prompts/P06-empaquetado-react.md)
+- **Qué obtuvimos:** la configuración de Vite y el script `build:sf`.
+- **⚠ Error de la IA:** Vite nombró el CSS `style.css`, pero la página lo buscaba como `index.css`.
+- **Qué verificamos y cómo:** la salida del build y la lista de archivos del zip.
+- **Qué corregimos:** fijamos `assetFileNames`.
+
+### 7 · Webhook de Stripe — [P07](prompts/P07-webhook-stripe.md)
+- **Qué obtuvimos:** `StripeWebhookService`, el trigger handler, el comprobante único y los tests.
+- **Qué verificamos y cómo:** los tests en la org (entrada 8) y un aviso real reenviado desde Stripe (entrada 11).
+
+### 8 · Despliegue y tests — [P08](prompts/P08-despliegue-tests.md)
+- **Qué obtuvimos:** despliegue exitoso; 21/21 tests y 91% de cobertura.
+- **⚠ Error de la IA:** el primer despliegue falló en 17 componentes por cuatro causas:
+  - Iconos de pestaña inválidos.
+  - `caseSensitive` en un campo que no era único.
+  - `externalSharingModel` incompatible con master-detail.
+  - Una descripción de más de 255 caracteres.
+- **Qué verificamos y cómo:** la tabla de errores de `sf project deploy start`.
+- **Qué corregimos:** las cuatro causas; el segundo despliegue pasó.
+
+### 9 · Sitio público — [P09](prompts/P09-sitio-publico.md)
+- **Qué obtuvimos:** el Site creado por metadata, el guest con `Portal_Guest` y la página de error `SitioError`.
+- **⚠ Diagnóstico equivocado de la IA:** el sitio respondía "en mantenimiento" y la IA supuso que faltaba aceptar términos. Era propagación: a los minutos respondió 200.
+- **Qué verificamos y cómo:** `curl` a varias rutas y revisión de Setup → Sites.
+- **Lección:** esperar y volver a probar antes de cambiar configuración.
+
+### 10 · Prueba de punta a punta como visitante — [P10](prompts/P10-prueba-punta-a-punta.md)
+- **Qué obtuvimos:** DON-00003 Pendiente con su sesión de Stripe en MXN.
+- **⚠ Error de la IA:** dio acceso al principal de Stripe por CLI y luego redesplegó el permission set, lo que borró ese acceso.
+- **Qué verificamos y cómo:** el motivo quedó en `Motivo_Cancelacion__c` y la donación pasó a Cancelada con un mensaje entendible (C6 funcionó).
+- **Qué corregimos:** agregamos al permission set la lectura de `UserExternalCredential` y `externalCredentialPrincipalAccesses` en la metadata.
+
+### 11 · Eventos "thin" de Stripe — [P11](prompts/P11-eventos-thin.md)
+- **Qué obtuvimos:** soporte de eventos thin. Con el id, Salesforce consulta la sesión a Stripe, que es la fuente de verdad; se agregaron 2 tests.
+- **⚠ Error de la IA:** indicó elegir "Instantánea" en Stripe, pero el destino ya existía como "Resumen" y el código no soportaba ese formato.
+- **Qué verificamos y cómo:** AV-00002 quedó Ignorado; tras el cambio reenviamos el evento: AV-00003 Aceptado, DON-00005 Pagada por Pasarela y la campaña en $500.
+
+### 12 · Auditoría y rediseño UX/UI — [P12](prompts/P12-rediseno-ux-ui.md)
+- **Qué obtuvimos:** un sistema de diseño propio (tokens, Fraunces + Inter empaquetadas, ilustraciones SVG), la página de proyecto, metas escalonadas (`Hito__c`), un formulario por pasos accesible y estados de pago honestos.
+- **⚠ Errores de la IA:**
+  1. La primera versión era un listado de campañas; el equipo quería una campaña principal con 3 metas, como Kickstarter.
+  2. Un desborde a 320 px que no se veía en desktop.
+  3. Saltos de línea reales dentro de un string JS.
+- **Qué verificamos y cómo:** capturas con Chrome headless a 320, 375 y 1440 px (iframe con el ancho exacto) y del Site desplegado; `node --check`; 28 tests de Apex en verde.
+- **Qué corregimos:** `Hito__c` sin rehacer el backend, `minmax(0,1fr)` en las rejillas y el string escapado.
+
+### 13 · Portada de descubrimiento — [P13](prompts/P13-portada-descubrimiento.md)
+- **Qué obtuvimos:** una portada tipo Kickstarter con banner de cifras, campaña destacada, recomendadas y explorar. Agregamos dos campañas secundarias ficticias (Viáticos en la CDMX y Seguro de viaje) con `scripts/apex/campanas_secundarias.apex`.
+- **⚠ Error de la IA:** la primera captura del sitio real mostraba la versión anterior y parecía un despliegue fallido. Era caché: el bundle nuevo sí estaba publicado (verificado con `curl`).
+- **Qué verificamos y cómo:** capturas en desarrollo a 375 y 1440 px y del sitio real con perfil de navegador limpio.
+- **Qué corregimos:** nada en el código. Documentamos que el sitio guarda en caché la portada unos minutos (Ctrl+F5).
