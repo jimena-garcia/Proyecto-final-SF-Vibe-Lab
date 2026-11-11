@@ -33,9 +33,22 @@ private class PortalDonacionesControllerTest {
         // Avance = solo pagadas (500 + 300 + 700); la pendiente de 900 no cuenta (HU-01 CA2)
         Assert.areEqual(1500, cs[0].recaudado);
         // Reconocimiento: solo crédito pagada (HU-05, HU-02 CP1, HU-06 CP3)
-        Assert.areEqual(1, cs[0].donantes.size());
-        Assert.areEqual('Donante Ficticio', cs[0].donantes[0].nombre);
-        Assert.areEqual(500, cs[0].donantes[0].monto);
+        // Todas las pagadas aparecen; solo la "con crédito" muestra el nombre (HU-05, HU-02 CP1, HU-06 CP3)
+        Assert.areEqual(3, cs[0].donantes.size(), 'Las 3 pagadas; la pendiente no');
+        Integer conNombre = 0;
+        for (PortalDonacionesController.DonanteDTO d : cs[0].donantes) {
+            if (d.anonimo) {
+                Assert.isNull(d.nombre, 'Anónima y con factura nunca muestran nombre');
+            } else {
+                Assert.areEqual('Donante Ficticio', d.nombre);
+                Assert.areEqual(500, d.monto);
+                conNombre++;
+            }
+        }
+        Assert.areEqual(1, conNombre);
+        String publico = JSON.serialize(cs);
+        Assert.isFalse(publico.contains('@'), 'Sin correos en el sitio público');
+        Assert.isFalse(publico.contains('GODE561231GR8'), 'Sin RFC en el sitio público');
         // Montos inválidos escritos por staff se ignoran
         Assert.areEqual(new List<Decimal>{ 200, 500, 1000 }, cs[0].montosSugeridos);
         // Conteo de pagadas (todas las modalidades), sin datos personales

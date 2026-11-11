@@ -18,7 +18,7 @@ const PREGUNTAS = [
   },
   {
     p: '¿Qué datos míos se publican?',
-    r: 'Solo si eliges "Con reconocimiento": tu nombre y el monto. Las donaciones anónimas y con factura nunca muestran datos. Tu correo y RFC nunca se publican.'
+    r: 'Si eliges "Con reconocimiento": tu nombre y el monto. Si eliges anónima o con factura: solo el monto, como "Donante anónimo". Tu correo y tu RFC nunca se publican.'
   },
   {
     p: '¿Recibo comprobante?',
@@ -140,18 +140,20 @@ export default function Proyecto({ campana }) {
           <section className="bloque" id="apoyan" aria-labelledby="donantes-titulo">
             <h2 id="donantes-titulo">Quiénes apoyan</h2>
             <p className="bloque__sub">
-              Personas que eligieron aparecer con su nombre. Las donaciones anónimas y con factura también suman, pero no se listan.
+              Todas las donaciones confirmadas. Solo quienes eligieron reconocimiento aparecen con su nombre; el resto se muestra como donante anónimo.
             </p>
             {donantes.length === 0 ? (
-              <p className="proyecto__vacio">Aún no hay donantes con reconocimiento público. Puedes ser la primera persona.</p>
+              <p className="proyecto__vacio">Aún no hay donaciones confirmadas. Puedes ser la primera persona en apoyar.</p>
             ) : (
               <ul className="donantes">
                 {donantes.map((d, i) => (
                   <li key={`${d.nombre}-${d.monto}-${i}`}>
-                    <span className="avatar" aria-hidden="true">
-                      {iniciales(d.nombre)}
+                    <span className={`avatar ${d.anonimo ? 'avatar--anonimo' : ''}`} aria-hidden="true">
+                      {d.anonimo ? <Icono nombre="usuarios" tam={16} /> : iniciales(d.nombre)}
                     </span>
-                    <span className="donantes__nombre">{d.nombre}</span>
+                    <span className={`donantes__nombre ${d.anonimo ? 'donantes__nombre--anonimo' : ''}`}>
+                      {d.anonimo ? 'Donante anónimo' : d.nombre}
+                    </span>
                     <span className="cifra">{pesos(d.monto)}</span>
                   </li>
                 ))}

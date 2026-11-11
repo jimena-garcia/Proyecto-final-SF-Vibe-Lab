@@ -24,7 +24,7 @@ CA \= criterios de aceptación de la guía. CP \= criterios propios del equipo. 
 - CA2. Dado que mi donación anónima está pagada, cuando recibo el comprobante, entonces el comprobante no muestra mi nombre.  
 - CA3. Dado que marqué mi donación como anónima, cuando intento solicitar factura, entonces no puedo hacerlo.  
 - CA4. Dado que existe una donación anónima, cuando staff la consulta, entonces la ve identificada como anónima.  
-- CP1. Dado que mi donación anónima está pagada, cuando cualquier visitante abre la campaña, entonces mi donación no aparece en el reconocimiento de donantes.
+- CP1. Dado que mi donación anónima está pagada, cuando cualquier visitante abre la campaña, entonces en el reconocimiento de donantes aparece como "Donante anónimo" con su monto, sin mi nombre ni ningún otro dato. *(Cambio del 2026-11-10: antes decía que no aparecía. Motivo: mostrar que hubo apoyo anónimo da transparencia al avance. Pendiente de confirmar con el cliente; ver R-06 en docs/preguntas_y_reportes.md.)*
 
 ### HU-03 · RF-D3 · Registro antes de pagar
 
@@ -61,7 +61,7 @@ CA \= criterios de aceptación de la guía. CP \= criterios propios del equipo. 
 - CA3. Dado que el donante con factura completó su donación, cuando se revisa el sistema, entonces no se emite ningún comprobante fiscal (CFDI).  
 - CP1. Dado que capturé un RFC con un solo carácter de más o de menos, cuando lo envío, entonces se rechaza y veo un mensaje que explica el formato esperado.  
 - CP2. Dado que elegí crédito o anónima, cuando uso el formulario, entonces no se me pide RFC.  
-- CP3. Dado que elegí factura y mi donación está pagada, cuando cualquier visitante abre la campaña, entonces mi nombre y mi RFC no aparecen en ninguna página pública.
+- CP3. Dado que elegí factura y mi donación está pagada, cuando cualquier visitante abre la campaña, entonces mi nombre y mi RFC no aparecen en ninguna página pública; la donación aparece como "Donante anónimo" con su monto.
 
 ### HU-07 · RF-F2 · Marcar la solicitud de factura
 

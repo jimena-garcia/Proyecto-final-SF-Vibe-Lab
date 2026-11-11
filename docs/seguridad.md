@@ -104,7 +104,7 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 | Dato | ¿Personal? | ¿Se guarda? | Por qué | Quién lo ve |
 |---|---|---|---|---|
 | Nombre (crédito / factura) | Sí | Sí | Reconocimiento público (crédito) o factura | Staff; en público solo el de crédito pagado |
-| Nombre (anónima) | Sí | **No**. Se descarta en Apex y lo impide una validation rule. | La modalidad anónima no lo requiere | Nadie |
+| Nombre (anónima) | Sí | **No**. Se descarta en Apex y lo impide una validation rule. | La modalidad anónima no lo requiere | Nadie. En el reconocimiento público aparece como "Donante anónimo" con su monto |
 | Correo | Sí | Sí | Enviar el comprobante | Staff y el propio donante (correo). Nunca en público. |
 | RFC (factura) | Sí (persona física) | Sí | Solicitud de factura | Solo staff |
 | Monto y campaña | No por sí solos | Sí | Avance de la meta | Público (monto agregado y por donante con crédito) |

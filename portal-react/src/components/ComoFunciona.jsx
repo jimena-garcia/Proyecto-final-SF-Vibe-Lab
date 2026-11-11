@@ -4,7 +4,7 @@ export const MODALIDADES = [
   {
     valor: 'Anonima',
     titulo: 'Anónima',
-    publico: 'Nadie verá tu nombre. Tu aporte solo suma al avance.',
+    publico: 'Solo el monto, como "Donante anónimo". Nadie verá tu nombre.',
     privado: 'Tu correo, solo para enviarte el comprobante.',
     factura: 'No incluye factura.'
   },
@@ -18,7 +18,7 @@ export const MODALIDADES = [
   {
     valor: 'Factura',
     titulo: 'Con factura',
-    publico: 'Nada: no apareces en la lista de donantes.',
+    publico: 'Solo el monto, como "Donante anónimo". Tu nombre y RFC no se publican.',
     privado: 'Tu nombre o razón social, RFC y correo, solo para tesorería.',
     factura: 'Queda registrada tu solicitud (sitio de práctica: no se emite CFDI).'
   }

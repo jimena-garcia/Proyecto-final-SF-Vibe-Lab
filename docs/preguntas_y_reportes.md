@@ -61,3 +61,15 @@ Formato de cada entrada (guía, sección 12): autor · fecha · 1) qué intentá
 
 **Después:** _(pendiente: probar en un navegador sin extensiones; si persiste, evaluar Stripe Embedded Checkout)_
 
+## R-06 · Decisión: mostrar las donaciones anónimas como "Donante anónimo"
+**Autor:** Dilian · **Fecha:** 2026-11-10 · **Historias:** HU-02 CP1, HU-06 CP3, HU-05, HU-11 · **Tipo:** pregunta al cliente
+1. **Qué intentábamos lograr:** que el reconocimiento público refleje todo el apoyo recibido. Con solo los donantes con crédito, la lista mostraba $500 de $74,000.
+2. **Qué hicimos:** cambiamos el reconocimiento. Las donaciones anónimas y con factura pagadas aparecen como "Donante anónimo" con su monto. El nombre solo aparece en "con reconocimiento".
+3. **Qué esperábamos:** más transparencia sin exponer identidad. Se mantiene el mínimo de RF-D2 CA1 ("mi nombre no aparece").
+4. **Qué pasó:** funciona en el sitio real (6 donaciones visibles; 5 como "Donante anónimo"). Un test verifica que la respuesta pública no contiene correos ni RFC.
+5. **Qué consultamos:** con la IA revisamos el choque con nuestro criterio propio HU-02 CP1 y con RF-V1 CA2, que menciona el "reconocimiento de donantes con crédito". Actualizamos HU-02 CP1 y HU-06 CP3.
+
+**Pregunta al cliente:** ¿Le parece bien mostrar las donaciones anónimas y con factura como "Donante anónimo" con su monto? La guía deja abierta esta pregunta.
+
+**Después:** _(registrar la respuesta del cliente)_
+

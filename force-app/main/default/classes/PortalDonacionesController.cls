@@ -17,9 +17,15 @@ public without sharing class PortalDonacionesController {
     private static final Set<String> MODALIDADES = new Set<String>{ 'Anonima', 'Credito', 'Factura' };
 
     // ---------------------------------------------------------------- DTOs
+    /**
+     * Reconocimiento público. Solo las donaciones "con crédito" muestran el nombre; las anónimas
+     * y con factura aparecen como "Donante anónimo" (nombre = null, anonimo = true).
+     * Nunca se envían correo, RFC ni el nombre de quien no eligió reconocimiento.
+     */
     public class DonanteDTO {
         public String nombre;
         public Decimal monto;
+        public Boolean anonimo;
     }
 
     /** Hito de financiación configurado por staff. Datos públicos por diseño. */
@@ -86,9 +92,9 @@ public without sharing class PortalDonacionesController {
                 Donaciones_Pagadas__c,
                 (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC LIMIT 10),
                 (
-                    SELECT Nombre__c, Monto__c
+                    SELECT Nombre__c, Monto__c, Modalidad__c
                     FROM Donaciones__r
-                    WHERE Estado__c = 'Pagada' AND Modalidad__c = 'Credito'
+                    WHERE Estado__c = 'Pagada'
                     ORDER BY Fecha_Pago__c DESC NULLS LAST
                     LIMIT 100
                 )
@@ -116,7 +122,8 @@ public without sharing class PortalDonacionesController {
             }
             for (Donacion__c d : c.Donaciones__r) {
                 DonanteDTO donante = new DonanteDTO();
-                donante.nombre = d.Nombre__c;
+                donante.anonimo = d.Modalidad__c != 'Credito';
+                donante.nombre = donante.anonimo ? null : d.Nombre__c;
                 donante.monto = d.Monto__c;
                 dto.donantes.add(donante);
             }

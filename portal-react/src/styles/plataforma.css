@@ -161,3 +161,6 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; font-variation-setti
 .proyecto__datos div { flex-direction: column; }
 .destacada__desc { font-size: var(--t-md); line-height: 1.55; }
 @media (max-width: 899px) { .banner__arte { display: none; } }
+
+.avatar--anonimo { background: var(--papel-2); color: var(--texto-2); }
+.donantes__nombre--anonimo { color: var(--texto-2); font-style: italic; }

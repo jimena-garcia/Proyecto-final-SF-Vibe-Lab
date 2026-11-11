@@ -25,7 +25,9 @@ const campanas = [
     donantes: [
       { nombre: 'Ana Ficticia', monto: 1000 },
       { nombre: 'Empresa Demo Mérida', monto: 5000 },
-      { nombre: 'Familia Ejemplo', monto: 500 }
+      { nombre: 'Familia Ejemplo', monto: 500 },
+      { nombre: null, monto: 35000, anonimo: true },
+      { nombre: null, monto: 2000, anonimo: true }
     ]
   },
   {
