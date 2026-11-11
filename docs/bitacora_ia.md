@@ -25,7 +25,8 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 15 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P15](prompts/dilian/P15-portal-admin.md) | ⚠ | ~12 h → 2 h |
 | 16 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-07, HU-08, HU-09, HU-15 | [P16](prompts/dilian/P16-roles-equipo.md) | ⚠ | ~6 h → 1 h |
 | 17 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-05, HU-11 (UX) | [P17](prompts/dilian/P17-marca-plataforma.md) | ⚠ | ~8 h → 1.5 h |
-| 18 | 2026-11-10 | Jimena | GitHub Copilot | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 | [P01](prompts/jimena/J01-guion-video-entrega1.md) | — | ~45 min → 10 min |
+| 18 | 2026-11-10 | Jimena | GitHub Copilot | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 | [J01](prompts/jimena/J01-guion-video-entrega1.md) | — | ~45 min → 10 min |
+| 19 | 2026-11-10 | Jimena | Claude y Gemini | HU-01 a HU-17 | [J02](prompts/jimena/J02-documentar-contribucion-entrega1.md) | ⚠ | 8 h ahorradas |
 
 ---
 
@@ -195,3 +196,10 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué obtuvimos:** un guion de máximo cinco minutos con pantallas, acciones y narración para el sitio público y el panel.
 - **Qué verificamos y cómo:** comprobación con PowerShell de los requisitos explícitos, la duración final, 11 escenas y ausencia de patrones de claves `sk_`, `rk_` y `whsec_`.
 - **Qué corregimos:** se ajustó la validación para leer el Markdown como UTF-8 y reconocer correctamente acentos y el separador de tiempo.
+
+### 19 · Historias, decisiones y documentación de Entrega 1 — [J02](prompts/jimena/J02-documentar-contribucion-entrega1.md)
+- **Qué obtuvimos:** historias HU-01 a HU-17, decisiones D1 a D6, repositorio público, tablero de GitHub Projects y versiones del backlog en español e inglés.
+- **⚠ Errores de la IA:** Gemini debilitó criterios mínimos, omitió el prefijo del timestamp en la firma de Stripe y propuso guardar el secreto en un lugar que podía terminar en el repositorio. Claude dudó inicialmente sobre RF-S3.
+- **Qué verificamos y cómo:** comparamos los resultados con la guía y las transcripciones de las clases grabadas. La transcripción confirmó que RF-S3 fue retirada.
+- **Qué corregimos:** reforzamos los criterios, añadimos el prefijo del timestamp, descartamos la ubicación insegura del secreto y ajustamos el alcance de RF-S3.
+- **Aceleración estimada:** aproximadamente 8 horas ahorradas. **Tiempo dedicado:** aproximadamente 6 horas.

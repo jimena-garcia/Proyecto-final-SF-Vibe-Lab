@@ -34,6 +34,8 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 | P15 | [Portal de administración y alta del equipo](dilian/P15-portal-admin.md) | HU-07, HU-08, HU-09, HU-15 |
 | P16 | [Roles del equipo y registro en Salesforce](dilian/P16-roles-equipo.md) | HU-07, HU-08, HU-09, HU-15 |
 | P17 | [Marca de la plataforma y diseño claro](dilian/P17-marca-plataforma.md) | HU-01, HU-04, HU-05, HU-11 |
+| J01 | [Guion del video de la Entrega 1](jimena/J01-guion-video-entrega1.md) | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 |
+| J02 | [Documentar la contribución de Jimena](jimena/J02-documentar-contribucion-entrega1.md) | HU-01 a HU-17 |
 
 ## Plantilla para un prompt nuevo
 
