@@ -71,6 +71,13 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 | Token público | No | Sí | Referencia del pago sin exponer el Id | El donante (en su URL) y staff |
 | IP o dispositivo del visitante | Sí | No | No se necesita | — |
 
+### Confirmación al regresar de Stripe (E2)
+Al volver a `?gracias=<token>`, el sitio llama a `verificarPago(token)`. Salesforce consulta la sesión **directamente a Stripe** con la clave secreta (Named Credential). Solo marca Pagada (Confirmada por = Pasarela) si se cumplen dos condiciones:
+1. Stripe responde `payment_status = paid`.
+2. El `client_reference_id` de la sesión coincide con el token de la donación.
+
+El navegador no puede falsificar el resultado: solo envía el token y nunca un estado. El webhook sigue igual como respaldo. Las dos rutas bloquean el registro (`FOR UPDATE`) antes de actualizarlo, así que nunca se envían dos comprobantes.
+
 ### Datos públicos agregados en el rediseño (E2)
 `getCampanas` ahora también devuelve: metas (`Hito__c`: título, monto, descripción), ilustración, la marca de destacada y el **número** de donaciones pagadas (roll-up COUNT). Ninguno es dato personal; el reconocimiento sigue limitado a nombre y monto de donaciones **con crédito y pagadas**. El guest sigue sin permisos de objeto, incluido `Hito__c`.
 

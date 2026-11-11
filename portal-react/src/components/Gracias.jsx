@@ -4,9 +4,9 @@ import { Boton, EstadoBadge, pesos } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
 import { alClicInterno, urlInicio } from '../lib/navegacion.js';
 
-// Sondeo con espera creciente: ~2 minutos en total. Stripe en modo de prueba puede
-// tardar en redirigir y en avisar a Salesforce.
-const ESPERAS = [2000, 3000, 4000, 5000, 8000, 10000, 15000, 20000, 30000, 30000];
+// Sondeo: cada 2 s durante el primer minuto (cuando suele llegar el aviso de Stripe)
+// y luego cada 5 s hasta completar ~3 minutos. Cada consulta es una lectura ligera por token.
+const ESPERAS = [...Array(30).fill(2000), ...Array(24).fill(5000)];
 
 /**
  * HU-04. Regla de honestidad: solo dice "confirmado" si Salesforce ya registra la
@@ -18,10 +18,10 @@ export default function Gracias({ token }) {
   const [consultando, setConsultando] = useState(false);
   const titulo = useRef(null);
 
-  const consultar = useCallback(async () => {
+  const consultar = useCallback(async (verificar = false) => {
     setConsultando(true);
     try {
-      const e = await api.getEstado(token);
+      const e = await (verificar ? api.verificarPago(token) : api.getEstado(token));
       setEstado(e ?? { estado: 'Desconocido' });
     } catch {
       setEstado((prev) => prev ?? { estado: 'Error' });
@@ -30,8 +30,12 @@ export default function Gracias({ token }) {
     }
   }, [token]);
 
+  // Al llegar (intento 0) y al pulsar "Actualizar estado" se pregunta a Stripe; en el sondeo, solo a Salesforce.
+  const [verificarEnSiguiente, setVerificarEnSiguiente] = useState(true);
   useEffect(() => {
-    consultar();
+    consultar(verificarEnSiguiente);
+    setVerificarEnSiguiente(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consultar, intento]);
 
   useEffect(() => {
@@ -102,7 +106,14 @@ export default function Gracias({ token }) {
         </p>
         {datos}
         <div className="estado__acciones">
-          <Boton variante="primario" onClick={() => setIntento((i) => (agotado ? 0 : i + 1))} cargando={consultando}>
+          <Boton
+            variante="primario"
+            onClick={() => {
+              setVerificarEnSiguiente(true);
+              setIntento((i) => (agotado ? 0 : i + 1));
+            }}
+            cargando={consultando}
+          >
             {!consultando && <Icono nombre="actualizar" />} Actualizar estado
           </Boton>
           {volver}

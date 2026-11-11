@@ -90,6 +90,8 @@ export async function getEstado() {
   return { estado, monto: 500, campana: campanas[0].nombre, folio: 'DON-DEMO' };
 }
 
+export const verificarPago = getEstado;
+
 export async function cancelar() {
   await esperar(300);
   return { ok: true, mensaje: 'El pago no se completó y no se te cobró nada.' };

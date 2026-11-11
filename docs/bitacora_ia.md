@@ -21,6 +21,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 11 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-14, 16 | [P11](prompts/P11-eventos-thin.md) | ⚠ | ~2 h → 20 min |
 | 12 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 04, 05, 11 | [P12](prompts/P12-rediseno-ux-ui.md) | ⚠ | ~16 h → 3 h |
 | 13 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, 11 | [P13](prompts/P13-portada-descubrimiento.md) | ⚠ | ~4 h → 45 min |
+| 14 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-04, HU-14, HU-16 | [P14](prompts/P14-confirmacion-rapida.md) | ⚠ | ~3 h → 30 min |
 
 ---
 
@@ -105,3 +106,17 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **⚠ Error de la IA:** la primera captura del sitio real mostraba la versión anterior y parecía un despliegue fallido. Era caché: el bundle nuevo sí estaba publicado (verificado con `curl`).
 - **Qué verificamos y cómo:** capturas en desarrollo a 375 y 1440 px y del sitio real con perfil de navegador limpio.
 - **Qué corregimos:** nada en el código. Documentamos que el sitio guarda en caché la portada unos minutos (Ctrl+F5).
+
+### 14 · Confirmación más rápida del pago — [P14](prompts/P14-confirmacion-rapida.md)
+- **Qué obtuvimos:**
+  - Medición de tiempos: DON-00006 tardó 81 s entre el registro y el aviso de Stripe.
+  - Sondeo de la página de gracias cada 2 s (antes con espera creciente).
+  - `verificarPago(token)`: al regresar, Salesforce consulta la sesión a Stripe y confirma al instante.
+- **⚠ Error de la IA:** el sondeo con espera creciente (2 → 3 → 5 → 8 → 10 → 15 s…) que la propia IA diseñó en el rediseño agregaba hasta 15 s de espera. Lo detectó el usuario por la lentitud percibida.
+- **Qué verificamos y cómo:**
+  - Consulta de `CreatedDate`, `Fecha_Pago__c` y `Recibido__c` de los avisos.
+  - 3 tests nuevos: pagada, no pagada o sesión ajena, y Stripe caído. 31/31 en verde.
+- **Qué corregimos:**
+  - Sondeo fijo de 2 s durante el primer minuto.
+  - `FOR UPDATE` en el webhook y en la verificación para no duplicar el comprobante.
+- **Decisión del equipo:** se cambió el proceso de confirmación (antes intocable) con aprobación explícita. Queda documentado en `docs/seguridad.md`.

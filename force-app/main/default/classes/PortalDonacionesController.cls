@@ -226,6 +226,46 @@ public without sharing class PortalDonacionesController {
         return e;
     }
 
+    /**
+     * Confirmación al regresar de Stripe (patrón recomendado por Stripe, complementa al webhook).
+     * El navegador solo manda el token; Salesforce consulta la sesión directamente a Stripe con la
+     * clave secreta (Named Credential), así que el resultado no se puede falsificar desde el cliente.
+     * Si Stripe dice "paid", la donación pasa a Pagada con Confirmada_Por = Pasarela. Idempotente:
+     * si el webhook ya la confirmó (o llega después), no cambia nada ni duplica el comprobante.
+     */
+    @RemoteAction
+    public static EstadoDTO verificarPago(String token) {
+        Donacion__c d = buscarPorToken(token);
+        if (d == null) {
+            return null;
+        }
+        if (d.Estado__c == 'Pendiente' && String.isNotBlank(d.Stripe_Session_Id__c)) {
+            try {
+                Map<String, Object> sesion = StripeService.obtenerSesion(d.Stripe_Session_Id__c); // callout antes de cualquier DML
+                Boolean esDeEstaDonacion = String.valueOf(sesion.get('client_reference_id')) == d.Token_Publico__c;
+                if (esDeEstaDonacion && String.valueOf(sesion.get('payment_status')) == 'paid') {
+                    // Bloquea el registro: si el webhook está confirmando al mismo tiempo, uno espera al otro.
+                    Donacion__c actual = [SELECT Id, Estado__c FROM Donacion__c WHERE Id = :d.Id FOR UPDATE];
+                    if (actual.Estado__c != 'Pagada') {
+                        Object total = sesion.get('amount_total');
+                        update new Donacion__c(
+                            Id = d.Id,
+                            Estado__c = 'Pagada',
+                            Confirmada_Por__c = 'Pasarela',
+                            Fecha_Pago__c = Datetime.now(),
+                            Monto__c = total == null ? d.Monto__c : Decimal.valueOf(String.valueOf(total)) / 100,
+                            Stripe_Payment_Intent__c = (String) sesion.get('payment_intent')
+                        );
+                    }
+                }
+            } catch (Exception e) {
+                // Sin conexión con Stripe: no pasa nada; el webhook confirmará cuando llegue.
+                System.debug(LoggingLevel.WARN, 'verificarPago: ' + e.getMessage());
+            }
+        }
+        return getEstado(token);
+    }
+
     /** HU-04 CP1 / HU-01 CP2: el donante canceló en la pasarela; la donación pendiente pasa a Cancelada. */
     @RemoteAction
     public static Resultado cancelar(String token) {
@@ -325,7 +365,7 @@ public without sharing class PortalDonacionesController {
             return null;
         }
         List<Donacion__c> filas = [
-            SELECT Id, Name, Estado__c, Monto__c, Email__c, Token_Publico__c, Campana__r.Name
+            SELECT Id, Name, Estado__c, Monto__c, Email__c, Token_Publico__c, Stripe_Session_Id__c, Campana__r.Name
             FROM Donacion__c
             WHERE Token_Publico__c = :token
             LIMIT 1

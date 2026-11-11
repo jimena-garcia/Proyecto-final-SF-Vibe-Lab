@@ -99,6 +99,7 @@ public without sharing class StripeWebhookService {
             WHERE (Stripe_Session_Id__c = :sesionId AND Stripe_Session_Id__c != NULL)
                OR (Token_Publico__c = :token AND Token_Publico__c != NULL)
             LIMIT 1
+            FOR UPDATE
         ];
         if (donaciones.isEmpty()) {
             registrar(new Aviso_Pasarela__c(

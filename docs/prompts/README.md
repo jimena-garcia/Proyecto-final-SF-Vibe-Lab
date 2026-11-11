@@ -30,6 +30,7 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 | P11 | [Diagnosticar un pago que no pasa a Pagada](P11-eventos-thin.md) | HU-14, HU-16 |
 | P12 | [Auditoría y rediseño UX/UI tipo Kickstarter](P12-rediseno-ux-ui.md) | HU-01, HU-04, HU-05, HU-11 (UX) |
 | P13 | [Portada de descubrimiento con destacada y recomendadas](P13-portada-descubrimiento.md) | HU-01 (RF-D1a), HU-11 |
+| P14 | [Confirmación más rápida del pago](P14-confirmacion-rapida.md) | HU-04, HU-14, HU-16 |
 
 ## Plantilla para un prompt nuevo
 

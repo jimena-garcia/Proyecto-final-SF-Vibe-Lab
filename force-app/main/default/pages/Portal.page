@@ -22,6 +22,7 @@
                         crearDonacion: '{!$RemoteAction.PortalDonacionesController.crearDonacion}',
                         iniciarPago: '{!$RemoteAction.PortalDonacionesController.iniciarPago}',
                         getEstado: '{!$RemoteAction.PortalDonacionesController.getEstado}',
+                        verificarPago: '{!$RemoteAction.PortalDonacionesController.verificarPago}',
                         cancelar: '{!$RemoteAction.PortalDonacionesController.cancelar}'
                     }
                 };

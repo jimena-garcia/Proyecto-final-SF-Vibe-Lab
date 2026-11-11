@@ -20,6 +20,7 @@ Portal de donaciones para que alumnos de SF Vibe Lab (UADY × Salesforce) asista
   1. `crearDonacion`: inserta la donación Pendiente.
   2. `iniciarPago`: callout a Stripe Checkout por `callout:Stripe_API` y devuelve la URL de pago.
   3. Stripe regresa a `?gracias=<token>` o `?cancelado=<token>`.
+  4. En `?gracias`, `verificarPago(token)` consulta la sesión a Stripe y confirma al instante si está pagada. El webhook es el respaldo; ambos usan `FOR UPDATE` para no duplicar el comprobante.
 - Webhook: `StripeWebhookResource` → `StripeWebhookService`. Verifica la firma HMAC, registra `Aviso_Pasarela__c` (Aceptado / Rechazado / Duplicado / Ignorado) y pone la donación en Pagada.
 - `DonacionTriggerHandler`: al pasar a Pagada fija `Confirmada_Por__c` y `Fecha_Pago__c` y envía un solo comprobante (`ComprobanteService`).
 - Staff: Lightning App "Donaciones Mexico Dreamin" con el permission set `Staff_Donaciones`.

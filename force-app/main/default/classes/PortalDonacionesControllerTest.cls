@@ -159,4 +159,68 @@ private class PortalDonacionesControllerTest {
         Assert.isNull(PortalDonacionesController.getEstado('0123456789abcdef0123456789abcdef'));
         Assert.isFalse(PortalDonacionesController.iniciarPago(null).ok);
     }
+
+    /** Simula GET /v1/checkout/sessions/{id} con el estado y la referencia que se indiquen. */
+    private class SesionStripeMock implements HttpCalloutMock {
+        String referencia;
+        String estadoPago;
+        Integer codigo;
+        SesionStripeMock(String referencia, String estadoPago, Integer codigo) {
+            this.referencia = referencia;
+            this.estadoPago = estadoPago;
+            this.codigo = codigo;
+        }
+        public HttpResponse respond(HttpRequest req) {
+            HttpResponse res = new HttpResponse();
+            res.setStatusCode(codigo);
+            res.setBody(JSON.serialize(new Map<String, Object>{
+                'id' => 'cs_test_verif',
+                'client_reference_id' => referencia,
+                'payment_status' => estadoPago,
+                'payment_intent' => 'pi_verif',
+                'amount_total' => 25000
+            }));
+            return res;
+        }
+    }
+
+    static String donacionConSesion() {
+        PortalDonacionesController.Resultado r = PortalDonacionesController.crearDonacion(entrada('Credito', 'Ana Ficticia', null, 250));
+        update new Donacion__c(Id = [SELECT Id FROM Donacion__c WHERE Token_Publico__c = :r.token].Id, Stripe_Session_Id__c = 'cs_test_verif');
+        return r.token;
+    }
+
+    @IsTest
+    static void verificarPagoConfirmaSiStripeDicePaid() {
+        String token = donacionConSesion();
+        Test.setMock(HttpCalloutMock.class, new SesionStripeMock(token, 'paid', 200));
+        Test.startTest();
+        PortalDonacionesController.EstadoDTO e = PortalDonacionesController.verificarPago(token);
+        Test.stopTest();
+        Assert.areEqual('Pagada', e.estado);
+        Donacion__c d = [SELECT Confirmada_Por__c, Comprobante_Enviado__c, Fecha_Pago__c FROM Donacion__c WHERE Token_Publico__c = :token];
+        Assert.areEqual('Pasarela', d.Confirmada_Por__c, 'Lo confirma Stripe, no el navegador');
+        Assert.isTrue(d.Comprobante_Enviado__c);
+        Assert.isNotNull(d.Fecha_Pago__c);
+    }
+
+    @IsTest
+    static void verificarPagoNoConfirmaSinPagoNiConSesionAjena() {
+        String token = donacionConSesion();
+        Test.setMock(HttpCalloutMock.class, new SesionStripeMock(token, 'unpaid', 200));
+        Assert.areEqual('Pendiente', PortalDonacionesController.verificarPago(token).estado);
+        Test.setMock(HttpCalloutMock.class, new SesionStripeMock('0123456789abcdef0123456789abcdef', 'paid', 200));
+        Assert.areEqual('Pendiente', PortalDonacionesController.verificarPago(token).estado, 'La sesión debe ser de esta donación');
+    }
+
+    @IsTest
+    static void verificarPagoToleraFalloDeStripe() {
+        String token = donacionConSesion();
+        Test.setMock(HttpCalloutMock.class, new SesionStripeMock(token, 'paid', 500));
+        Test.startTest();
+        PortalDonacionesController.EstadoDTO e = PortalDonacionesController.verificarPago(token);
+        Test.stopTest();
+        Assert.areEqual('Pendiente', e.estado, 'Sin Stripe no cambia; el webhook confirmará después');
+        Assert.isNull(PortalDonacionesController.verificarPago('ffffffffffffffffffffffffffffffff'));
+    }
 }

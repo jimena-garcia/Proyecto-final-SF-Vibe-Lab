@@ -27,6 +27,7 @@ const api = enSalesforce
       crearDonacion: (datos) => invocar('crearDonacion', JSON.stringify(datos)),
       iniciarPago: (token) => invocar('iniciarPago', token),
       getEstado: (token) => invocar('getEstado', token),
+      verificarPago: (token) => invocar('verificarPago', token),
       cancelar: (token) => invocar('cancelar', token)
     }
   : mock;
