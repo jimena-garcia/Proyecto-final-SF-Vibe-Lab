@@ -1,47 +1,47 @@
-# Guion de video demo — Entrega 1
+# Demo Video Script — Delivery 1
 
-**Duración objetivo:** 4:45 minutos máximo  
-**Fecha:** 10 de noviembre de 2026  
-**Alcance:** demostrar las historias que aparecen como cumplidas en la tabla de avance del `README.md`. La demostración usa únicamente datos ficticios y Stripe en modo de prueba.
+**Target duration:** 4:45 minutes maximum
+**Date:** November 10, 2026
+**Scope:** demonstrate the user stories marked as completed in the progress table in `README.md`. The demo uses only fictitious data and Stripe in test mode.
 
-## Preparación antes de grabar
+## Pre-recording setup
 
-- Abrir una ventana de incógnito para el sitio público, sin iniciar sesión.
-- Tener lista la URL pública del Salesforce Site.
-- Tener listo el acceso interno al panel, sin mostrar usuario ni contraseña en el video.
-- Usar campañas y donaciones ficticias ya cargadas.
-- Para el pago, usar la tarjeta de prueba `4242 4242 4242 4242`, una fecha futura y un CVC de prueba. No mostrar claves de Stripe, contraseñas, correos reales, RFC reales ni identificadores sensibles.
-- En el panel, tener disponible al menos una donación que solicite factura y un aviso de pasarela visible.
+- Open an incognito window for the public site without signing in.
+- Have the public Salesforce Site URL ready.
+- Have internal panel access ready, without showing the username or password in the video.
+- Use preloaded fictitious campaigns and donations.
+- For the payment, use the test card `4242 4242 4242 4242`, a future expiration date, and a test CVC. Do not show Stripe keys, passwords, real email addresses, real RFCs, or sensitive identifiers.
+- In the panel, have at least one donation requesting an invoice and one visible gateway notification.
 
-## Guion
+## Script
 
-| Tiempo | Pantalla y acción | Qué decir |
+| Time | Screen and action | What to say |
 |---|---|---|
-| 00:00–00:20 | **Introducción.** Mostrar la portada del sitio público en la ventana de incógnito. | “Esta es la Entrega 1 del portal de donaciones de SF Vibe Lab para Mexico Dreamin 2026. Comenzamos como visitante, sin iniciar sesión. Todo lo que veremos usa datos ficticios y pagos de Stripe en modo de prueba.” |
-| 00:20–00:50 | **Portada pública.** Desplazarse por la portada y mostrar la campaña destacada, las campañas recomendadas y sus barras de avance. | “El sitio público permite descubrir varias campañas activas, ver su meta y consultar su avance sin crear una cuenta. El visitante solo ve la información pública necesaria para elegir dónde apoyar.” |
-| 00:50–01:20 | **Página de una campaña.** Abrir una campaña, por ejemplo “Mexico Dreamin 2026”, y desplazarse hasta la sección de metas. Mostrar las tres metas acumulativas, sus montos y descripciones. | “Al elegir una campaña se abre su página de proyecto. Aquí se muestran sus metas escalonadas y acumulativas, el avance de la campaña y la opción para iniciar una donación.” |
-| 01:20–02:10 | **Formulario de donación.** Pulsar “Donar”, seleccionar la modalidad **Anónima**, elegir un monto sugerido y capturar únicamente datos ficticios solicitados por el formulario. Continuar hasta Stripe Checkout. | “Ahora registro una donación antes de pagar. Selecciono la modalidad anónima para que mi nombre no se publique y elijo un monto sugerido. Al continuar, la donación queda registrada como pendiente y Stripe recibe una referencia que permite relacionar el pago con ella.” |
-| 02:10–02:45 | **Stripe Checkout.** Mostrar que se está en la pasarela de prueba. Capturar `4242 4242 4242 4242`, una fecha futura y un CVC de prueba; confirmar el pago. | “Este es Stripe Checkout en modo de prueba. Uso la tarjeta de prueba 4242 4242 4242 4242. Salesforce no recibe ni almacena el número de tarjeta, la fecha ni el CVC.” |
-| 02:45–03:15 | **Página de gracias.** Esperar el regreso al sitio y mostrar la página de gracias con el estado que corresponda. No abrir correos ni mostrar datos de otros donantes. | “Después del pago, Stripe me devuelve al portal y aparece la página de gracias. El sitio consulta el estado de la sesión y muestra un mensaje acorde: la donación no se presenta como confirmada hasta que la pasarela la confirma. Esta pantalla no expone información de otros donantes.” |
-| 03:15–03:35 | **Reconocimiento público.** Volver a la página de la campaña o recargarla y abrir “Quiénes apoyan”. Mostrar el registro como **“Donante anónimo”** con su monto, sin nombre, correo ni RFC. | “En el reconocimiento público, una donación anónima aparece como ‘Donante anónimo’ junto con su monto. No se publica ningún dato personal. Esta evidencia demuestra el comportamiento de visibilidad pública; el correo del comprobante queda como pendiente y por eso HU-02 no se presenta como completamente cumplida.” |
-| 03:35–04:00 | **Panel: Campañas y metas.** Abrir el enlace interno `/apex/PanelAdmin`, iniciar sesión fuera de cámara y entrar a **Campañas**. Abrir una campaña para mostrar su meta y sus hitos. | “Pasamos al panel interno, protegido por el login de Salesforce. En Campañas, coordinación puede consultar las campañas y administrar su meta y sus metas. Estos cambios se reflejan en el sitio público.” |
-| 04:00–04:25 | **Panel: Donaciones.** Entrar a **Donaciones**, mostrar estado, monto, modalidad y campaña. Activar el filtro **Solicitan factura**. | “Tesorería puede consultar las donaciones con su estado, monto, modalidad y campaña. Al activar ‘Solicitan factura’ quedan solo las solicitudes de factura, con sus datos fiscales visibles únicamente para el personal autorizado. En esta grabación se usan registros ficticios.” |
-| 04:25–04:45 | **Panel: Avisos de la pasarela.** Abrir **Avisos** o **Avisos de pasarela** y mostrar el resultado, fecha y motivo de un aviso. | “Finalmente, Avisos de pasarela permite revisar los eventos recibidos y distinguir su resultado, fecha y motivo. Así el equipo puede auditar las confirmaciones y los avisos rechazados sin modificar manualmente el estado del pago.” |
-| 04:45–05:00 | **Cierre.** Volver a una vista limpia del panel o del sitio, sin datos personales. | “La demo se realizó exclusivamente con Stripe en modo de prueba y datos ficticios. Para cerrar, queda pendiente R-01: el correo del comprobante no llega al buzón, aunque el sistema acepta la generación del comprobante sin nombre. Ese pendiente se documentará y se revisará para la siguiente entrega.” |
+| 00:00–00:20 | **Introduction.** Show the public site home page in the incognito window. | “This is Delivery 1 of the SF Vibe Lab donation portal for Mexico Dreamin 2026. We begin as a visitor, without signing in. Everything shown uses fictitious data and Stripe test payments.” |
+| 00:20–00:50 | **Public home page.** Scroll through the home page and show the featured campaign, recommended campaigns, and progress bars. | “The public site lets visitors discover several active campaigns, see their goals, and check their progress without creating an account. Visitors only see the public information needed to decide where to donate.” |
+| 00:50–01:20 | **Campaign page.** Open a campaign, such as “Mexico Dreamin 2026”, and scroll to the goals section. Show the three cumulative goals, their amounts, and descriptions. | “When a campaign is selected, its project page opens. It shows the campaign’s progressive, cumulative goals, its progress, and the option to start a donation.” |
+| 01:20–02:10 | **Donation form.** Click “Donar”, select the **Anónima** option, choose a suggested amount, and enter only the fictitious data requested by the form. Continue to Stripe Checkout. | “I will now register a donation before paying. I select the anonymous option so my name will not be published, and choose a suggested amount. When I continue, the donation is recorded as pending and Stripe receives a reference that links the payment to it.” |
+| 02:10–02:45 | **Stripe Checkout.** Show that this is the test payment page. Enter `4242 4242 4242 4242`, a future expiration date, and a test CVC; then confirm the payment. | “This is Stripe Checkout in test mode. I am using the test card 4242 4242 4242 4242. Salesforce does not receive or store the card number, expiration date, or CVC.” |
+| 02:45–03:15 | **Thank-you page.** Wait for the return to the site and show the appropriate thank-you state. Do not open email or show other donors’ data. | “After payment, Stripe returns me to the portal and the thank-you page appears. The site checks the session status and shows the appropriate message: the donation is not presented as confirmed until the payment gateway confirms it. This page does not expose other donors’ information.” |
+| 03:15–03:35 | **Public recognition.** Return to the campaign page or reload it and open “Quiénes apoyan”. Show the entry as **“Donante anónimo”** with its amount, without a name, email, or RFC. | “In the public recognition list, an anonymous donation appears as ‘Donante anónimo’ with its amount. No personal data is published. This demonstrates the public visibility behavior; the receipt email remains pending, so HU-02 is not presented as fully completed.” |
+| 03:35–04:00 | **Panel: Campaigns and goals.** Open the internal `/apex/PanelAdmin` link, sign in off-camera, and open **Campañas**. Open a campaign to show its goal and milestones. | “Next, we move to the internal panel, protected by Salesforce login. In Campaigns, coordination staff can view campaigns and manage their goal and milestones. These changes are reflected on the public site.” |
+| 04:00–04:25 | **Panel: Donations.** Open **Donaciones** and show the status, amount, modality, and campaign. Activate the **Solicitan factura** filter. | “Treasury staff can view each donation’s status, amount, modality, and campaign. When ‘Solicitan factura’ is enabled, only invoice requests remain, with their tax details visible to authorized staff only. This recording uses fictitious records.” |
+| 04:25–04:45 | **Panel: Gateway notifications.** Open **Avisos** or **Avisos de pasarela** and show a notification’s result, date, and reason. | “Finally, Gateway Notifications lets the team review received events and distinguish their result, date, and reason. This supports auditing confirmations and rejected notifications without manually changing the payment status.” |
+| 04:45–05:00 | **Closing.** Return to a clean view of the panel or site without personal data. | “This demo used Stripe exclusively in test mode and fictitious data. One item remains open: R-01, because the receipt email does not reach the mailbox, although the system accepts receipt generation without a name. This issue will be documented and reviewed for the next delivery.” |
 
-## Checklist de evidencia visible
+## Visible evidence checklist
 
-- [x] Sitio público abierto sin login.
-- [x] Campaña con metas escalonadas y avance.
-- [x] Donación registrada antes de abrir la pasarela.
-- [x] Checkout con la tarjeta de prueba `4242 4242 4242 4242`.
-- [x] Regreso a la página de gracias.
-- [x] Reconocimiento público como “Donante anónimo”, solo con monto.
-- [x] Panel de Campañas y metas.
-- [x] Panel de Donaciones con filtro “Solicitan factura”.
-- [x] Panel de Avisos de pasarela.
-- [x] Cierre con modo de prueba y R-01.
+- [x] Public site opened without login.
+- [x] Campaign with progressive goals and progress.
+- [x] Donation registered before opening the payment gateway.
+- [x] Checkout with the test card `4242 4242 4242 4242`.
+- [x] Return to the thank-you page.
+- [x] Public recognition as “Donante anónimo”, showing only the amount.
+- [x] Campaigns and goals panel.
+- [x] Donations panel with the “Solicitan factura” filter.
+- [x] Gateway Notifications panel.
+- [x] Closing with test mode and R-01.
 
-## Límites de la grabación
+## Recording limits
 
-No mostrar contraseñas, claves de Stripe, tokens, correos reales, RFC reales, números de tarjeta distintos a la tarjeta de prueba, payloads del webhook ni datos personales de donantes. No presentar el correo del comprobante como una funcionalidad verificada: R-01 sigue abierto.
+Do not show passwords, Stripe keys, tokens, real email addresses, real RFCs, card numbers other than the test card, webhook payloads, or donors’ personal data. Do not present the receipt email as a verified feature: R-01 remains open.
