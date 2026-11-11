@@ -12,18 +12,40 @@
 
 | # | Vía | Acción | Resultado esperado | Resultado obtenido | Evidencia |
 |---|---|---|---|---|---|
-| L1 | Navegar el sitio | Recorrer campañas, "Ver donantes", formulario, gracias y cancelado | Solo campañas, avance, nombre + monto de donantes **con crédito pagados** y el formulario. Nunca correo, RFC ni anónimos. | | |
-| L2 | API REST de datos | `curl -i "$SITIO/services/data/v66.0/sobjects/Donacion__c/<Id>"` | 401 / `INVALID_SESSION_ID` o 404, sin datos | 2026-11-10 (probado sobre Campana__c): 401 `INVALID_SESSION_ID` | salida de curl (pendiente captura) |
-| L3 | API REST de consultas | `curl -i "$SITIO/services/data/v66.0/query?q=SELECT+Email__c+FROM+Donacion__c"` | 401 / error, sin datos | 2026-11-10: 401 `INVALID_SESSION_ID` | salida de curl (pendiente captura) |
-| L4 | Remoting con token ajeno o adivinado | En la consola del navegador, sobre el sitio: `Visualforce.remoting.Manager.invokeAction(PORTAL_CONFIG.acciones.getEstado, '0123456789abcdef0123456789abcdef', console.log)` | `null` | | |
-| L5 | Remoting con token real de otro donante | Igual que L4, con el token de la preparación | Solo estado, monto, campaña y folio: **sin nombre, correo ni RFC** | | |
-| L6 | Endpoint Aura del sitio | `curl -i -X POST "$SITIO/s/sfsites/aura"` (o `/aura`) con un payload `getRecord` de Donacion__c | Error o sin datos (el guest no tiene permiso de objeto) | | |
-| M1 | API REST (modificar) | `curl -i -X PATCH "$SITIO/services/data/v66.0/sobjects/Donacion__c/<Id>" -H "Content-Type: application/json" -d '{"Estado__c":"Pagada"}'` | 401 / error; la donación no cambia | | |
-| M2 | Remoting (modificar) | Llamar `crearDonacion` con JSON que incluya `"Estado__c":"Pagada"` o `"Id":"<Id ajeno>"` | Los campos extra se ignoran; solo se crea una **nueva** donación Pendiente | | |
-| M3 | Webhook falso | `curl -i -X POST "$SITIO/services/apexrest/stripe/webhook" -H "Stripe-Signature: t=1,v1=abc" -d '{"id":"evt_x","type":"checkout.session.completed"}'` | 400; la donación no cambia; aparece un Aviso **Rechazado** | | |
-| M4 | Cancelar donación ajena | `cancelar` con el token de una donación **Pagada** ajena | No cambia (solo cancela si está Pendiente) | | |
+| L1 | Navegar el sitio | Recorrer campañas, "Ver donantes", formulario, gracias y cancelado | Solo campañas, avance, nombre + monto de donantes **con crédito pagados** y el formulario. Nunca correo, RFC ni anónimos. | 2026-11-10, sitio real, sin sesión: solo campañas, avance, metas y reconocimiento (nombre + monto de crédito pagado). Ningún correo ni RFC. | Capturas del sitio real (portada y campaña) |
+| L2 | API REST de datos | `curl -i "$SITIO/services/data/v66.0/sobjects/Donacion__c/<Id>"` | 401 / `INVALID_SESSION_ID` o 404, sin datos | 2026-11-10, sitio real, sin sesión (DON-00006, pagada): **401** `INVALID_SESSION_ID`, sin datos | Salida del script `prueba_seguridad.py` (ver abajo) |
+| L3 | API REST de consultas | `curl -i "$SITIO/services/data/v66.0/query?q=SELECT+Email__c+FROM+Donacion__c"` | 401 / error, sin datos | 2026-11-10, sitio real, sin sesión: **401** `INVALID_SESSION_ID` (consulta de Email y RFC) | Salida del script |
+| L4 | Remoting con token ajeno o adivinado | En la consola del navegador, sobre el sitio: `Visualforce.remoting.Manager.invokeAction(PORTAL_CONFIG.acciones.getEstado, '0123456789abcdef0123456789abcdef', console.log)` | `null` | 2026-11-10, sitio real, sin sesión: `null` | Salida del script |
+| L5 | Remoting con token real de otro donante | Igual que L4, con el token de la preparación | Solo estado, monto, campaña y folio: **sin nombre, correo ni RFC** | 2026-11-10, sitio real, sin sesión: solo `campana, estado, folio, monto`. Además `getCampanas` no contiene "@" ni "rfc"; los donantes públicos solo traen `nombre, monto` | Salida del script |
+| L6 | Endpoint Aura del sitio | `curl -i -X POST "$SITIO/s/sfsites/aura"` (o `/aura`) con un payload `getRecord` de Donacion__c | Error o sin datos (el guest no tiene permiso de objeto) | 2026-11-10, sitio real, sin sesión: **404**, sin datos (Aura deshabilitado en el sitio: `enableAuraRequests=false`) | Salida del script |
+| M1 | API REST (modificar) | `curl -i -X PATCH "$SITIO/services/data/v66.0/sobjects/Donacion__c/<Id>" -H "Content-Type: application/json" -d '{"Estado__c":"Pagada"}'` | 401 / error; la donación no cambia | 2026-11-10, sitio real, sin sesión: **401**; DON-00006 sigue **Pagada** | Salida del script + consulta en Salesforce |
+| M2 | Remoting (modificar) | Llamar `crearDonacion` con JSON que incluya `"Estado__c":"Pagada"` o `"Id":"<Id ajeno>"` | Los campos extra se ignoran; solo se crea una **nueva** donación Pendiente | 2026-11-10, sitio real, sin sesión: **rechazado** (`ok=false`, sin token): el servidor no acepta campos que no estén en la lista blanca; no se creó ni modificó nada | Salida del script |
+| M3 | Webhook falso | `curl -i -X POST "$SITIO/services/apexrest/stripe/webhook" -H "Stripe-Signature: t=1,v1=abc" -d '{"id":"evt_x","type":"checkout.session.completed"}'` | 400; la donación no cambia; aparece un Aviso **Rechazado** | 2026-11-10, sitio real, sin sesión: **400** `rechazado`; queda AV-00009 **Rechazado** ("Marca de tiempo fuera de tolerancia"); ninguna donación cambia | Salida del script + panel → Avisos |
+| M4 | Cancelar donación ajena | `cancelar` con el token de una donación **Pagada** ajena | No cambia (solo cancela si está Pendiente) | 2026-11-10, sitio real, sin sesión: respuesta genérica, pero DON-00006 sigue **Pagada** | Consulta en Salesforce |
 
 **Riesgo residual de M4.** Quien conoce el token de una donación *pendiente* puede cancelarla. El token tiene 128 bits aleatorios, solo viaja en la URL de regreso de Stripe del propio donante y no expone datos personales. Si después llega el pago, el webhook la marca Pagada de todos modos.
+
+### Cómo repetir la prueba automáticamente
+Script: `scripts/prueba_seguridad.py`. Usa solo la biblioteca estándar de Python y no envía cookies ni sesión.
+
+```bash
+python scripts/prueba_seguridad.py <Id de una donación pagada> <su Token público> <Id de su campaña>
+```
+
+Resultado del 2026-11-10 (donación ajena = DON-00006, pagada):
+
+| Prueba | Resultado |
+|---|---|
+| L2 GET Donacion__c por REST | HTTP 401 INVALID_SESSION_ID |
+| L3 query SOQL (Email, RFC) | HTTP 401 INVALID_SESSION_ID |
+| L4 getEstado con token inventado | null |
+| L5 getEstado con token real ajeno | solo campana, estado, folio, monto |
+| L5b getCampanas | sin "@", sin "rfc"; donantes: nombre, monto |
+| L6 endpoint Aura | HTTP 404 |
+| M1 PATCH Donacion__c | HTTP 401 (la donación sigue Pagada) |
+| M2 crearDonacion con Estado/Id | rechazado, no se crea nada |
+| M3 aviso falso | HTTP 400 + Aviso Rechazado |
+| M4 cancelar donación pagada ajena | sin cambio (sigue Pagada) |
 
 ## 2. Permisos del visitante (usuario invitado del sitio)
 
