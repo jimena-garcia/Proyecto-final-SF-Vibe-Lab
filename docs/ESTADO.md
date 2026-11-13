@@ -42,7 +42,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 ## Problemas abiertos (no cerrar sin evidencia)
 | # | Problema | Afecta | Estado |
 |---|---|---|---|
-| R-01 | El correo del comprobante no llega al buzón (Salesforce lo acepta sin error) | HU-02 CA2, HU-14 CA2 | Reportado al profesor; esperando si acepta evidencia alternativa |
+| R-01 | ~~El correo del comprobante no llega~~ **Resuelto el 12 nov** con un remitente verificado de la org | HU-02 CA2, HU-14 CA2 | Cerrado. Límite: 15 correos al día (Developer Edition) |
 | R-05 | La redirección de Stripe a "gracias" a veces tarda ~2 min | HU-04 (experiencia) | Intermitente, ajeno al sitio; probar sin extensiones |
 | R-06 | Decisión "Donante anónimo" en el reconocimiento público | HU-02 CP1, HU-06 CP3 | Pendiente de confirmar con el cliente |
 | — | Nombre de la plataforma ("Impulso Vibe Lab") provisional | Marca | Pendiente; se cambia en `portal-react/src/marca.js` |
@@ -54,7 +54,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 - **Defensa oral:** 18 nov 2026, presencial.
 
 ## Próximos pasos (Entrega 2)
-1. Resolver o documentar R-01 (correo).
+1. ~~Resolver R-01 (correo)~~: resuelto el 12 nov.
 2. Fase C del plan de diseño: imagen y logo por campaña (tema por campaña).
 3. Fase D: actualizaciones de campaña y estado "finalizada".
 4. Fase E: filtros por campaña y fecha en Donaciones; actividad reciente en Resumen.

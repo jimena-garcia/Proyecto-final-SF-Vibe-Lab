@@ -13,12 +13,19 @@ public without sharing class ComprobanteService {
         }
         Map<Id, Campana__c> campanas = new Map<Id, Campana__c>([SELECT Id, Name FROM Campana__c WHERE Id IN :campanaIds]);
 
+        Id remitente = remitenteVerificado();
         List<Messaging.SingleEmailMessage> correos = new List<Messaging.SingleEmailMessage>();
         List<Id> orden = new List<Id>();
         for (Donacion__c d : donaciones) {
             Messaging.SingleEmailMessage m = new Messaging.SingleEmailMessage();
             m.setToAddresses(new List<String>{ d.Email__c });
-            m.setSenderDisplayName('Portal de donaciones Mexico Dreamin (prueba)');
+            if (remitente != null) {
+                // Remitente verificado de la org. Sin él, el correo sale a nombre del usuario
+                // invitado del Site y Gmail lo descarta (R-01).
+                m.setOrgWideEmailAddressId(remitente);
+            } else {
+                m.setSenderDisplayName('Portal de donaciones Mexico Dreamin (prueba)');
+            }
             m.setSubject('Comprobante de tu donación ' + d.Name);
             m.setPlainTextBody(cuerpo(d, campanas.get(d.Campana__c)));
             m.setSaveAsActivity(false);
@@ -43,6 +50,17 @@ public without sharing class ComprobanteService {
         if (!fallidas.isEmpty()) {
             update fallidas;
         }
+    }
+
+    /** Dirección de toda la organización ya verificada y disponible para todos los perfiles (incluido el invitado). Sin IDs fijos. */
+    @TestVisible
+    private static Id remitenteVerificado() {
+        List<OrgWideEmailAddress> dirs = [
+            SELECT Id FROM OrgWideEmailAddress
+            WHERE IsVerified = true AND IsAllowAllProfiles = true
+            ORDER BY CreatedDate ASC LIMIT 1
+        ];
+        return dirs.isEmpty() ? null : dirs[0].Id;
     }
 
     @TestVisible

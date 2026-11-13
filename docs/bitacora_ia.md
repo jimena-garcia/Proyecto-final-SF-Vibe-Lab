@@ -27,6 +27,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 17 | 2026-11-10 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-05, HU-11 (UX) | [P17](prompts/dilian/P17-marca-plataforma.md) | ⚠ | ~8 h → 1.5 h |
 | 18 | 2026-11-10 | Jimena | GitHub Copilot | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 | [J01](prompts/jimena/J01-guion-video-entrega1.md) | — | ~45 min → 10 min |
 | 19 | 2026-11-10 | Jimena | Claude y Gemini | HU-01 a HU-17 | [J02](prompts/jimena/J02-documentar-contribucion-entrega1.md) | ⚠ | 8 h ahorradas |
+| 20 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14 | [P18](prompts/dilian/P18-correo-comprobante.md) | ⚠ | ~3 h → 30 min |
 
 ---
 
@@ -203,3 +204,23 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué verificamos y cómo:** comparamos los resultados con la guía y las transcripciones de las clases grabadas. La transcripción confirmó que RF-S3 fue retirada.
 - **Qué corregimos:** reforzamos los criterios, añadimos el prefijo del timestamp, descartamos la ubicación insegura del secreto y ajustamos el alcance de RF-S3.
 - **Aceleración estimada:** aproximadamente 8 horas ahorradas. **Tiempo dedicado:** aproximadamente 6 horas.
+
+### 20 · El correo del comprobante no llegaba (R-01) — [P18](prompts/dilian/P18-correo-comprobante.md)
+- **Qué obtuvimos:**
+  - Un diagnóstico por comparación:
+    - El correo enviado como administrador llegó.
+    - El enviado por el flujo real (usuario invitado del Site) no llegó.
+  - La solución: un remitente verificado de toda la organización, usado por `ComprobanteService`.
+- **⚠ Errores de la IA:**
+  1. El 10 nov la IA atribuyó el problema a la configuración de *Deliverability* y a la dirección de sustitución. No probó quién era el remitente real, y R-01 quedó abierto dos días.
+  2. Al revisar la configuración por metadata, intentó descargarla fuera del proyecto y la CLI lo rechazó. Se corrigió descargándola en una carpeta temporal dentro del proyecto, que después se borró.
+- **Qué verificamos y cómo:**
+  - Límite diario consultado con `sf org list limits` (15 correos; no estaba agotado).
+  - Configuración de correo descargada por metadata.
+  - Donaciones reales de punta a punta, con navegador automático y tarjeta 4242:
+    - DON-00012 (antes del cambio): no llegó.
+    - DON-00013 (después): llegó en segundos.
+  - 41 tests en verde.
+- **Qué corregimos:** `ComprobanteService` usa la dirección verificada. Si no hay una, conserva el comportamiento anterior.
+- **Decisión:** no usar un servicio externo de correo (Brevo) sin aprobación del profesor (costo cero y datos personales).
+

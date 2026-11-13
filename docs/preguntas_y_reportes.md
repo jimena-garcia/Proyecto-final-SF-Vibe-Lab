@@ -17,7 +17,20 @@ Formato de cada entrada (guía, sección 12): autor · fecha · 1) qué intentá
    - El comprobante sí se genera; su contenido se verifica con el test `cuerpoDelComprobanteRespetaModalidad`.
 5. **Qué consultamos:** con la IA (bitácora, entradas 11 y 14) revisamos la verificación de dominio del remitente y la dirección de sustitución. Pendiente: probar una dirección de toda la organización verificada.
 
-**Después:** _(llenar con la respuesta del profesor: ¿acepta la evidencia alternativa del comprobante generado?)_
+**Después (2026-11-12): resuelto.**
+- **Diagnóstico:**
+  - Un correo enviado desde la org como administrador sí llegó (a spam).
+  - El comprobante de una donación real (DON-00012) no llegó.
+  - La diferencia está en quién envía. La confirmación llega por el Site, así que el correo salía a nombre del **usuario invitado del sitio** (`donaciones@…org.force.com`), y Gmail lo descartaba en silencio.
+  - No era el límite diario: la Developer Edition permite 15 correos sueltos al día y quedaban todos.
+- **Solución:**
+  - Se registró una **dirección de correo de toda la organización**, verificada y permitida para todos los perfiles.
+  - `ComprobanteService` la usa como remitente (`setOrgWideEmailAddressId`) y la busca por consulta, sin IDs fijos.
+- **Evidencia:**
+  - Donación anónima DON-00013 ($20, tarjeta 4242): el comprobante llegó al buzón en segundos, sin nombre.
+  - 41 tests en verde.
+- **Límite conocido:** 15 comprobantes al día (Developer Edition). Alcanza para pruebas y demos.
+- **Alternativa descartada por ahora:** un servicio externo de correo (Brevo) agregaría un tercero que recibe datos personales. Requeriría la aprobación del profesor.
 
 ## R-02 · El sitio público respondía "en mantenimiento" (503)
 **Autor:** Dilian · **Fecha:** 2026-11-10 · **Historias:** HU-11
