@@ -55,7 +55,11 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
               </dl>
             </div>
             <div className="banner__arte" aria-hidden="true">
-              <Ilustracion tipo="General" />
+              {destacada?.imagenUrl ? (
+                <img className="banner__foto" src={destacada.imagenUrl} alt="" decoding="async" />
+              ) : (
+                <Ilustracion tipo="General" />
+              )}
             </div>
           </div>
         </div>
