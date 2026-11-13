@@ -147,7 +147,7 @@ a.adm-enlace-fuerte:hover { text-decoration: underline; }
 .adm-pass { display: flex; gap: var(--e-2); align-items: center; }
 .adm-reglas { list-style: none; margin: var(--e-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-4); font-size: var(--t-xs); color: var(--texto-2); }
 .adm-reglas li { display: inline-flex; gap: var(--e-1); align-items: center; }
-.adm-reglas li.ok { color: var(--jade); font-weight: 600; }
+.adm-reglas li.ok { color: var(--exito); font-weight: 600; }
 .adm-equipo { list-style: none; margin: 0; padding: 0; display: grid; }
 .adm-equipo li { display: flex; justify-content: space-between; gap: var(--e-3); padding: var(--e-3) 0; border-top: 1px solid var(--linea); }
 .adm-equipo li p { overflow-wrap: anywhere; }

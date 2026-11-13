@@ -2,7 +2,7 @@
 // La campaña elige una con el campo Ilustracion__c; sin valor se usa "General".
 // Paleta limitada a los tokens del sistema.
 
-const P = { tinta: '#14213d', papel: '#f3eee5', achiote: '#c2410c', jade: '#0f766e', sol: '#f5b451', claro: '#fdebdd' };
+const P = { tinta: '#14213d', papel: '#f3eee5', achiote: '#c2410c', jade: '#50338c', sol: '#f5b451', claro: '#fdebdd' };
 
 function General() {
   return (
@@ -39,7 +39,7 @@ function Boletos() {
 function Transporte() {
   return (
     <>
-      <rect width="400" height="250" fill="#e3ece9" />
+      <rect width="400" height="250" fill="#e8eff9" />
       <path d="M30 200 Q 200 20 370 150" stroke={P.tinta} strokeWidth="3" fill="none" strokeDasharray="2 10" strokeLinecap="round" />
       <circle cx="30" cy="200" r="9" fill={P.jade} />
       <circle cx="370" cy="150" r="9" fill={P.achiote} />

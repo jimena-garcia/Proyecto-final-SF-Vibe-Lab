@@ -1,11 +1,13 @@
 /* ==========================================================================
    Tokens — plataforma "Impulso Vibe Lab" (SF Vibe Lab · UADY × Salesforce)
    Paleta clara inspirada funcionalmente en plataformas de crowdfunding:
-   fondo blanco, texto casi negro y UN solo verde propio para acción y progreso.
+   fondo blanco, texto casi negro, AZUL para acción y MORADO para progreso
+   (colores del logo de Mexico Dreamin, tomados de la foto del evento; 12 nov 2026).
+   El verde queda solo como color semántico de éxito ("Pagado", confirmaciones).
    Los nombres de variables se conservan (achiote = acción, jade = progreso) para que
    todos los componentes —públicos y del panel— tomen la nueva paleta sin reescribirse.
-   Contraste medido sobre blanco: acción 5.36:1 (AA texto), progreso 3.49:1 (≥3:1 gráficos),
-   texto secundario 6.69:1.
+   Contraste medido sobre blanco: acción 6.1:1 (AA texto), progreso 9.57:1,
+   texto secundario 6.69:1. Blanco sobre el banner: 8.25:1 o más.
    ========================================================================== */
 :root {
   /* Superficies y texto */
@@ -21,14 +23,16 @@
   --linea: #e6e6e3;
   --linea-fuerte: #cfcfca;
 
-  /* Acción principal (verde de la plataforma) */
-  --achiote: #0b7a52;          /* botones primarios, enlaces de acción: 5.36:1 */
-  --achiote-hover: #0a6e4a;
-  --achiote-suave: #e3f4ec;
+  /* Acción principal (azul) */
+  --achiote: #1f62b1;          /* botones primarios, enlaces de acción: 6.1:1 */
+  --achiote-hover: #194f92;
+  --achiote-suave: #e8eff9;
 
   /* Progreso y estados */
-  --jade: #0f9d63;             /* barras de progreso, metas alcanzadas: 3.49:1 */
-  --jade-suave: #dff3e9;
+  --jade: #50338c;             /* barras de progreso, metas alcanzadas (morado): 9.57:1 */
+  --jade-suave: #eee8f7;
+  --exito: #0b6b47;            /* semántico: pagado / confirmado */
+  --exito-suave: #e3f4ec;
   --sol: #b45309;              /* pendiente / atención: 5.02:1 */
   --sol-suave: #fef3c7;
   --error: #b91c1c;

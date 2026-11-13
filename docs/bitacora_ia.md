@@ -30,6 +30,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 20 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14 | [P18](prompts/dilian/P18-correo-comprobante.md) | ⚠ | ~3 h → 30 min |
 | 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
 | 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
+| 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
 
 ---
 
@@ -271,4 +272,16 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - 44 tests en verde.
   - Subida real desde el panel con navegador automático. Capturas del sitio a 1280 y 390 px.
 - **Decisión:** la imagen de Mexico Dreamin (fotos de personas reales del evento, aportada por el equipo) vive solo en la org, no en el repositorio público.
+
+### 23 · Paleta azul y morado de Mexico Dreamin — [P21](prompts/dilian/P21-paleta-azul-morado.md)
+- **Qué obtuvimos:**
+  - Colores tomados del logo de Mexico Dreamin en la foto del evento (cuantización de colores con Pillow): azul `#1F62B1` y morado `#50338C`.
+  - Azul para botones, enlaces y marca; morado para progreso y metas; banner con degradado morado → azul.
+  - El verde se conserva solo como color de éxito ("Pagado", confirmaciones).
+  - Se aplicó al sitio, al panel (mismos tokens) y al comprobante por correo.
+- **Qué verificamos y cómo:**
+  - Contraste medido: azul 6.1:1 y morado 9.57:1 sobre blanco; blanco sobre el banner ≥ 8.25:1 (AA).
+  - Capturas de la portada y de la página de campaña en el sitio real.
+  - Tests del comprobante en verde.
+- **Nota:** cambia la decisión de la Fase B ("un solo verde propio de la plataforma"). Ahora la plataforma usa los colores del evento principal, por decisión del equipo.
 

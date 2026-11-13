@@ -8,7 +8,8 @@
 public without sharing class ComprobanteService {
     // Identidad de la plataforma (igual que portal-react/src/marca.js).
     @TestVisible static final String MARCA = 'Impulso Vibe Lab';
-    static final String VERDE = '#0B7A52';
+    static final String AZUL = '#1F62B1'; // marca y botón de la plataforma
+    static final String EXITO = '#0B6B47'; // semántico: pagado / confirmado
 
     public static void enviar(List<Donacion__c> donaciones) {
         Set<Id> campanaIds = new Set<Id>();
@@ -120,7 +121,7 @@ public without sharing class ComprobanteService {
         }
         String boton = enlace == null ? '' :
             '<tr><td align="center" style="padding:8px 32px 28px;">'
-            + '<a href="' + esc(enlace) + '" style="display:inline-block;background:' + VERDE + ';color:#FFFFFF;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">Ver el avance de la campaña</a>'
+            + '<a href="' + esc(enlace) + '" style="display:inline-block;background:' + AZUL + ';color:#FFFFFF;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">Ver el avance de la campaña</a>'
             + '</td></tr>';
 
         return '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comprobante ' + esc(d.Name) + '</title></head>'
@@ -131,19 +132,19 @@ public without sharing class ComprobanteService {
             // Encabezado
             + '<tr><td style="padding:20px 32px;border-bottom:1px solid #E6E6E3;">'
             + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>'
-            + '<td style="font-size:18px;font-weight:800;color:' + VERDE + ';">' + MARCA + '<div style="font-size:12px;font-weight:400;color:#5C5C5C;margin-top:2px;">SF Vibe Lab · UADY × Salesforce</div></td>'
+            + '<td style="font-size:18px;font-weight:800;color:' + AZUL + ';">' + MARCA + '<div style="font-size:12px;font-weight:400;color:#5C5C5C;margin-top:2px;">SF Vibe Lab · UADY × Salesforce</div></td>'
             + '<td align="right"><span style="display:inline-block;background:#FFF7E6;color:#8A5A00;font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border-radius:999px;">MODO DE PRUEBA</span></td>'
             + '</tr></table></td></tr>'
             // Título
             + '<tr><td style="padding:28px 32px 8px;">'
-            + '<div style="width:44px;height:44px;line-height:44px;border-radius:50%;background:#E7F5EE;color:' + VERDE + ';font-size:24px;font-weight:700;text-align:center;">&#10003;</div>'
+            + '<div style="width:44px;height:44px;line-height:44px;border-radius:50%;background:#E7F5EE;color:' + EXITO + ';font-size:24px;font-weight:700;text-align:center;">&#10003;</div>'
             + '<h1 style="margin:16px 0 4px;font-size:22px;line-height:1.3;">¡Gracias por tu donación' + nombre + '!</h1>'
             + '<p style="margin:0;font-size:15px;color:#5C5C5C;">Tu pago está confirmado y ya cuenta en el avance de <strong style="color:#1A1A1A;">' + campana + '</strong>.</p>'
             + '</td></tr>'
             // Monto
             + '<tr><td style="padding:20px 32px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F7F5;border-radius:10px;"><tr>'
             + '<td style="padding:18px 20px;"><div style="font-size:13px;color:#5C5C5C;">Monto donado</div><div style="font-size:28px;font-weight:800;margin-top:2px;">' + monto + '</div></td>'
-            + '<td align="right" style="padding:18px 20px;"><span style="display:inline-block;background:#E7F5EE;color:' + VERDE + ';font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;">Pagado</span></td>'
+            + '<td align="right" style="padding:18px 20px;"><span style="display:inline-block;background:#E7F5EE;color:' + EXITO + ';font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;">Pagado</span></td>'
             + '</tr></table></td></tr>'
             // Detalle
             + '<tr><td style="padding:16px 32px 8px;"><div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#5C5C5C;margin-bottom:6px;">Comprobante de donación</div>'

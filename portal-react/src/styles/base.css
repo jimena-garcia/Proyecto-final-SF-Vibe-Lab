@@ -293,7 +293,7 @@ button, input { font: inherit; color: inherit; }
 .estado__tarjeta { max-width: 640px; margin: 0 auto; background: var(--superficie); border-radius: var(--r-lg); box-shadow: var(--sombra); padding: var(--e-6) var(--e-5); }
 @media (min-width: 640px) { .estado__tarjeta { padding: var(--e-7); } }
 .estado__icono { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; margin-bottom: var(--e-5); }
-.estado__icono--exito { background: var(--jade-suave); color: var(--jade); }
+.estado__icono--exito { background: var(--exito-suave); color: var(--exito); }
 .estado__icono--espera { background: var(--sol-suave); color: var(--sol); }
 .estado__icono--neutro { background: var(--papel-2); color: var(--texto-2); }
 .estado h1 { font-size: clamp(1.8rem, 5vw, var(--t-3xl)); }
@@ -303,7 +303,7 @@ button, input { font: inherit; color: inherit; }
 .estado__datos dd { margin: 0; font-weight: 600; text-align: right; }
 .estado__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); margin-top: var(--e-6); }
 .badge { display: inline-flex; align-items: center; gap: var(--e-1); padding: 2px var(--e-3); border-radius: var(--r-full); font-size: var(--t-xs); font-weight: 600; }
-.badge--pagada { background: var(--jade-suave); color: #115e59; }
+.badge--pagada { background: var(--exito-suave); color: var(--exito); }
 .badge--pendiente { background: var(--sol-suave); color: #78350f; }
 .badge--cancelada { background: var(--papel-2); color: var(--texto-2); }
 
@@ -357,7 +357,7 @@ button, input { font: inherit; color: inherit; }
 .metas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
 .meta { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-lg); background: var(--superficie); border: 1px solid var(--linea); }
 .meta__marca { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: var(--t-sm); border: 2px solid var(--linea-fuerte); color: var(--texto-3); background: var(--superficie); }
-.meta--alcanzada { background: #f2faf8; border-color: #b7e2da; }
+.meta--alcanzada { background: #f6f2fc; border-color: #d9ccee; }
 .meta--alcanzada .meta__marca { background: var(--jade); border-color: var(--jade); color: #fff; }
 .meta--siguiente { border-color: var(--achiote); box-shadow: 0 0 0 3px var(--achiote-suave); }
 .meta--siguiente .meta__marca { border-color: var(--achiote); color: var(--achiote); }
