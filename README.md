@@ -4,7 +4,7 @@ Portal de donaciones para Mexico Dreamin (SF Vibe Lab, UADY × Salesforce)
 *Video Demo Entrega 1:* <[video_Entrega_1]https://canva.link/w2418fk6s50we1w>
 > **¿Eres del equipo o usas un asistente de IA?** Empieza por [`docs/ESTADO.md`](docs/ESTADO.md) (qué funciona hoy y qué falta) y [`AGENTS.md`](AGENTS.md) (reglas, arquitectura, despliegue y registro de IA). Claude Code, Gemini, Codex, Cursor y Copilot los cargan solos.
 ## Backlog
-Board: <[enlace al video](https://github.com/users/jimena-garcia/projects/1)>
+Tablero: [Backlog en GitHub Projects](https://github.com/users/jimena-garcia/projects/1)
 
 ## Avance
 
@@ -49,6 +49,9 @@ URL: https://orgfarm-0cda6e4c00-dev-ed.develop.my.salesforce-sites.com/ (Stripe 
 | `force-app/` | Metadata de Salesforce (objetos, Apex, página, permission sets) |
 | `portal-react/` | Sitio público en React (`npm run dev` con datos ficticios, `npm run build:sf` para Salesforce) |
 | `docs/requisitos/historias_de_usuario.md` | Backlog con criterios de aceptación |
+| `docs/tecnico/arquitectura.md` | Arquitectura: piezas, flujo de pago, clases, seguridad y despliegue |
+| `docs/tecnico/modelo_datos.md` | Modelo de datos: objetos, campos, validaciones y quién ve qué |
+| `docs/tecnico/pruebas.md` | Pruebas: 41 tests de Apex por historia, prueba de seguridad y prueba de punta a punta |
 | `docs/tecnico/setup_org.md` | Puesta en marcha: org, Stripe, sitio y webhook |
 | `docs/seguridad.md` | Prueba del visitante, permisos, secretos y datos personales |
 | `docs/bitacora_ia.md` · `docs/contribucion.md` · `docs/preguntas_y_reportes.md` | Bitácoras |
