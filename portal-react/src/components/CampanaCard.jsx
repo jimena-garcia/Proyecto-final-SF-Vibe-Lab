@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Ilustracion from '../ui/Ilustracion.jsx';
 import { pesos } from '../ui/basicos.jsx';
 import { alClicInterno, urlCampana } from '../lib/navegacion.js';
@@ -7,10 +8,23 @@ import { MARCA } from '../marca.js';
 /** Imagen de la campaña con la barra de avance pegada abajo (patrón de crowdfunding). */
 export function ImagenCampana({ campana, className = '' }) {
   const pct = Math.min(100, porcentaje(campana.recaudado, campana.meta));
+  const [fallo, setFallo] = useState(false);
+  const foto = campana.imagenUrl && !fallo;
   return (
     <div className={`imagen-campana ${className}`}>
       <div className="imagen-campana__media">
-        <Ilustracion tipo={campana.ilustracion} />
+        {foto ? (
+          <img
+            className="imagen-campana__foto"
+            src={campana.imagenUrl}
+            alt={campana.imagenAlt || ''}
+            loading="lazy"
+            decoding="async"
+            onError={() => setFallo(true)}
+          />
+        ) : (
+          <Ilustracion tipo={campana.ilustracion} />
+        )}
       </div>
       <div
         className="imagen-campana__barra"

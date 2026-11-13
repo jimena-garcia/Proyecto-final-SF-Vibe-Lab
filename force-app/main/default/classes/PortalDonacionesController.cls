@@ -45,6 +45,8 @@ public without sharing class PortalDonacionesController {
         public List<DonanteDTO> donantes = new List<DonanteDTO>();
         public List<HitoDTO> hitos = new List<HitoDTO>();
         public String ilustracion;
+        public String imagenUrl; // enlace público de la imagen (null = usar la ilustración)
+        public String imagenAlt;
         public Boolean destacada;
         public Integer donacionesPagadas;
     }
@@ -88,6 +90,8 @@ public without sharing class PortalDonacionesController {
                 Recaudado__c,
                 Montos_Sugeridos__c,
                 Ilustracion__c,
+                Imagen_URL__c,
+                Imagen_Alt__c,
                 Destacada__c,
                 Donaciones_Pagadas__c,
                 (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC LIMIT 10),
@@ -111,6 +115,8 @@ public without sharing class PortalDonacionesController {
             dto.recaudado = c.Recaudado__c == null ? 0 : c.Recaudado__c;
             dto.montosSugeridos = parsearMontos(c.Montos_Sugeridos__c);
             dto.ilustracion = String.isBlank(c.Ilustracion__c) ? 'General' : c.Ilustracion__c;
+            dto.imagenUrl = c.Imagen_URL__c != null && c.Imagen_URL__c.startsWith('https://') ? c.Imagen_URL__c : null;
+            dto.imagenAlt = c.Imagen_Alt__c;
             dto.destacada = c.Destacada__c;
             dto.donacionesPagadas = c.Donaciones_Pagadas__c == null ? 0 : c.Donaciones_Pagadas__c.intValue();
             for (Hito__c h : c.Hitos__r) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Imagen_URL__c</fullName>
+    <description>Enlace público (ContentDistribution) de la imagen de la campaña. Lo llena el panel al subir la imagen; no se edita a mano.</description>
+    <inlineHelpText>Se llena al subir la imagen desde el panel (Campañas → Imagen).</inlineHelpText>
+    <label>Imagen (enlace público)</label>
+    <length>1000</length>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>2</visibleLines>
+</CustomField>

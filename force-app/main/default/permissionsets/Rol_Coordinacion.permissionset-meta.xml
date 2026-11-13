@@ -6,6 +6,8 @@
     <fieldPermissions><editable>true</editable><field>Campana__c.Descripcion__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Campana__c.Montos_Sugeridos__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Campana__c.Ilustracion__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Imagen_URL__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field>Campana__c.Imagen_Alt__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Campana__c.Destacada__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Recaudado__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Avance__c</field><readable>true</readable></fieldPermissions>

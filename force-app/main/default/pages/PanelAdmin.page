@@ -22,6 +22,8 @@
                         getResumen: '{!$RemoteAction.AdminPortalController.getResumen}',
                         getCampanas: '{!$RemoteAction.AdminPortalController.getCampanas}',
                         guardarCampana: '{!$RemoteAction.AdminPortalController.guardarCampana}',
+                        subirImagen: '{!$RemoteAction.AdminPortalController.subirImagen}',
+                        quitarImagen: '{!$RemoteAction.AdminPortalController.quitarImagen}',
                         getDonaciones: '{!$RemoteAction.AdminPortalController.getDonaciones}',
                         getAvisos: '{!$RemoteAction.AdminPortalController.getAvisos}',
                         getEquipo: '{!$RemoteAction.EquipoController.getEquipo}',

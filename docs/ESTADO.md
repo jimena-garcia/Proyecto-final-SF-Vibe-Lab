@@ -55,7 +55,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 
 ## Próximos pasos (Entrega 2)
 1. ~~Resolver R-01 (correo)~~: resuelto el 12 nov.
-2. Fase C del plan de diseño: imagen y logo por campaña (tema por campaña).
+2. Fase C del plan de diseño: ~~imagen por campaña~~ (hecha el 12 nov: panel → Campañas → Imagen). Falta el tema y el logo por campaña.
 3. Fase D: actualizaciones de campaña y estado "finalizada".
 4. Fase E: filtros por campaña y fecha en Donaciones; actividad reciente en Resumen.
 5. Que **cada integrante** registre sus entradas en la bitácora de IA, en reportes y en contribución.

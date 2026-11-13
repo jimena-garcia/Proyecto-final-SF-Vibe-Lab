@@ -71,6 +71,8 @@ public with sharing class AdminPortalController {
         public Boolean activa;
         public Boolean destacada;
         public String ilustracion;
+        public String imagenUrl; // solo lectura: lo escribe subirImagen
+        public String imagenAlt;
         public String montosSugeridos;
         public Integer donacionesPagadas;
         public List<HitoAdmin> hitos = new List<HitoAdmin>();
@@ -109,6 +111,7 @@ public with sharing class AdminPortalController {
         public Boolean ok = false;
         public String mensaje;
         public String id;
+        public String url;
     }
 
     // ------------------------------------------------------------------ Resumen
@@ -147,7 +150,7 @@ public with sharing class AdminPortalController {
         for (Campana__c c : [
             SELECT
                 Id, Name, Descripcion__c, Meta__c, Recaudado__c, Activa__c, Destacada__c, Ilustracion__c,
-                Montos_Sugeridos__c, Donaciones_Pagadas__c,
+                Imagen_URL__c, Imagen_Alt__c, Montos_Sugeridos__c, Donaciones_Pagadas__c,
                 (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC)
             FROM Campana__c
             WITH USER_MODE
@@ -163,6 +166,8 @@ public with sharing class AdminPortalController {
             dto.activa = c.Activa__c;
             dto.destacada = c.Destacada__c;
             dto.ilustracion = String.isBlank(c.Ilustracion__c) ? 'General' : c.Ilustracion__c;
+            dto.imagenUrl = c.Imagen_URL__c;
+            dto.imagenAlt = c.Imagen_Alt__c;
             dto.montosSugeridos = c.Montos_Sugeridos__c;
             dto.donacionesPagadas = c.Donaciones_Pagadas__c == null ? 0 : c.Donaciones_Pagadas__c.intValue();
             for (Hito__c h : c.Hitos__r) {
@@ -210,6 +215,7 @@ public with sharing class AdminPortalController {
                 Activa__c = e.activa == true,
                 Destacada__c = e.destacada == true,
                 Ilustracion__c = String.isBlank(e.ilustracion) ? 'General' : e.ilustracion,
+                Imagen_Alt__c = String.isBlank(e.imagenAlt) ? null : e.imagenAlt.trim().abbreviate(255),
                 Montos_Sugeridos__c = String.isBlank(e.montosSugeridos) ? null : e.montosSugeridos.deleteWhitespace()
             );
             if (String.isNotBlank(e.id)) {
@@ -250,6 +256,166 @@ public with sharing class AdminPortalController {
             r.mensaje = 'No tienes permiso para guardar esta campaña o ocurrió un error: ' + ex.getMessage();
         }
         return r;
+    }
+
+    // ------------------------------------------------------------------ Imagen de la campaña
+    public static final Integer MAX_BYTES_IMAGEN = 1572864; // 1.5 MB (el panel la reduce antes de subirla)
+    @TestVisible
+    static final String TITULO_IMAGEN = 'Imagen de campaña';
+
+    /**
+     * Sube la imagen de una campaña (PNG, JPG o WebP; máx. 1.5 MB) y publica un enlace público
+     * para que el sitio (visitante sin login) pueda mostrarla. Reemplaza la anterior.
+     * Solo Coordinación (Gestionar_Campanas). El enlace da acceso solo a ESTE archivo.
+     */
+    @RemoteAction
+    public static Resultado subirImagen(String campanaId, String nombreArchivo, String base64) {
+        Resultado r = new Resultado();
+        if (!tiene(PERM_CAMPANAS)) {
+            r.mensaje = 'Tu rol no permite cambiar la imagen de las campañas.';
+            return r;
+        }
+        Campana__c c = campanaVisible(campanaId);
+        if (c == null) {
+            r.mensaje = 'Guarda la campaña antes de subir su imagen.';
+            return r;
+        }
+        String extension = tipoImagen(base64);
+        if (extension == null) {
+            r.mensaje = 'El archivo debe ser una imagen PNG, JPG o WebP.';
+            return r;
+        }
+        Blob datos;
+        try {
+            datos = EncodingUtil.base64Decode(base64);
+        } catch (Exception ex) {
+            r.mensaje = 'No pudimos leer la imagen. Intenta con otro archivo.';
+            return r;
+        }
+        if (datos.size() > MAX_BYTES_IMAGEN) {
+            r.mensaje = 'La imagen pesa más de 1.5 MB. Usa una más ligera.';
+            return r;
+        }
+        Savepoint sp = Database.setSavepoint();
+        try {
+            r.url = new Medios().publicar(c.Id, datos, extension);
+            r.ok = true;
+            r.id = c.Id;
+            r.mensaje = 'Imagen actualizada. Ya se ve en el sitio público.';
+        } catch (Exception ex) {
+            Database.rollback(sp);
+            r.mensaje = 'No pudimos guardar la imagen: ' + ex.getMessage();
+        }
+        return r;
+    }
+
+    /** Quita la imagen: la campaña vuelve a mostrar su ilustración. */
+    @RemoteAction
+    public static Resultado quitarImagen(String campanaId) {
+        Resultado r = new Resultado();
+        if (!tiene(PERM_CAMPANAS)) {
+            r.mensaje = 'Tu rol no permite cambiar la imagen de las campañas.';
+            return r;
+        }
+        Campana__c c = campanaVisible(campanaId);
+        if (c == null) {
+            r.mensaje = 'No encontramos la campaña.';
+            return r;
+        }
+        new Medios().quitar(c.Id, null);
+        r.ok = true;
+        r.id = c.Id;
+        r.mensaje = 'Imagen quitada. La campaña muestra su ilustración.';
+        return r;
+    }
+
+    private static Campana__c campanaVisible(String campanaId) {
+        if (String.isBlank(campanaId)) {
+            return null;
+        }
+        try {
+            Id cid = Id.valueOf(campanaId);
+            List<Campana__c> cs = [SELECT Id FROM Campana__c WHERE Id = :cid WITH USER_MODE LIMIT 1];
+            return cs.isEmpty() ? null : cs[0];
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /** Reconoce el formato por los primeros bytes (no por el nombre del archivo). */
+    @TestVisible
+    private static String tipoImagen(String base64) {
+        if (String.isBlank(base64) || base64.length() < 16) {
+            return null;
+        }
+        String hex;
+        try {
+            hex = EncodingUtil.convertToHex(EncodingUtil.base64Decode(base64.left(16)));
+        } catch (Exception ex) {
+            return null;
+        }
+        if (hex.startsWith('89504e47')) {
+            return 'png';
+        }
+        if (hex.startsWith('ffd8ff')) {
+            return 'jpg';
+        }
+        if (hex.startsWith('52494646') && hex.length() >= 24 && hex.substring(16, 24) == '57454250') {
+            return 'webp';
+        }
+        return null;
+    }
+
+    /**
+     * Archivos y enlaces públicos. Sin sharing porque el enlace público (ContentDistribution) y el
+     * borrado de la imagen anterior son operaciones de sistema. Quien llama ya validó el permiso
+     * Gestionar_Campanas y el acceso del usuario a la campaña.
+     */
+    private without sharing class Medios {
+        String publicar(Id campanaId, Blob datos, String extension) {
+            ContentVersion v = new ContentVersion(
+                Title = TITULO_IMAGEN,
+                PathOnClient = 'imagen-campana.' + extension,
+                VersionData = datos,
+                FirstPublishLocationId = campanaId
+            );
+            insert v;
+            ContentDistribution d = new ContentDistribution(
+                Name = TITULO_IMAGEN,
+                ContentVersionId = v.Id,
+                PreferencesAllowViewInBrowser = true,
+                PreferencesAllowOriginalDownload = true,
+                PreferencesLinkLatestVersion = true,
+                PreferencesNotifyOnVisit = false,
+                PreferencesPasswordRequired = false
+            );
+            insert d;
+            String url = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE Id = :d.Id].ContentDownloadUrl;
+            Id nuevoDoc = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :v.Id].ContentDocumentId;
+            quitar(campanaId, nuevoDoc);
+            update new Campana__c(Id = campanaId, Imagen_URL__c = url);
+            return url;
+        }
+
+        /** Borra las imágenes anteriores de la campaña (menos `conservar`). Sin `conservar`, limpia el campo. */
+        void quitar(Id campanaId, Id conservar) {
+            Set<Id> docs = new Set<Id>();
+            for (ContentDocumentLink l : [
+                SELECT ContentDocumentId
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId = :campanaId AND ContentDocument.Title = :TITULO_IMAGEN
+            ]) {
+                if (l.ContentDocumentId != conservar) {
+                    docs.add(l.ContentDocumentId);
+                }
+            }
+            if (!docs.isEmpty()) {
+                delete [SELECT Id FROM ContentDocument WHERE Id IN :docs];
+            }
+            if (conservar == null) {
+                update new Campana__c(Id = campanaId, Imagen_URL__c = null);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ Donaciones (HU-07, HU-09, HU-15)

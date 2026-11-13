@@ -145,4 +145,56 @@ private class AdminPortalControllerTest {
             Assert.areEqual(1, AdminPortalController.getAvisos(false).size());
         }
     }
+
+    // PNG de 1x1 px (válido) y un texto que no es imagen.
+    static final String PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    static final String NO_IMAGEN = EncodingUtil.base64Encode(Blob.valueOf('<script>alert(1)</script> no es imagen'));
+
+    static Integer imagenesDe(Id campanaId) {
+        return [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :campanaId AND ContentDocument.Title = :AdminPortalController.TITULO_IMAGEN];
+    }
+
+    @IsTest
+    static void coordinacionSubeReemplazaYQuitaLaImagen() {
+        Campana__c c = [SELECT Id FROM Campana__c LIMIT 1];
+        System.runAs(coordinacion()) {
+            AdminPortalController.Resultado r1 = AdminPortalController.subirImagen(c.Id, 'portada.png', PNG);
+            Assert.isTrue(r1.ok, r1.mensaje);
+            Assert.isTrue(r1.url.startsWith('https://'), r1.url);
+            AdminPortalController.Resultado r2 = AdminPortalController.subirImagen(c.Id, 'otra.png', PNG);
+            Assert.isTrue(r2.ok, r2.mensaje);
+        }
+        Assert.areEqual(1, imagenesDe(c.Id), 'Al reemplazar se borra la imagen anterior');
+        Assert.isNotNull([SELECT Imagen_URL__c FROM Campana__c WHERE Id = :c.Id].Imagen_URL__c);
+
+        // El sitio público recibe el enlace de la imagen.
+        PortalDonacionesController.CampanaDTO dto = PortalDonacionesController.getCampanas()[0];
+        Assert.isTrue(dto.imagenUrl.startsWith('https://'));
+
+        System.runAs(coordinacion()) {
+            Assert.isTrue(AdminPortalController.quitarImagen(c.Id).ok);
+        }
+        Assert.areEqual(0, imagenesDe(c.Id));
+        Assert.isNull([SELECT Imagen_URL__c FROM Campana__c WHERE Id = :c.Id].Imagen_URL__c);
+    }
+
+    @IsTest
+    static void rechazaArchivosQueNoSonImagenYRolesSinPermiso() {
+        Campana__c c = [SELECT Id FROM Campana__c LIMIT 1];
+        System.runAs(coordinacion()) {
+            AdminPortalController.Resultado r = AdminPortalController.subirImagen(c.Id, 'truco.png', NO_IMAGEN);
+            Assert.isFalse(r.ok);
+            Assert.isTrue(r.mensaje.contains('PNG, JPG o WebP'), r.mensaje);
+            Assert.isFalse(AdminPortalController.subirImagen(null, 'x.png', PNG).ok, 'Sin campaña guardada no se sube');
+        }
+        System.runAs(tesoreria()) {
+            AdminPortalController.Resultado r = AdminPortalController.subirImagen(c.Id, 'x.png', PNG);
+            Assert.isFalse(r.ok);
+            Assert.isTrue(r.mensaje.contains('rol'), r.mensaje);
+            Assert.isFalse(AdminPortalController.quitarImagen(c.Id).ok);
+        }
+        Assert.areEqual(0, imagenesDe(c.Id));
+        Assert.areEqual('jpg', AdminPortalController.tipoImagen('/9j/4AAQSkZJRgABAQAAAQABAAD'));
+        Assert.areEqual('webp', AdminPortalController.tipoImagen(EncodingUtil.base64Encode(Blob.valueOf('RIFF1234WEBPVP8 '))));
+    }
 }

@@ -155,3 +155,18 @@ export async function desactivar(id) {
   equipo = equipo.map((p) => (p.id === id ? { ...p, activo: false } : p));
   return { ok: true, mensaje: 'Usuario desactivado.' };
 }
+
+export async function subirImagen(id, nombre, base64) {
+  await esperar(500);
+  const url = `data:image/jpeg;base64,${base64}`;
+  const c = campanas.find((x) => x.id === id);
+  if (c) c.imagenUrl = url;
+  return { ok: true, url, mensaje: 'Imagen actualizada (demo).' };
+}
+
+export async function quitarImagen(id) {
+  await esperar(300);
+  const c = campanas.find((x) => x.id === id);
+  if (c) c.imagenUrl = null;
+  return { ok: true, mensaje: 'Imagen quitada (demo).' };
+}

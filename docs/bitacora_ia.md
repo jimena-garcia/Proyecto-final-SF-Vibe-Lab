@@ -29,6 +29,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 19 | 2026-11-10 | Jimena | Claude y Gemini | HU-01 a HU-17 | [J02](prompts/jimena/J02-documentar-contribucion-entrega1.md) | ⚠ | 8 h ahorradas |
 | 20 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14 | [P18](prompts/dilian/P18-correo-comprobante.md) | ⚠ | ~3 h → 30 min |
 | 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
+| 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
 
 ---
 
@@ -241,4 +242,33 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - 42 tests en verde.
   - Vista previa a 800 y 390 px con los datos reales de DON-00013.
   - Donación real DON-00014 enviada al correo del equipo.
+
+### 22 · Imagen propia por campaña — [P20](prompts/dilian/P20-imagen-campana.md)
+- **Qué obtuvimos:**
+  - En el panel (Campañas → editar), Coordinación sube, cambia o quita la imagen de una campaña y escribe su descripción para lectores de pantalla.
+  - El navegador reduce la imagen (máx. 1600 px, WebP) antes de subirla; la de Mexico Dreamin pasó de 1.28 MB a 150 KB.
+  - El sitio público muestra la foto en la portada, las tarjetas y la página de la campaña. Si no hay foto o no carga, usa la ilustración.
+- **Cómo funciona:**
+  - El archivo se guarda en Salesforce Files (`ContentVersion`) ligado a la campaña.
+  - Un **enlace público** (`ContentDistribution`) da acceso solo a ese archivo, para que el visitante sin login lo vea. El guest sigue sin permisos de objeto.
+  - Al reemplazar o quitar la imagen se borra la anterior.
+- **Seguridad:**
+  - Solo con el permiso `Gestionar_Campanas` (Coordinación). Tesorería recibe "Tu rol no permite…".
+  - El formato se valida por los primeros bytes del archivo (PNG, JPG o WebP), no por el nombre. Un texto renombrado a `.png` se rechaza.
+  - Límite de 1.5 MB en el servidor.
+  - El campo del enlace solo lo escribe Apex; nadie lo edita a mano.
+- **⚠ Errores de la IA:**
+  1. El primer script para editar el Apex usó un heredoc de bash demasiado largo y falló; se pasó a un archivo de Python.
+  2. Para verificar, filtró en SOQL un campo de texto largo (`Imagen_URL__c != null`), lo que Salesforce no permite; la consulta no devolvió nada. Se consultó por Id.
+  3. La vista previa del panel salió en blanco en la primera captura. Se diagnosticó que la imagen sí cargaba (1178 px), solo tardaba; ahora se muestra la copia local al instante.
+- **Qué verificamos y cómo:**
+  - Antes de construir: un enlace público de prueba respondió 200 sin sesión y el sitio no bloquea imágenes de ese dominio (CSP). El archivo de prueba se borró.
+  - 2 tests nuevos:
+    - Subir, reemplazar (queda una sola imagen) y quitar.
+    - El sitio recibe el enlace.
+    - Se rechaza un archivo que no es imagen.
+    - Tesorería no puede subir ni quitar.
+  - 44 tests en verde.
+  - Subida real desde el panel con navegador automático. Capturas del sitio a 1280 y 390 px.
+- **Decisión:** la imagen de Mexico Dreamin (fotos de personas reales del evento, aportada por el equipo) vive solo en la org, no en el repositorio público.
 
