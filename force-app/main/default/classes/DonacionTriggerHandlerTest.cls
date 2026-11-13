@@ -35,6 +35,23 @@ private class DonacionTriggerHandlerTest {
     }
 
     @IsTest
+    static void comprobanteHtmlRespetaPrivacidadYEscapa() {
+        Campana__c c = new Campana__c(Name = 'Boletos');
+        Donacion__c anonima = new Donacion__c(Modalidad__c = 'Anonima', Nombre__c = 'Nombre Oculto', Monto__c = 100, Token_Publico__c = 'abc');
+        Donacion__c credito = new Donacion__c(Modalidad__c = 'Credito', Nombre__c = '<b>Ana</b>', Monto__c = 50);
+        Donacion__c factura = new Donacion__c(Modalidad__c = 'Factura', Nombre__c = 'Empresa Ficticia', Monto__c = 100);
+        String a = ComprobanteService.html(anonima, c);
+        String cr = ComprobanteService.html(credito, c);
+        String f = ComprobanteService.html(factura, c);
+        Assert.isFalse(a.contains('Nombre Oculto'), 'El comprobante anónimo no lleva nombre (HU-02 CA2)');
+        Assert.isTrue(a.contains('Donante anónimo'));
+        Assert.isTrue(cr.contains('&lt;b&gt;Ana&lt;/b&gt;'), 'El nombre capturado se escapa');
+        Assert.isFalse(cr.contains('<b>Ana</b>'));
+        Assert.isTrue(f.contains('comprobante fiscal (CFDI)'), 'Sin CFDI (HU-06 CA3)');
+        Assert.isTrue(a.contains(ComprobanteService.MARCA) && a.contains('MODO DE PRUEBA'));
+    }
+
+    @IsTest
     static void cuerpoDelComprobanteRespetaModalidad() {
         Campana__c c = new Campana__c(Name = 'Boletos');
         Donacion__c anonima = new Donacion__c(Modalidad__c = 'Anonima', Monto__c = 100, Token_Publico__c = 'abc');

@@ -28,6 +28,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 18 | 2026-11-10 | Jimena | GitHub Copilot | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 | [J01](prompts/jimena/J01-guion-video-entrega1.md) | — | ~45 min → 10 min |
 | 19 | 2026-11-10 | Jimena | Claude y Gemini | HU-01 a HU-17 | [J02](prompts/jimena/J02-documentar-contribucion-entrega1.md) | ⚠ | 8 h ahorradas |
 | 20 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14 | [P18](prompts/dilian/P18-correo-comprobante.md) | ⚠ | ~3 h → 30 min |
+| 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
 
 ---
 
@@ -223,4 +224,21 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - 41 tests en verde.
 - **Qué corregimos:** `ComprobanteService` usa la dirección verificada. Si no hay una, conserva el comportamiento anterior.
 - **Decisión:** no usar un servicio externo de correo (Brevo) sin aprobación del profesor (costo cero y datos personales).
+
+### 21 · Comprobante con diseño (HTML) — [P19](prompts/dilian/P19-comprobante-html.md)
+- **Qué obtuvimos:**
+  - Comprobante en HTML con la identidad de la plataforma: encabezado, etiqueta "Modo de prueba", monto destacado con estado "Pagado", tabla de detalle, aviso según la modalidad, botón a la campaña y pie con aviso académico.
+  - Se conserva la versión de texto plano como respaldo.
+  - Usa tablas y estilos en línea para que se vea bien en Gmail y Outlook.
+- **⚠ Errores de la IA:**
+  1. Para la vista previa intentó llamar desde Apex anónimo un método privado (`@TestVisible` solo aplica en tests). Se hizo público, porque es una función pura sin datos sensibles.
+  2. El primer script de la vista previa tomó el texto del código fuente en lugar del log. Se corrigió tomando la última coincidencia del log.
+- **Qué verificamos y cómo:**
+  - Test nuevo `comprobanteHtmlRespetaPrivacidadYEscapa`:
+    - La anónima no muestra el nombre (HU-02 CA2).
+    - El nombre capturado se escapa (sin inyección de HTML).
+    - La de factura aclara que no es CFDI (HU-06 CA3).
+  - 42 tests en verde.
+  - Vista previa a 800 y 390 px con los datos reales de DON-00013.
+  - Donación real DON-00014 enviada al correo del equipo.
 
