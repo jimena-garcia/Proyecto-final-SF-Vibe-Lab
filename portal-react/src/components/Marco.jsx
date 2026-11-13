@@ -1,10 +1,9 @@
 import Icono from '../ui/Icono.jsx';
 import { alClicInterno, navegar, urlInicio } from '../lib/navegacion.js';
-import { MARCA, urlAccesoEquipo } from '../marca.js';
+import { MARCA } from '../marca.js';
 
-/** Header claro: marca de la plataforma, buscador de campañas y acceso del equipo. */
+/** Header claro: marca de la plataforma y buscador de campañas. El acceso del equipo no se anuncia en el sitio público. */
 export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
-  const acceso = urlAccesoEquipo();
   return (
     <>
       <a className="saltar" href="#contenido">
@@ -57,11 +56,6 @@ export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
             <a href={`${urlInicio()}#como-funciona`} onClick={alClicInterno(urlInicio(), 'como-funciona')}>
               Cómo funciona
             </a>
-            {acceso && (
-              <a className="btn btn--secundario btn--sm" href={acceso}>
-                Acceso del equipo
-              </a>
-            )}
           </nav>
         </div>
       </header>

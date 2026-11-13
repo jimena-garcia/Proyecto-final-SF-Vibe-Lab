@@ -11,14 +11,3 @@ export const MARCA = {
   avisoNoAfiliacion:
     'Las campañas son iniciativas de SF Vibe Lab. Los eventos que se mencionan (como Mexico Dreamin) no las organizan ni las respaldan oficialmente.'
 };
-
-/**
- * Enlace al panel de administración. El panel vive en el dominio interno de la org
- * (…my.salesforce.com); el sitio público en …my.salesforce-sites.com. En otros entornos
- * (desarrollo local) no se muestra.
- */
-export function urlAccesoEquipo() {
-  const { hostname, protocol } = window.location;
-  if (!hostname.endsWith('.my.salesforce-sites.com')) return null;
-  return `${protocol}//${hostname.replace('.my.salesforce-sites.com', '.my.salesforce.com')}/apex/PanelAdmin`;
-}

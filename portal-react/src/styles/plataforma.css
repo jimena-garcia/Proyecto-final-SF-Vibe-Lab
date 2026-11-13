@@ -8,7 +8,8 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; font-variation-setti
 /* Header blanco */
 .header { background: var(--superficie); color: var(--texto); border-bottom: 1px solid var(--linea); }
 .header__barra { min-height: 72px; gap: var(--e-5); }
-.marca { color: var(--texto); }
+.marca { color: var(--texto); gap: var(--e-3); min-width: 0; }
+.marca__texto small { margin-top: 3px; }
 .marca__simbolo { width: 36px; height: 36px; border-radius: 10px; background: var(--achiote); color: #fff; display: grid; place-items: center; flex: none; }
 .marca__texto { font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.02em; }
 .marca__texto small { color: var(--texto-2); font-weight: 500; letter-spacing: 0; }
