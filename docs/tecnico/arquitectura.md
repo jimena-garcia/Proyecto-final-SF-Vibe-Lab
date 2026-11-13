@@ -77,10 +77,10 @@ Plataforma de crowdfunding del programa SF Vibe Lab (UADY × Salesforce) **monta
 | `StripeService` | Crear Checkout y consultar sesiones vía `callout:Stripe_API` | — |
 | `StripeWebhookResource` / `StripeWebhookService` | Endpoint REST del webhook; firma, idempotencia y registro de avisos | `without sharing` |
 | `DonacionTriggerHandler` | Reacciona al paso a Pagada (bulkificado) | — |
-| `ComprobanteService` | Arma y envía el comprobante (sin nombre si es anónima; aclara que no es CFDI) | `without sharing` |
-| `AdminPortalController` | Datos del **panel**. Valida la custom permission del rol en cada método | `with sharing` + `WITH USER_MODE` |
+| `ComprobanteService` | Arma y envía el comprobante en HTML y texto (sin nombre si es anónima; aclara que no es CFDI). Desde el 12 nov sale con un remitente verificado de la org (R-01) | `without sharing` |
+| `AdminPortalController` | Datos del **panel**. Valida la custom permission del rol en cada método. Desde el 12 nov sube la imagen de cada campaña (Salesforce Files + enlace público) | `with sharing` + `WITH USER_MODE` |
 | `EquipoController` | Alta de personas, roles y desactivación. Solo quien tiene "Gestionar usuarios" | `with sharing` |
-| `TestDataFactory` y `*Test` | Datos de prueba y **41 tests** (ver [`pruebas.md`](pruebas.md)) | — |
+| `TestDataFactory` y `*Test` | Datos de prueba y **44 tests** (41 en la Entrega 1; ver [`pruebas.md`](pruebas.md)) | — |
 
 ## 5. Seguridad (resumen; detalle en [`../seguridad.md`](../seguridad.md))
 

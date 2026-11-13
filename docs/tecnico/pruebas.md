@@ -2,7 +2,7 @@
 
 Tres niveles: **tests automáticos de Apex**, **prueba de seguridad sin sesión** contra el sitio real y **prueba de punta a punta** de una donación.
 
-## 1. Tests automáticos de Apex (41 en verde)
+## 1. Tests automáticos de Apex (44 en verde; 41 en la Entrega 1)
 
 Comando:
 ```bash
@@ -32,11 +32,14 @@ sf apex run test --test-level RunLocalTests --code-coverage --wait 15
 | `DonacionTriggerHandlerTest` | `confirmacionManualSeDistingueYEnviaUnSoloComprobante` | Manual vs. pasarela; un solo comprobante | HU-15, HU-14 |
 | | `bulkificado` | Funciona con muchas donaciones a la vez | Calidad |
 | | `cuerpoDelComprobanteRespetaModalidad` | Comprobante sin nombre si es anónima; aviso de no-CFDI | HU-02, HU-06 |
+| | `comprobanteHtmlRespetaPrivacidadYEscapa` (12 nov) | Comprobante HTML: anónima sin nombre, datos escapados, aviso de no-CFDI | HU-02, HU-06 |
 | `AdminPortalControllerTest` | `permisosPorRol` | Cada rol ve solo sus secciones | HU-07…09 |
 | | `tesoreriaVeElResumenCompleto`, `coordinacionVeAvancePeroNoDatosDeDonantes` | Coordinación no ve correo ni RFC | HU-09, HU-12 |
 | | `coordinacionCreaYEditaCampanaConMetas`, `rechazaMetaMayorALaFinalSinGuardarNada` | Administración de campañas y metas | HU-08 |
 | | `tesoreriaNoPuedeEditarCampanas` | Separación de roles | HU-08 |
 | | `tesoreriaFiltraDonacionesYVeDatosDeFactura` | Filtro de factura con nombre y RFC | HU-07 |
+| | `coordinacionSubeReemplazaYQuitaLaImagen` (12 nov) | Imagen de campaña: subir, reemplazar (queda una), quitar; el sitio recibe el enlace | HU-08 |
+| | `rechazaArchivosQueNoSonImagenYRolesSinPermiso` (12 nov) | Solo PNG/JPG/WebP reales; Tesorería no puede cambiar imágenes | HU-08, HU-12 |
 | `EquipoControllerTest` | `administradorDaDeAltaConRolYLoCambia`, `validaDatosAntesDeCrear` | Alta de integrantes con rol | Equipo |
 | | `ningunRolPuedeCrearUsuariosNiCambiarRoles` | Solo el dueño gestiona el equipo | Seguridad |
 

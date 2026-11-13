@@ -21,7 +21,9 @@ Stripe_Config__c                   (custom setting protegido, jerárquico)
 | `Avance__c` | Fórmula % | `Recaudado / Meta` |
 | `Activa__c` | Casilla | Visible en el sitio y acepta donaciones |
 | `Destacada__c` | Casilla | Campaña principal de la portada (el panel deja solo una) |
-| `Ilustracion__c` | Lista | Ilustración de la tarjeta (General, Boletos, Transporte, Hospedaje) |
+| `Ilustracion__c` | Lista | Ilustración de la tarjeta (General, Boletos, Transporte, Hospedaje); se usa si no hay imagen |
+| `Imagen_URL__c` | Texto largo | Enlace público de la imagen de la campaña. Lo escribe Apex al subirla desde el panel (desde el 12 nov) |
+| `Imagen_Alt__c` | Texto | Descripción de la imagen para lectores de pantalla (desde el 12 nov) |
 | `Montos_Sugeridos__c` | Texto | Botones rápidos del formulario (`200;500;1000`) |
 
 **Validación:** `Meta_Positiva` (la meta debe ser mayor que cero).
