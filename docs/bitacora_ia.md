@@ -36,6 +36,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 26 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J24](prompts/jimena/J24-paleta-mexico-dreamin.md) | — | ~30 min → 10 min |
 | 27 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | [P22](prompts/dilian/P22-checkout-embebido.md) | ⚠ | ~4 h → 40 min |
 | 28 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-08, HU-11 | [P23](prompts/dilian/P23-empatia-gracias-hero.md) | ⚠ | ~6 h → 1 h |
+| 29 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-08 | [P23](prompts/dilian/P23-empatia-gracias-hero.md) | ⚠ | ~2 h → 25 min |
 
 ---
 
@@ -339,3 +340,17 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Test nuevo `historiaDeLaCampanaEnElSitioYEnGracias` (lista sin viñetas ni renglones vacíos; `getEstado` devuelve la campaña) y el de Coordinación guarda los 3 campos. Despliegue con `RunLocalTests`: 47/47.
   - Capturas con Chrome automatizado a 1280 y 390 px de portada, campaña y gracias (modo demo).
   - Script que hace clic en "Contribuir ahora" (abre el modal), "Conoce a quién apoyas" (la sección queda arriba) y "Quiero apoyar" (abre el modal).
+
+### 29 · Campañas secundarias con causas distintas de Mexico Dreamin — [P23](prompts/dilian/P23-empatia-gracias-hero.md) · [R-07](preguntas_y_reportes.md)
+- **Qué obtuvimos:**
+  - Viáticos y seguro se integraron a la meta final de Mexico Dreamin ("Hospedaje, viáticos y seguro"; la meta sigue en $100,000).
+  - Tres causas ficticias distintas, con historia, metas, "A quién apoyas", "Lo que hace posible" y mensaje de gracias: Certificaciones Salesforce ($36,000), Comunidad Salesforce en Mérida ($20,000) y Becas de conectividad ($18,000). El equipo eligió las causas.
+  - Tres ilustraciones nuevas (Certificación, Comunidad, Conectividad) en el sitio, el panel y la lista de Salesforce.
+  - `campanas_secundarias.apex` (idempotente) y `campana_principal.apex` reflejan el nuevo estado; `datos_demo.apex` quedó marcado como obsoleto.
+- **⚠ Errores de la IA:**
+  1. El primer script de datos no compiló (variable `final_`: Apex no acepta identificadores que terminan en guion bajo). No cambió nada porque no llegó a ejecutarse.
+  2. La IA creyó dos veces que los acentos se habían guardado mal ("Mérida", "día"). Era la consola de Windows leyendo la salida de `sf` sin UTF-8; se comprobó leyendo el JSON como UTF-8.
+- **Qué verificamos y cómo:**
+  - Se confirmó antes que ninguna de las campañas reutilizadas tenía donaciones (consulta por campaña y estado).
+  - El script del repo se ejecutó contra la org y dejó los mismos datos (sin duplicados).
+  - Captura del sitio real con "Más campañas" abierto.

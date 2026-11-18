@@ -40,34 +40,34 @@ const campanas = [
   },
   {
     id: 'a01DEMO00000000002',
-    nombre: '[DEMO] Otra campaña de ejemplo',
-    descripcion: 'Campaña secundaria de demostración para ver cómo se listan otras campañas activas.',
+    nombre: '[DEMO] Certificaciones Salesforce',
+    descripcion: 'Ayuda a que alumnos de SF Vibe Lab presenten su primera certificación oficial de Salesforce.',
     meta: 20000,
     recaudado: 3500,
     donacionesPagadas: 6,
-    ilustracion: 'Transporte',
+    ilustracion: 'Certificacion',
     montosSugeridos: [300, 800, 1500],
     donantes: []
   },
   {
     id: 'a01DEMO00000000003',
-    nombre: '[DEMO] Viáticos en la CDMX',
-    descripcion: 'Comidas y transporte local durante los días del evento.',
+    nombre: '[DEMO] Comunidad Salesforce en Mérida',
+    descripcion: 'Meetups y un hackathon de la comunidad Salesforce en Mérida, abiertos a estudiantes.',
     meta: 15000,
     recaudado: 9200,
     donacionesPagadas: 14,
-    ilustracion: 'Hospedaje',
+    ilustracion: 'Comunidad',
     montosSugeridos: [150, 300, 600],
     donantes: []
   },
   {
     id: 'a01DEMO00000000004',
-    nombre: '[DEMO] Seguro de viaje',
-    descripcion: 'Seguro de gastos médicos para cada alumno durante el viaje.',
+    nombre: '[DEMO] Becas de conectividad',
+    descripcion: 'Internet en casa durante el semestre para alumnos que estudian desde lugares con mala conexión.',
     meta: 8000,
     recaudado: 800,
     donacionesPagadas: 3,
-    ilustracion: 'Boletos',
+    ilustracion: 'Conectividad',
     montosSugeridos: [100, 250, 500],
     donantes: []
   }

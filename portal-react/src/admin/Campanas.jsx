@@ -94,7 +94,10 @@ const ILUSTRACIONES = [
   { valor: 'General', texto: 'Ruta' },
   { valor: 'Boletos', texto: 'Boletos' },
   { valor: 'Transporte', texto: 'Transporte' },
-  { valor: 'Hospedaje', texto: 'Hospedaje' }
+  { valor: 'Hospedaje', texto: 'Hospedaje' },
+  { valor: 'Certificacion', texto: 'Certificación' },
+  { valor: 'Comunidad', texto: 'Comunidad' },
+  { valor: 'Conectividad', texto: 'Conectividad' }
 ];
 
 function validar(c) {

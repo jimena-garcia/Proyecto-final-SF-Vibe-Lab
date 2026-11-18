@@ -35,11 +35,11 @@ export default function ComoFunciona() {
         <ol className="pasos">
           <li>
             <h3>Eliges campaña y monto</h3>
-            <p>Cada campaña cubre un tramo del viaje. Puedes elegir un monto sugerido o escribir el tuyo.</p>
+            <p>Cada campaña apoya a estudiantes con una causa distinta. Puedes elegir un monto sugerido o escribir el tuyo.</p>
           </li>
           <li>
             <h3>Pagas de forma segura en Stripe</h3>
-            <p>Registramos tu donación y te llevamos a Stripe. Nunca vemos ni guardamos los datos de tu tarjeta.</p>
+            <p>Pagas con tarjeta en el formulario seguro de Stripe, sin salir del sitio. Nunca vemos ni guardamos los datos de tu tarjeta.</p>
           </li>
           <li>
             <h3>Se confirma y te avisamos</h3>

@@ -86,3 +86,12 @@ Formato de cada entrada (guía, sección 12): autor · fecha · 1) qué intentá
 
 **Después:** _(registrar la respuesta del cliente)_
 
+## R-07 · Decisión: las demás campañas son causas estudiantiles distintas de Mexico Dreamin
+**Autor:** Dilian · **Fecha:** 2026-11-17 · **Historias:** HU-01, HU-08 · **Tipo:** decisión del equipo (por confirmar con el cliente)
+1. **Qué intentábamos lograr:** que el donante no se confunda al ver tres campañas del mismo viaje (Mexico Dreamin, Viáticos en la CDMX y Seguro de viaje).
+2. **Qué hicimos:** viáticos y seguro pasaron a la meta final de Mexico Dreamin ("Hospedaje, viáticos y seguro"); la meta sigue en $100,000. Las otras campañas se reutilizaron (no tenían donaciones) como causas ficticias distintas: Certificaciones Salesforce, Comunidad Salesforce en Mérida y Becas de conectividad, cada una con su ilustración. Script: `scripts/apex/campanas_secundarias.apex`.
+3. **Qué esperábamos:** que cada campaña cuente una historia distinta y que Mexico Dreamin concentre todo lo del viaje.
+4. **Qué pasó:** el sitio real muestra la campaña principal y tres causas distintas en "Más campañas". HU-01 CA1 (al menos dos campañas activas) se sigue cumpliendo.
+5. **Qué consultamos:** con la IA revisamos que los requisitos no limitan las campañas al viaje. El texto de "Cómo funciona" se ajustó ("cada campaña apoya a estudiantes con una causa distinta").
+
+**Pregunta al cliente:** ¿Está bien que la plataforma incluya otras causas del programa SF Vibe Lab además de Mexico Dreamin?

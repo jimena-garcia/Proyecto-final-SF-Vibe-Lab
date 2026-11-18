@@ -46,6 +46,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 | R-01 | ~~El correo del comprobante no llega~~ **Resuelto el 12 nov** con un remitente verificado de la org | HU-02 CA2, HU-14 CA2 | Cerrado. Límite: 15 correos al día (Developer Edition) |
 | R-05 | La redirección de Stripe a "gracias" a veces tarda ~2 min | HU-04 (experiencia) | **Mitigado el 17 nov** con Embedded Checkout (sin redirección). Se activa al capturar la clave `pk_test` en Stripe Config |
 | R-06 | Decisión "Donante anónimo" en el reconocimiento público | HU-02 CP1, HU-06 CP3 | Pendiente de confirmar con el cliente |
+| R-07 | Otras campañas = causas estudiantiles distintas de Mexico Dreamin | HU-01, HU-08 | Hecho el 17 nov; pendiente de confirmar con el cliente |
 | — | Nombre de la plataforma ("Impulso Vibe Lab") provisional | Marca | Pendiente; se cambia en `portal-react/src/marca.js` |
 | — | Logos oficiales UADY / Salesforce / Mexico Dreamin | Footer y campaña | Pendientes de los archivos del equipo |
 

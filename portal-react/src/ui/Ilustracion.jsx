@@ -82,7 +82,73 @@ function Hospedaje() {
   );
 }
 
-const MAPA = { Boletos, Transporte, Hospedaje, General };
+/** Certificaciones: credencial con sello de aprobado. */
+function Certificacion() {
+  return (
+    <>
+      <rect width="400" height="250" fill={P.jadeSuave} />
+      <rect x="92" y="48" width="200" height="150" rx="10" fill={P.papel} stroke={P.tinta} strokeWidth="3" />
+      <rect x="114" y="74" width="120" height="12" rx="6" fill={P.tinta} />
+      <rect x="114" y="98" width="150" height="8" rx="4" fill={P.nubeSuave} />
+      <rect x="114" y="116" width="130" height="8" rx="4" fill={P.nubeSuave} />
+      <rect x="114" y="160" width="70" height="8" rx="4" fill={P.tinta} />
+      <path d="M286 170l-14 52 22-12 22 12-14-52z" fill={P.achiote} />
+      <circle cx="294" cy="160" r="38" fill={P.jade} />
+      <circle cx="294" cy="160" r="28" fill="none" stroke={P.papel} strokeWidth="3" strokeDasharray="3 6" />
+      <path d="M280 160l10 10 20-22" stroke={P.papel} strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="58" cy="210" r="18" fill={P.sol} />
+    </>
+  );
+}
+
+/** Comunidad: personas alrededor de una mesa con globos de conversación. */
+function Comunidad() {
+  const persona = (x, color) => (
+    <g key={x}>
+      <circle cx={x} cy="118" r="20" fill={color} />
+      <path d={`M${x - 32} 196c0-26 14-46 32-46s32 20 32 46z`} fill={color} />
+    </g>
+  );
+  return (
+    <>
+      <rect width="400" height="250" fill={P.claro} />
+      {persona(110, P.tinta)}
+      {persona(200, P.achiote)}
+      {persona(290, P.jade)}
+      <rect x="50" y="190" width="300" height="20" rx="6" fill={P.tinta} />
+      <rect x="128" y="34" width="70" height="40" rx="12" fill={P.papel} stroke={P.tinta} strokeWidth="3" />
+      <path d="M150 74l-6 14 18-14z" fill={P.tinta} />
+      <circle cx="148" cy="54" r="4" fill={P.tinta} />
+      <circle cx="163" cy="54" r="4" fill={P.tinta} />
+      <circle cx="178" cy="54" r="4" fill={P.tinta} />
+      <rect x="226" y="46" width="56" height="34" rx="12" fill={P.sol} />
+      <path d="M262 80l8 12-20-12z" fill={P.sol} />
+    </>
+  );
+}
+
+/** Conectividad: laptop con señal de wifi. */
+function Conectividad() {
+  return (
+    <>
+      <rect width="400" height="250" fill={P.papel} />
+      <rect x="110" y="96" width="180" height="112" rx="10" fill={P.tinta} />
+      <rect x="122" y="108" width="156" height="88" rx="4" fill={P.jadeSuave} />
+      <path d="M86 208h228l-14 18H100z" fill={P.tinta} />
+      <rect x="140" y="126" width="80" height="10" rx="5" fill={P.jade} />
+      <rect x="140" y="146" width="110" height="8" rx="4" fill={P.nubeSuave} />
+      <rect x="140" y="162" width="96" height="8" rx="4" fill={P.nubeSuave} />
+      <g fill="none" stroke={P.achiote} strokeWidth="9" strokeLinecap="round">
+        <path d="M156 64a64 64 0 0 1 88 0" />
+        <path d="M172 82a38 38 0 0 1 56 0" />
+      </g>
+      <circle cx="200" cy="98" r="8" fill={P.achiote} />
+      <circle cx="334" cy="60" r="20" fill={P.sol} />
+    </>
+  );
+}
+
+const MAPA = { Boletos, Transporte, Hospedaje, General, Certificacion, Comunidad, Conectividad };
 
 export default function Ilustracion({ tipo }) {
   const Dibujo = MAPA[tipo] || General;

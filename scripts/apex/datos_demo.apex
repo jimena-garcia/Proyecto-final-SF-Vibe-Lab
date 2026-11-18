@@ -1,3 +1,6 @@
+// OBSOLETO desde el 17 nov 2026: era la primera carga de la demo (tres campañas del mismo viaje).
+// Ya no lo ejecutes: la usan campana_principal.apex (Mexico Dreamin) y campanas_secundarias.apex
+// (causas estudiantiles distintas). Se conserva por trazabilidad de la Entrega 1.
 // Campañas ficticias para la demo (montos inventados). Ejecutar:
 //   sf apex run -f scripts/apex/datos_demo.apex
 List<Campana__c> cs = new List<Campana__c>{

@@ -19,8 +19,8 @@ insert new List<Hito__c>{
         Descripcion__c = 'Cubre la entrada al evento para los alumnos participantes.'),
     new Hito__c(Campana__c = c.Id, Name = 'Transporte Mérida–CDMX', Monto__c = 75000,
         Descripcion__c = 'Suma el viaje redondo a la Ciudad de México.'),
-    new Hito__c(Campana__c = c.Id, Name = 'Hospedaje en CDMX', Monto__c = 100000,
-        Descripcion__c = 'Completa el viaje: estancia cerca de la sede del evento.')
+    new Hito__c(Campana__c = c.Id, Name = 'Hospedaje, viáticos y seguro', Monto__c = 100000,
+        Descripcion__c = 'Completa el viaje: estancia cerca de la sede, comidas y transporte local en la CDMX, y seguro de gastos médicos para cada alumno.')
 };
 
 List<Campana__c> otras = [SELECT Id FROM Campana__c WHERE Id != :c.Id AND Activa__c = TRUE];
