@@ -55,7 +55,6 @@ TAREAS = [
     ('T-09', 'Resolver o documentar el correo del comprobante (R-01)', 'Entrega 2', 'Dilian', None,
      'HU-02 CA2, HU-14 CA2.'),
     ('T-10', 'Identidad por campaña: imagen y logo (Fase C)', 'Entrega 2', 'Dilian', None, ''),
-    ('T-11', 'Actualizaciones de campaña y estado finalizada (Fase D)', 'Entrega 2', 'Dilian', None, ''),
     ('T-12', 'Preparar la defensa oral (demo en vivo y preguntas)', 'Entrega 2', 'Ambos', None, '18 nov, presencial.'),
 ]
 for tid, titulo, hito, resp, estado, desc in TAREAS:
