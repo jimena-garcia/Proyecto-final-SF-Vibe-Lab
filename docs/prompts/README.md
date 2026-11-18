@@ -38,6 +38,7 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 | J02 | [Documentar la contribución de Jimena](jimena/J02-documentar-contribucion-entrega1.md) | HU-01 a HU-17 |
 | J22 | [Portada de objetivo y contribución en modal](jimena/J22-portada-objetivo-modal.md) | HU-01, HU-02, HU-05, HU-11 |
 | J23 | [Ajuste horizontal y acordeón de la portada](jimena/J23-ajuste-portada-acordeon.md) | HU-01, HU-11 |
+| J24 | [Paleta visual de Mexico Dreamin](jimena/J24-paleta-mexico-dreamin.md) | HU-01, HU-11 |
 
 ## Plantilla para un prompt nuevo
 

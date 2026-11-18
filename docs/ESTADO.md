@@ -68,3 +68,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 ## Ajuste de portada (17 nov 2026)
 - La campaña principal ocupa el contenedor completo en un layout horizontal: imagen 55 % e información 45 %.
 - “Más campañas” funciona como acordeón en la misma portada y el encabezado abre y lleva a esa sección sin cambiar de ruta.
+
+## Paleta Mexico Dreamin (17 nov 2026)
+- Azul `#245494` para acción y navegación; Navy `#16305A` para el banner.
+- Magenta `#CC2484` para progreso, metas, ilustraciones y el llamado final a aportar.

@@ -1,40 +1,42 @@
 /* ==========================================================================
    Tokens — plataforma "Impulso Vibe Lab" (SF Vibe Lab · UADY × Salesforce)
-   Paleta clara inspirada funcionalmente en plataformas de crowdfunding:
-   fondo blanco, texto casi negro, AZUL para acción y MORADO para progreso
-   (colores del logo de Mexico Dreamin, tomados de la foto del evento; 12 nov 2026).
-   El verde queda solo como color semántico de éxito ("Pagado", confirmaciones).
-   Los nombres de variables se conservan (achiote = acción, jade = progreso) para que
-   todos los componentes —públicos y del panel— tomen la nueva paleta sin reescribirse.
-   Contraste medido sobre blanco: acción 6.1:1 (AA texto), progreso 9.57:1,
-   texto secundario 6.69:1. Blanco sobre el banner: 8.25:1 o más.
+   Paleta tomada de mexicodreamin.com: azul #245494 para acción y navegación,
+   magenta #CC2484 para progreso, metas, ilustración y llamado final a contribuir.
+   Navy derivado #16305A para el banner y títulos de énfasis.
+   Los nombres de variables se conservan (achiote = acción, jade = progreso).
    ========================================================================== */
 :root {
   /* Superficies y texto */
-  --tinta: #1a1a1a;            /* texto principal y navegación del panel */
-  --tinta-2: #2b2b2b;
+  --tinta: #1a1a1a;
+  --tinta-2: #5c5c5c;
   --papel: #ffffff;            /* fondo general */
-  --papel-2: #f3f3f1;          /* superficies suaves, pistas de progreso */
-  --crema: #f6f2ea;            /* franja de confianza */
+  --papel-2: #f3f3f1;
+  --crema: #f3f3f1;
   --superficie: #ffffff;
   --texto: #1a1a1a;
   --texto-2: #5c5c5c;
-  --texto-3: #6b6b6b;
+  --texto-3: #5c5c5c;
   --linea: #e6e6e3;
-  --linea-fuerte: #cfcfca;
+  --linea-fuerte: #d0d0cb;
 
   /* Acción principal (azul) */
-  --achiote: #1f62b1;          /* botones primarios, enlaces de acción: 6.1:1 */
-  --achiote-hover: #194f92;
-  --achiote-suave: #e8eff9;
-  --contribuir: #b84a08;
+  --navy: #16305a;
+  --nube: #245494;
+  --nube-suave: #e7eef7;
+  --achiote: #245494;
+  --achiote-hover: #1b4175;
+  --achiote-suave: #e7eef7;
+  --contribuir: #cc2484;
+  --contribuir-hover: #a81c6b;
+  --contribuir-suave: #fbe8f3;
 
   /* Progreso y estados */
-  --jade: #50338c;             /* barras de progreso, metas alcanzadas (morado): 9.57:1 */
-  --jade-suave: #eee8f7;
-  --exito: #0b6b47;            /* semántico: pagado / confirmado */
+  --jade: #cc2484;
+  --jade-suave: #fbe8f3;
+  --exito: #0b6b47;
   --exito-suave: #e3f4ec;
-  --sol: #b45309;              /* pendiente / atención: 5.02:1 */
+  --sol: #b45309;
+  --sol-texto: #78350f;
   --sol-suave: #fef3c7;
   --error: #b91c1c;
   --error-suave: #fee2e2;

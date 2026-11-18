@@ -33,6 +33,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
 | 24 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-02, HU-05, HU-11 | [J22](prompts/jimena/J22-portada-objetivo-modal.md) | — | ~3 h → 45 min |
 | 25 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J23](prompts/jimena/J23-ajuste-portada-acordeon.md) | — | ~1 h → 20 min |
+| 26 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J24](prompts/jimena/J24-paleta-mexico-dreamin.md) | — | ~30 min → 10 min |
 
 ---
 
@@ -296,4 +297,9 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué obtuvimos:** objetivo principal horizontal 55/45 en escritorio, apilado en móvil y “Más campañas” como acordeón accesible en la misma página.
 - **Qué verificamos y cómo:** `npm run build` terminó sin errores y se revisaron las referencias residuales de la ruta separada y los estilos de recomendadas.
 - **Qué corregimos:** se eliminó `?mas=1`, se agregó la navegación por `#mas-campanas` y se compactaron los espaciados de la portada.
+
+### 26 · Paleta visual de Mexico Dreamin — [J24](prompts/jimena/J24-paleta-mexico-dreamin.md)
+- **Qué obtuvimos:** azul `#245494`, Navy `#16305A` y magenta `#CC2484` aplicados a los tokens existentes y las ilustraciones.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores; calculamos contraste de los pares principales, todos con al menos 5.02:1 para texto normal blanco o oscuro.
+- **Qué corregimos:** reemplazamos colores directos restantes por variables y conservamos semánticos del sistema.
 

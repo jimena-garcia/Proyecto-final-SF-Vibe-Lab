@@ -2,7 +2,16 @@
 // La campaña elige una con el campo Ilustracion__c; sin valor se usa "General".
 // Paleta limitada a los tokens del sistema.
 
-const P = { tinta: '#14213d', papel: '#f3eee5', achiote: '#c2410c', jade: '#50338c', sol: '#f5b451', claro: '#fdebdd' };
+const P = {
+  tinta: 'var(--navy)',
+  papel: 'var(--papel-2)',
+  achiote: 'var(--contribuir)',
+  jade: 'var(--jade)',
+  sol: 'var(--nube)',
+  claro: 'var(--contribuir-suave)',
+  nubeSuave: 'var(--nube-suave)',
+  jadeSuave: 'var(--jade-suave)'
+};
 
 function General() {
   return (
@@ -28,8 +37,8 @@ function Boletos() {
         <circle cx="240" cy="180" r="12" fill={P.claro} />
         <path d="M240 88v74" stroke={P.claro} strokeWidth="3" strokeDasharray="4 7" />
         <rect x="96" y="96" width="110" height="12" rx="6" fill={P.sol} />
-        <rect x="96" y="120" width="80" height="8" rx="4" fill="#3b4a70" />
-        <rect x="96" y="138" width="96" height="8" rx="4" fill="#3b4a70" />
+        <rect x="96" y="120" width="80" height="8" rx="4" fill={P.tinta} />
+        <rect x="96" y="138" width="96" height="8" rx="4" fill={P.tinta} />
         <circle cx="285" cy="125" r="20" fill={P.achiote} />
       </g>
     </>
@@ -39,7 +48,7 @@ function Boletos() {
 function Transporte() {
   return (
     <>
-      <rect width="400" height="250" fill="#e8eff9" />
+      <rect width="400" height="250" fill={P.nubeSuave} />
       <path d="M30 200 Q 200 20 370 150" stroke={P.tinta} strokeWidth="3" fill="none" strokeDasharray="2 10" strokeLinecap="round" />
       <circle cx="30" cy="200" r="9" fill={P.jade} />
       <circle cx="370" cy="150" r="9" fill={P.achiote} />
@@ -57,15 +66,15 @@ function Transporte() {
 function Hospedaje() {
   return (
     <>
-      <rect width="400" height="250" fill="#ebe7f0" />
+      <rect width="400" height="250" fill={P.jadeSuave} />
       <circle cx="300" cy="64" r="22" fill={P.sol} />
-      <rect x="40" y="110" width="80" height="140" fill="#3b4a70" />
+      <rect x="40" y="110" width="80" height="140" fill={P.tinta} />
       <rect x="120" y="70" width="110" height="180" fill={P.tinta} />
-      <rect x="230" y="130" width="70" height="120" fill="#3b4a70" />
+      <rect x="230" y="130" width="70" height="120" fill={P.tinta} />
       <rect x="300" y="160" width="70" height="90" fill={P.jade} />
       {[0, 1, 2, 3].map((f) =>
         [0, 1, 2].map((c) => (
-          <rect key={`${f}-${c}`} x={136 + c * 30} y={90 + f * 34} width="16" height="20" rx="2" fill={f === 1 && c === 1 ? P.sol : '#56648c'} />
+          <rect key={`${f}-${c}`} x={136 + c * 30} y={90 + f * 34} width="16" height="20" rx="2" fill={f === 1 && c === 1 ? P.sol : P.tinta} />
         ))
       )}
       <rect x="160" y="220" width="30" height="30" fill={P.achiote} />
