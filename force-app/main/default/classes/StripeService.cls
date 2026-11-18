@@ -11,7 +11,8 @@ public with sharing class StripeService {
 
     public class SesionCheckout {
         public String id;
-        public String url;
+        public String url; // solo en modo redirección
+        public String clientSecret; // solo en modo embebido: lo usa Stripe.js para montar el formulario
     }
 
     /**
@@ -19,6 +20,12 @@ public with sharing class StripeService {
      * client_reference_id = token público de la donación: es la referencia que permite
      * a staff encontrar la donación a partir del pago de prueba (HU-03 CA2).
      * Idempotency-Key = token: si el donante reintenta, Stripe devuelve la misma sesión (HU-03 CP2).
+     *
+     * embebido = true → Embedded Checkout (ui_mode=embedded): el formulario de Stripe se monta
+     * dentro de nuestra página y no hay redirección de ida ni de vuelta. Stripe solo regresa a
+     * urlExito si el método de pago lo exige (redirect_on_completion=if_required); con tarjeta,
+     * nunca. Evita la espera de hasta 2 min que tenía la redirección de la página de Stripe.
+     * embebido = false → Checkout hospedado con redirección (comportamiento original).
      */
     public static SesionCheckout crearCheckout(
         String token,
@@ -27,7 +34,8 @@ public with sharing class StripeService {
         String email,
         String urlExito,
         String urlCancelacion,
-        String moneda
+        String moneda,
+        Boolean embebido
     ) {
         Long centavos = (monto * 100).setScale(0, RoundingMode.HALF_UP).longValue();
 
@@ -40,8 +48,16 @@ public with sharing class StripeService {
         agregar(params, 'line_items[0][price_data][currency]', moneda);
         agregar(params, 'line_items[0][price_data][unit_amount]', String.valueOf(centavos));
         agregar(params, 'line_items[0][price_data][product_data][name]', concepto);
-        agregar(params, 'success_url', urlExito);
-        agregar(params, 'cancel_url', urlCancelacion);
+        // Solo tarjeta: no carga Link ni billeteras, que eran piezas extra que podían colgar la página.
+        agregar(params, 'payment_method_types[0]', 'card');
+        if (embebido) {
+            agregar(params, 'ui_mode', 'embedded');
+            agregar(params, 'redirect_on_completion', 'if_required');
+            agregar(params, 'return_url', urlExito);
+        } else {
+            agregar(params, 'success_url', urlExito);
+            agregar(params, 'cancel_url', urlCancelacion);
+        }
         if (String.isNotBlank(email)) {
             agregar(params, 'customer_email', email);
         }
@@ -51,7 +67,7 @@ public with sharing class StripeService {
         req.setMethod('POST');
         req.setTimeout(20000);
         req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-        req.setHeader('Idempotency-Key', 'checkout-' + token);
+        req.setHeader('Idempotency-Key', (embebido ? 'checkout-emb-' : 'checkout-') + token);
         req.setBody(String.join(params, '&'));
 
         HttpResponse res = new Http().send(req);
@@ -62,7 +78,8 @@ public with sharing class StripeService {
         SesionCheckout sesion = new SesionCheckout();
         sesion.id = (String) cuerpo.get('id');
         sesion.url = (String) cuerpo.get('url');
-        if (String.isBlank(sesion.id) || String.isBlank(sesion.url)) {
+        sesion.clientSecret = (String) cuerpo.get('client_secret');
+        if (String.isBlank(sesion.id) || String.isBlank(embebido ? sesion.clientSecret : sesion.url)) {
             throw new StripeException('Stripe no devolvió la sesión de pago.');
         }
         return sesion;

@@ -55,6 +55,7 @@ En Stripe, en modo de prueba, ve a Developers → API keys y copia la **Secret k
 5. Setup → Custom Settings → **Stripe Config** → Manage → New (valores por defecto de la organización):
    - `URL pública del portal` = la URL del paso 4.
    - `Moneda` = `mxn`. Si Stripe rechaza MXN, usa `usd` y anótalo en la bitácora.
+   - `Clave publicable (pk_test)` = la **Publishable key** de Stripe (dashboard en modo de prueba → Developers → API keys; empieza con `pk_test_`). Activa el **Embedded Checkout**: el formulario de pago se muestra dentro del sitio y no hay redirección. Esta clave **no es secreta** (Stripe la diseñó para el navegador), pero igual se captura aquí y no en el código. Solo se acepta `pk_test_`; si se deja vacía, el portal usa el Checkout con redirección.
 
 ## 5. Correo y staff
 

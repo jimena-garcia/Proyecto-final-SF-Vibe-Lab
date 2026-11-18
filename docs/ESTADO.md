@@ -22,7 +22,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
   - Portada de descubrimiento: destacada, recomendadas y buscador.
   - Página de campaña con metas escalonadas.
   - Donación anónima, con reconocimiento o con factura (RFC con patrón del SAT).
-  - Stripe Checkout por el monto exacto.
+  - Stripe Checkout por el monto exacto, **embebido** en la página (sin redirección) si está capturada la clave publicable; si no, con redirección.
   - Página de gracias (pendiente, confirmado o cancelado).
   - Lista "Quiénes apoyan": las anónimas y con factura aparecen como "Donante anónimo".
 - **Pagos:**
@@ -35,7 +35,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 - **Seguridad:**
   - El visitante no tiene permisos de objeto.
   - 10 pruebas sin sesión pasan; ver `docs/seguridad.md` y `scripts/prueba_seguridad.py`.
-- **Tests:** 41 tests de Apex en verde (`sf apex run test --test-level RunLocalTests`).
+- **Tests:** 46 tests de Apex en verde (`sf apex run test --test-level RunLocalTests`).
 - **Demo Entrega 1:** guion de video en `docs/video/guion_entrega1.md`, con recorrido público y panel de máximo cinco minutos.
 - **Contribución de Jimena:** documentada en `docs/equipo/jimena.md`, `docs/contribucion.md` y la bitácora de IA.
 
@@ -43,7 +43,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 | # | Problema | Afecta | Estado |
 |---|---|---|---|
 | R-01 | ~~El correo del comprobante no llega~~ **Resuelto el 12 nov** con un remitente verificado de la org | HU-02 CA2, HU-14 CA2 | Cerrado. Límite: 15 correos al día (Developer Edition) |
-| R-05 | La redirección de Stripe a "gracias" a veces tarda ~2 min | HU-04 (experiencia) | Intermitente, ajeno al sitio; probar sin extensiones |
+| R-05 | La redirección de Stripe a "gracias" a veces tarda ~2 min | HU-04 (experiencia) | **Mitigado el 17 nov** con Embedded Checkout (sin redirección). Se activa al capturar la clave `pk_test` en Stripe Config |
 | R-06 | Decisión "Donante anónimo" en el reconocimiento público | HU-02 CP1, HU-06 CP3 | Pendiente de confirmar con el cliente |
 | — | Nombre de la plataforma ("Impulso Vibe Lab") provisional | Marca | Pendiente; se cambia en `portal-react/src/marca.js` |
 | — | Logos oficiales UADY / Salesforce / Mexico Dreamin | Footer y campaña | Pendientes de los archivos del equipo |

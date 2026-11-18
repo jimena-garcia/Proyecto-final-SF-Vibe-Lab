@@ -146,6 +146,41 @@ private class PortalDonacionesControllerTest {
     }
 
     @IsTest
+    static void conClavePublicaUsaCheckoutEmbebidoSinRedireccion() {
+        Stripe_Config__c cfg = Stripe_Config__c.getOrgDefaults();
+        cfg.Publishable_Key__c = 'pk_test_ClaveFicticia123';
+        update cfg;
+        PortalDonacionesController.Resultado r = PortalDonacionesController.crearDonacion(entrada('Anonima', null, null, 300));
+        TestDataFactory.StripeMock mock = new TestDataFactory.StripeMock(200);
+        Test.setMock(HttpCalloutMock.class, mock);
+        Test.startTest();
+        PortalDonacionesController.Resultado pago = PortalDonacionesController.iniciarPago(r.token);
+        Test.stopTest();
+        Assert.isTrue(pago.ok);
+        Assert.isNull(pago.urlPago, 'En modo embebido no hay redirección');
+        Assert.areEqual('cs_test_123_secret_abc', pago.clientSecret);
+        Assert.areEqual('pk_test_ClaveFicticia123', pago.clavePublica);
+        String body = EncodingUtil.urlDecode(mock.ultima.getBody(), 'UTF-8');
+        Assert.isTrue(body.contains('ui_mode=embedded'));
+        Assert.isTrue(body.contains('redirect_on_completion=if_required'));
+        Assert.isTrue(body.contains('return_url=https://portal.ejemplo.test/?gracias=' + r.token));
+        Assert.isTrue(body.contains('payment_method_types[0]=card'), 'Solo tarjeta');
+        Assert.isFalse(body.contains('success_url'), 'Embedded Checkout no acepta success_url');
+        Assert.isTrue(body.contains('client_reference_id=' + r.token), 'Misma referencia que el webhook usa para confirmar');
+    }
+
+    @IsTest
+    static void clavePublicaDeProduccionSeIgnora() {
+        Stripe_Config__c cfg = Stripe_Config__c.getOrgDefaults();
+        cfg.Publishable_Key__c = 'pk_live_NoSeDebeUsar123';
+        update cfg;
+        Assert.isNull(PortalDonacionesController.clavePublica(), 'M1: solo modo de prueba');
+        cfg.Publishable_Key__c = 'pk_test_<script>';
+        update cfg;
+        Assert.isNull(PortalDonacionesController.clavePublica(), 'Formato inválido');
+    }
+
+    @IsTest
     static void falloDeStripeCancelaConMensajeEntendible() {
         PortalDonacionesController.Resultado r = PortalDonacionesController.crearDonacion(entrada('Anonima', null, null, 100));
         Test.setMock(HttpCalloutMock.class, new TestDataFactory.StripeMock(401));

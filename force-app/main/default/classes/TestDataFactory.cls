@@ -109,7 +109,7 @@ public class TestDataFactory {
             res.setStatusCode(codigo);
             res.setBody(
                 codigo == 200
-                    ? '{"id":"cs_test_123","url":"https://checkout.stripe.com/c/pay/cs_test_123"}'
+                    ? '{"id":"cs_test_123","url":"https://checkout.stripe.com/c/pay/cs_test_123","client_secret":"cs_test_123_secret_abc"}'
                     : '{"error":{"message":"Invalid API Key provided"}}'
             );
             return res;

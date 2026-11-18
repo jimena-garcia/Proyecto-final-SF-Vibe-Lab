@@ -31,6 +31,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
 | 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
 | 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
+| 24 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | [P22](prompts/dilian/P22-checkout-embebido.md) | ⚠ | ~4 h → 40 min |
 
 ---
 
@@ -285,3 +286,17 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Tests del comprobante en verde.
 - **Nota:** cambia la decisión de la Fase B ("un solo verde propio de la plataforma"). Ahora la plataforma usa los colores del evento principal, por decisión del equipo.
 
+### 24 · Stripe Embedded Checkout (sin redirección) — [P22](prompts/dilian/P22-checkout-embebido.md)
+- **Qué obtuvimos:**
+  - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`. Ambos modos piden solo tarjeta (`payment_method_types[0]=card`).
+  - `iniciarPago` usa el modo embebido solo si el custom setting tiene una clave `pk_test_` válida; si no, sigue con la redirección de siempre (cambio reversible sin desplegar).
+  - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar. Botón "Cancelar y no donar" reutiliza `?cancelado=`.
+  - La página de gracias no cambió: solo dice "confirmado" cuando Salesforce lo registra (`verificarPago` + webhook).
+- **⚠ Errores de la IA:**
+  1. El 12 nov la IA había propuesto primero "probar sin extensiones" como causa probable; la prueba del equipo mostró que el comprobante llegaba rápido y la espera era de la página de Stripe, así que esa hipótesis no resolvía el problema.
+- **Qué verificamos y cómo:**
+  - El sitio solo manda `frame-ancestors 'self'` como CSP (revisado con `curl -I`): no bloquea el script ni el iframe de Stripe.
+  - 2 tests nuevos: modo embebido (parámetros enviados, sin `success_url`, devuelve `client_secret` y clave) y que una clave `pk_live_` o mal formada se ignora (M1).
+  - Despliegue con `RunLocalTests`: 46/46 en verde.
+  - _(pendiente)_ Donación de prueba en el sitio real con la tarjeta 4242 tras capturar la clave publicable.
+- **Seguridad:** la clave publicable y el `client_secret` de la sesión no permiten cobrar ni leer datos; la secret key sigue solo en la Named Credential (M3).

@@ -65,7 +65,9 @@ public without sharing class PortalDonacionesController {
         public String mensaje;
         public List<String> errores = new List<String>();
         public String token;
-        public String urlPago;
+        public String urlPago; // modo redirección
+        public String clientSecret; // modo embebido: secreto de ESTA sesión de pago, no de la cuenta
+        public String clavePublica; // pk_test_…: pública por diseño (va en el navegador)
     }
 
     public class EstadoDTO {
@@ -197,6 +199,8 @@ public without sharing class PortalDonacionesController {
             return r;
         }
         String base = urlBase();
+        String clavePublica = clavePublica();
+        Boolean embebido = clavePublica != null;
         try {
             StripeService.SesionCheckout sesion = StripeService.crearCheckout(
                 d.Token_Publico__c,
@@ -205,13 +209,19 @@ public without sharing class PortalDonacionesController {
                 d.Email__c,
                 base + '?gracias=' + d.Token_Publico__c,
                 base + '?cancelado=' + d.Token_Publico__c,
-                moneda()
+                moneda(),
+                embebido
             );
             d.Stripe_Session_Id__c = sesion.id;
             update d;
             r.ok = true;
             r.token = d.Token_Publico__c;
-            r.urlPago = sesion.url;
+            if (embebido) {
+                r.clientSecret = sesion.clientSecret;
+                r.clavePublica = clavePublica;
+            } else {
+                r.urlPago = sesion.url;
+            }
         } catch (Exception e) {
             // C6 / S11: la donación no queda en un estado incoherente y el donante ve un mensaje entendible.
             d.Estado__c = 'Cancelada';
@@ -398,6 +408,17 @@ public without sharing class PortalDonacionesController {
         }
         String sitio = Site.getBaseSecureUrl();
         return String.isBlank(sitio) ? URL.getOrgDomainUrl().toExternalForm() + '/' : sitio.removeEnd('/') + '/';
+    }
+
+    /**
+     * Clave publicable de Stripe para Embedded Checkout. Solo se acepta de modo de prueba (M1).
+     * Si no está capturada (o no es pk_test_), el portal usa el Checkout con redirección.
+     */
+    @TestVisible
+    private static String clavePublica() {
+        Stripe_Config__c cfg = Stripe_Config__c.getOrgDefaults();
+        String clave = cfg == null ? null : cfg.Publishable_Key__c;
+        return (String.isNotBlank(clave) && Pattern.matches('^pk_test_[0-9A-Za-z]+$', clave.trim())) ? clave.trim() : null;
     }
 
     private static String moneda() {

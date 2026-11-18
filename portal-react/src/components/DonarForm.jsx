@@ -4,6 +4,7 @@ import { validar, normalizarRfc, MONTO_MINIMO, MONTO_MAXIMO } from '../validacio
 import { Alerta, Boton, pesos } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
 import { MODALIDADES } from './ComoFunciona.jsx';
+import PagoEmbebido from './PagoEmbebido.jsx';
 
 // Orden en que se enfoca el primer error.
 const ORDEN = ['monto', 'modalidad', 'nombre', 'rfc', 'email'];
@@ -14,7 +15,8 @@ export default function DonarForm({ campana }) {
   const [tocados, setTocados] = useState({});
   const [enviado, setEnviado] = useState(false);
   const [servidor, setServidor] = useState(null);
-  const [fase, setFase] = useState('captura'); // captura | registrando | redirigiendo
+  const [fase, setFase] = useState('captura'); // captura | registrando | redirigiendo | pagando
+  const [pago, setPago] = useState(null); // datos del Embedded Checkout
   const formRef = useRef(null);
 
   const sugeridos = campana.montosSugeridos || [];
@@ -62,6 +64,12 @@ export default function DonarForm({ campana }) {
         setFase('captura');
         return;
       }
+      if (pago.clientSecret && pago.clavePublica) {
+        // Embedded Checkout: Stripe se muestra aquí mismo, sin redirección.
+        setPago({ token: pago.token, clientSecret: pago.clientSecret, clavePublica: pago.clavePublica, monto: Number(datos.monto) });
+        setFase('pagando');
+        return;
+      }
       setFase('redirigiendo');
       window.location.assign(pago.urlPago);
     } catch (err) {
@@ -77,6 +85,10 @@ export default function DonarForm({ campana }) {
         <Icono nombre="alerta" tam={16} /> {errores[campo]}
       </p>
     ) : null;
+
+  if (fase === 'pagando' && pago) {
+    return <PagoEmbebido {...pago} campana={campana.nombre} />;
+  }
 
   return (
     <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-labelledby="donar-titulo">
@@ -285,7 +297,7 @@ export default function DonarForm({ campana }) {
         <Icono nombre="info" tam={16} />
         {fase === 'redirigiendo'
           ? 'Te estamos llevando a Stripe. Puede tardar unos segundos; no cierres esta pestaña.'
-          : 'Te llevaremos a Stripe (modo de prueba) para pagar con tarjeta. Al terminar regresarás aquí. Nunca vemos tu tarjeta.'}
+          : 'Pagarás con tarjeta a través de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
       </p>
     </form>
   );

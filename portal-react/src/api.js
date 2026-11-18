@@ -2,7 +2,8 @@
 // - Dentro del Salesforce Site: usa Visualforce Remoting (window.Visualforce) con las
 //   acciones que Portal.page publica en window.PORTAL_CONFIG.
 // - En `npm run dev` (sin Salesforce): usa datos ficticios de mock.js.
-// Nunca hay claves aquí: el navegador no habla con Stripe salvo por la redirección al Checkout.
+// Nunca hay claves secretas aquí. El navegador solo recibe, por cada pago, la clave PUBLICABLE
+// (pk_test_, pública por diseño) y el client_secret de esa sesión para montar Embedded Checkout.
 import * as mock from './mock.js';
 
 const enSalesforce = typeof window !== 'undefined' && window.Visualforce && window.PORTAL_CONFIG;
