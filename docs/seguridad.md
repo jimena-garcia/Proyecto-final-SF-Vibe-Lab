@@ -92,6 +92,8 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 |---|---|---|
 | Secret key de prueba `sk_test_…` | External Credential `Stripe_Credential` (Setup) | Código, metadata versionada, sitio, navegador, bitácora, prompts de IA |
 | Signing secret del webhook `whsec_…` | Custom Setting protegido `Stripe_Config__c`. Sus datos no son metadata y `retrieve` no los baja. | Igual que arriba |
+| Clave **publicable** `pk_test_…` (desde el 17 nov, Embedded Checkout) | Custom Setting `Stripe_Config__c` → "Clave publicable (pk_test)". Apex solo la acepta si empieza con `pk_test_` (M1) | Código y repo. **No es secreta**: Stripe la diseñó para el navegador y solo sirve para mostrar el formulario de pago; no permite cobrar ni leer datos |
+| `client_secret` de cada sesión de pago | No se guarda. Apex lo recibe de Stripe y lo entrega solo al navegador del donante que inició ese pago | Sirve únicamente para mostrar esa sesión; no da acceso a la cuenta |
 
 **Cómo se comprobó:**
 - Hook `.githooks/pre-commit` que rechaza patrones `sk_`, `rk_` y `whsec_`.
@@ -108,7 +110,7 @@ Permission set `Portal_Guest`. El perfil guest no tiene permisos adicionales.
 | Correo | Sí | Sí | Enviar el comprobante | Staff y el propio donante (correo). Nunca en público. |
 | RFC (factura) | Sí (persona física) | Sí | Solicitud de factura | Solo staff |
 | Monto y campaña | No por sí solos | Sí | Avance de la meta | Público (monto agregado y por donante con crédito) |
-| Datos de tarjeta (número, CVC, vigencia) | Sí, sensibles | **No**. Se capturan en Stripe Checkout. | Salesforce nunca los recibe | Solo Stripe |
+| Datos de tarjeta (número, CVC, vigencia) | Sí, sensibles | **No**. Se capturan en Stripe Checkout (desde el 17 nov, en un iframe de Stripe dentro del sitio: el sitio tampoco puede leerlos). | Salesforce nunca los recibe | Solo Stripe |
 | Id de sesión y payment intent de Stripe | No | Sí | Conciliar el pago con la donación | Staff |
 | Token público | No | Sí | Referencia del pago sin exponer el Id | El donante (en su URL) y staff |
 | IP o dispositivo del visitante | Sí | No | No se necesita | — |
@@ -123,6 +125,8 @@ El navegador no puede falsificar el resultado: solo envía el token y nunca un e
 ### Datos públicos agregados en el rediseño (E2)
 `getCampanas` ahora también devuelve: metas (`Hito__c`: título, monto, descripción), ilustración, la marca de destacada y el **número** de donaciones pagadas (roll-up COUNT). Ninguno es dato personal; el reconocimiento sigue limitado a nombre y monto de donaciones **con crédito y pagadas**. El guest sigue sin permisos de objeto, incluido `Hito__c`.
 
+Desde el 17 nov también se publican tres textos de la campaña que escribe Coordinación: "A quién apoyas" (`Beneficiarios__c`), "Lo que hace posible tu aporte" (`Impacto__c`) y el mensaje de agradecimiento (`Mensaje_Gracias__c`). Describen al grupo beneficiado en general, no a personas: el alcance excluye vincular una donación con un alumno concreto. `getEstado(token)` devuelve además el Id de la campaña (dato público) para que la página de gracias muestre su avance.
+
 ## 5. Riesgos conocidos
 
 - **Spam en el formulario público.** Cualquiera puede crear donaciones Pendientes falsas. No se califica (guía, sección 3). Mitigaciones posibles: CAPTCHA, límite por IP o limpieza de pendientes viejas.
@@ -136,3 +140,9 @@ El navegador no puede falsificar el resultado: solo envía el token y nunca un e
 - Los avisos falsos quedan como `Aviso_Pasarela__c` **Rechazado**, con fecha y motivo (HU-15 CA2, HU-17 CA1).
 - Los repetidos quedan como **Duplicado** gracias a `Clave_Unica__c` única. Un solo comprobante, gracias a `Comprobante_Enviado__c` (HU-17 CA2).
 - El aviso rechazado guarda el id que dice traer marcado como "(no verificado)". No guarda el payload, para no almacenar datos personales de un tercero.
+
+### Pago embebido (Stripe Embedded Checkout, 17 nov)
+- El formulario de tarjeta se muestra en un iframe de `js.stripe.com` dentro del sitio. Así se evita la espera de hasta 2 minutos de la redirección (R-05). El sitio no puede leer lo que se escribe en ese iframe.
+- La CSP del sitio solo define `frame-ancestors 'self'` (revisado con `curl -I`), así que no hizo falta abrir permisos nuevos para el script ni para el iframe de Stripe.
+- La confirmación no cambió: la donación solo pasa a Pagada por el webhook firmado o por `verificarPago`, que consulta a Stripe con la clave secreta. Que el navegador diga "pago completo" no cambia nada en Salesforce.
+- Si se cierra el pago a la mitad, la donación pendiente pasa a Cancelada. Si de todos modos llega el pago, el webhook la marca Pagada (no se pierde dinero).

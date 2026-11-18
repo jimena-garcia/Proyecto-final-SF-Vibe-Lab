@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Impacto__c</fullName>
-    <description>Una idea por línea. Se muestra como lista en la sección "A quién apoyas" y en la página de gracias.</description>
-    <label>Lo que hace posible tu aporte</label><length>2000</length><visibleLines>5</visibleLines><required>false</required><trackHistory>false</trackHistory><type>LongTextArea</type>
+    <description>Una idea por línea. Se muestra como lista en la sección &quot;A quién apoyas&quot; y en la página de gracias.</description>
+    <label>Lo que hace posible tu aporte</label>
+    <length>2000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
 </CustomField>

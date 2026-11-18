@@ -42,7 +42,7 @@
         <label>Donante</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Readonly</behavior>
+                <behavior>Required</behavior>
                 <field>Modalidad__c</field>
             </layoutItems>
             <layoutItems>
@@ -107,6 +107,13 @@
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>false</customLabel>
+        <detailHeading>false</detailHeading>
+        <editHeading>false</editHeading>
+        <layoutColumns/>
+        <style>CustomLinks</style>
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Icono from '../ui/Icono.jsx';
+import { pesos } from '../ui/basicos.jsx';
 
 /**
  * Bloques que cuentan a quién se apoya. Los textos vienen de la campaña y Coordinación los edita
@@ -93,7 +94,10 @@ export function QuienesApoyan({ campana, id = 'apoyan', titulo = 'Quiénes apoya
               >
                 <ul className="carrusel-apoyo__lista">
                   {[...publicos, ...(estatica ? [] : publicos)].map((d, i) => (
-                    <li key={`${d.nombre}-${i}`}>{d.nombre}</li>
+                    <li key={`${d.nombre}-${i}`}>
+                      <span>{d.nombre}</span>
+                      <strong className="cifra">{pesos(d.monto)}</strong>
+                    </li>
                   ))}
                 </ul>
               </div>

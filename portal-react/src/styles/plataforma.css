@@ -426,3 +426,6 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; font-variation-setti
 .gracias__cierre h2 { font-size: var(--t-xl); margin: 0 0 var(--e-2); }
 .gracias__cierre p { margin: 0 0 var(--e-4); color: var(--texto-2); }
 .gracias__cierre .estado__acciones { justify-content: center; }
+
+/* RF-C1 CA1: el reconocimiento muestra nombre y monto de cada donante con crédito. */
+.carrusel-apoyo li { justify-content: space-between; gap: var(--e-3); }

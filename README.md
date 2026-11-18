@@ -15,8 +15,8 @@ Una historia cuenta como **cumplida** solo si todos sus criterios se demuestran 
 | HU-01 | RF-D1a | 1 | Cumplida | Sitio: 3 campañas activas con meta y avance; solo suman pagadas |
 | HU-02 | RF-D2 | 1 | Cumplida (desde el 12 nov) | Donación anónima DON-00013: el comprobante llegó al buzón, sin nombre. En la Entrega 1 estaba No cumplida (CA2); se resolvió con un remitente verificado (R-01) |
 | HU-03 | RF-D3 | 1 | Cumplida | Donación Pendiente antes de abrir Stripe; `client_reference_id` = token |
-| HU-04 | RF-D4 | 1 | Cumplida | Página de gracias: pendiente / confirmado / cancelado |
-| HU-05 | RF-C1 | 1 | Cumplida | Reconocimiento público solo con nombre y monto (pagadas) |
+| HU-04 | RF-D4 | 1 | Cumplida | Página de gracias: pendiente / confirmado / cancelado. Desde el 17 nov el pago es embebido (sin redirección) y la página solo dice "confirmado" cuando Salesforce lo registra |
+| HU-05 | RF-C1 | 1 | Cumplida | "Quiénes apoyan": nombre y monto de cada donación con crédito pagada, sin correo (corregido el 17 nov: el carrusel nuevo había quitado el monto) |
 | HU-06 | RF-F1 | 1 | Cumplida | Validación del RFC con patrón SAT (sitio, Apex y validation rule); sin CFDI |
 | HU-07 | RF-F2 | 1 | Cumplida | Panel → Donaciones → "Solicitan factura" (nombre y RFC) |
 | HU-08 | RF-S1 | 1 | Cumplida | Panel → Campañas: crear y editar meta y metas; se refleja en el sitio |
@@ -24,7 +24,7 @@ Una historia cuenta como **cumplida** solo si todos sus criterios se demuestran 
 | HU-10 | RF-S3 | 1 | Retirada por el cliente | — |
 | HU-11 | RF-V1 | 1 | Cumplida | Sitio sin login |
 | HU-12 | RF-V2 | 1 | Cumplida | `docs/seguridad.md` (10 pruebas de lectura y modificación + script repetible) |
-| HU-13 | RF-D1b | 2 | Cumplida | Stripe cobra exactamente el monto capturado |
+| HU-13 | RF-D1b | 2 | Cumplida | Stripe cobra exactamente el monto capturado (test `iniciarPagoCreaSesionConMontoExactoYReferencia`; DON-00030 y DON-00035 con pago embebido) |
 | HU-14 | RF-D5 | 2 | Cumplida | Confirmación automática por el aviso de Stripe y comprobante recibido en el buzón (DON-00013) |
 | HU-15 | RF-S4 | 2 | Cumplida | Panel: "Confirmada por Stripe" y Avisos rechazados con fecha y motivo |
 | HU-16 | RF-V3a | 2 | Cumplida | Aviso real de Stripe → donación Pagada sin intervención |
@@ -32,7 +32,7 @@ Una historia cuenta como **cumplida** solo si todos sus criterios se demuestran 
 
 ### Cálculo
 - **Entrega 1** (entregada el 10 nov; 11 historias sin RF-S3): **10 de 11 = 91%**. Con RF-S3: 10 de 12 = 83%. HU-02 no estaba cumplida por el correo del comprobante.
-- **Avance actual hacia la Entrega 2** (16 historias sin RF-S3): **16 de 16 = 100%**. Con RF-S3: 16 de 17 = 94%. El 12 nov se resolvió el correo del comprobante (R-01), y con eso HU-02 y HU-14 pasaron a cumplidas.
+- **Entrega 2** (17 nov; las 16 historias sin RF-S3): **16 de 16 = 100%**. Con RF-S3: 16 de 17 = 94%. El 12 nov se resolvió el correo del comprobante (R-01), y con eso HU-02 y HU-14 pasaron a cumplidas. Cálculo: historias cumplidas ÷ historias del backlog (Entrega 1 + Entrega 2).
 
 ## Sitio público
 URL: https://orgfarm-0cda6e4c00-dev-ed.develop.my.salesforce-sites.com/ (Stripe en modo de prueba: tarjeta 4242 4242 4242 4242)

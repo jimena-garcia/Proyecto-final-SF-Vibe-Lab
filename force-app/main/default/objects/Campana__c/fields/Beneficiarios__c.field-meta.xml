@@ -2,5 +2,12 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Beneficiarios__c</fullName>
     <description>Quiénes reciben el apoyo, en una frase. Se muestra en la página de la campaña, en la portada y en la página de gracias.</description>
-    <label>A quién apoyas</label><length>255</length><required>false</required><trackHistory>false</trackHistory><type>Text</type>
+    <externalId>false</externalId>
+    <label>A quién apoyas</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>

@@ -2,5 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Publishable_Key__c</fullName>
     <description>Clave PUBLICABLE de Stripe (pk_test_…) para Embedded Checkout. No es secreta: Stripe la diseñó para ir en el navegador. Solo se acepta de modo de prueba. Vacía = Checkout con redirección.</description>
-    <label>Clave publicable (pk_test)</label><length>255</length><required>false</required><type>Text</type>
+    <externalId>false</externalId>
+    <label>Clave publicable (pk_test)</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>
