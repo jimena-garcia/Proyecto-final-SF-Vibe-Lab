@@ -164,7 +164,7 @@ private class PortalDonacionesControllerTest {
         Assert.isTrue(body.contains('ui_mode=embedded'));
         Assert.isTrue(body.contains('redirect_on_completion=if_required'));
         Assert.isTrue(body.contains('return_url=https://portal.ejemplo.test/?gracias=' + r.token));
-        Assert.isTrue(body.contains('payment_method_types[0]=card'), 'Solo tarjeta');
+        Assert.isFalse(body.contains('payment_method_types'), 'Stripe ya no acepta este parámetro (400)');
         Assert.isFalse(body.contains('success_url'), 'Embedded Checkout no acepta success_url');
         Assert.isTrue(body.contains('client_reference_id=' + r.token), 'Misma referencia que el webhook usa para confirmar');
     }

@@ -48,8 +48,8 @@ public with sharing class StripeService {
         agregar(params, 'line_items[0][price_data][currency]', moneda);
         agregar(params, 'line_items[0][price_data][unit_amount]', String.valueOf(centavos));
         agregar(params, 'line_items[0][price_data][product_data][name]', concepto);
-        // Solo tarjeta: no carga Link ni billeteras, que eran piezas extra que podían colgar la página.
-        agregar(params, 'payment_method_types[0]', 'card');
+        // Los métodos de pago (tarjeta, Link, billeteras) se eligen en el dashboard de Stripe:
+        // la API ya no acepta payment_method_types al crear la sesión (responde 400).
         if (embebido) {
             agregar(params, 'ui_mode', 'embedded');
             agregar(params, 'redirect_on_completion', 'if_required');

@@ -288,12 +288,13 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 
 ### 24 · Stripe Embedded Checkout (sin redirección) — [P22](prompts/dilian/P22-checkout-embebido.md)
 - **Qué obtuvimos:**
-  - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`. Ambos modos piden solo tarjeta (`payment_method_types[0]=card`).
+  - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`.
   - `iniciarPago` usa el modo embebido solo si el custom setting tiene una clave `pk_test_` válida; si no, sigue con la redirección de siempre (cambio reversible sin desplegar).
   - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar. Botón "Cancelar y no donar" reutiliza `?cancelado=`.
   - La página de gracias no cambió: solo dice "confirmado" cuando Salesforce lo registra (`verificarPago` + webhook).
 - **⚠ Errores de la IA:**
-  1. El 12 nov la IA había propuesto primero "probar sin extensiones" como causa probable; la prueba del equipo mostró que el comprobante llegaba rápido y la espera era de la página de Stripe, así que esa hipótesis no resolvía el problema.
+  1. La IA agregó `payment_method_types[0]=card` para pedir "solo tarjeta". Stripe respondió 400 porque ese parámetro ya no se acepta (los métodos se eligen en el dashboard). Lo detectamos en la primera donación de prueba (DON-00025, cancelada sin cobro, con el motivo guardado en la donación). Se quitó el parámetro y un test verifica que no se envíe.
+  2. El 12 nov la IA había propuesto primero "probar sin extensiones" como causa probable; la prueba del equipo mostró que el comprobante llegaba rápido y la espera era de la página de Stripe, así que esa hipótesis no resolvía el problema.
 - **Qué verificamos y cómo:**
   - El sitio solo manda `frame-ancestors 'self'` como CSP (revisado con `curl -I`): no bloquea el script ni el iframe de Stripe.
   - 2 tests nuevos: modo embebido (parámetros enviados, sin `success_url`, devuelve `client_secret` y clave) y que una clave `pk_live_` o mal formada se ignora (M1).
