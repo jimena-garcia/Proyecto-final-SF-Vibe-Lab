@@ -76,7 +76,7 @@ export function CampanaCard({ campana }) {
             </a>
           </h3>
           <p className="tarjeta__organizador">{MARCA.organizador}</p>
-          {cubre && <p className="tarjeta__cubre"><strong>Cubre:</strong> {cubre}</p>}
+          {cubre && <p className="tarjeta__cubre"><strong></strong> {cubre}</p>}
           <DatosCampana campana={campana} />
         </div>
       </div>

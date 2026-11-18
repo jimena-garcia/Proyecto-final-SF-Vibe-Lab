@@ -123,8 +123,9 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
 
       {destacada && (
         <section className="seccion seccion--vitrina" aria-label="Campaña principal">
-          <div className="contenedor vitrina vitrina--principal">
-            <h2 className="vitrina__titulo">Objetivo principal</h2>
+          <div>
+            <div className="contenedor vitrina vitrina--principal">
+            <h2 className="vitrina__titulo"></h2>
             <Destacada campana={destacada} />
             {otras.length > 0 && (
               <button
@@ -138,6 +139,7 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
                 <Icono nombre="flecha-abajo" tam={18} className={masAbierto ? 'chevron chevron--abierto' : 'chevron'} />
               </button>
             )}
+          </div>
           </div>
         </section>
       )}
