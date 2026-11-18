@@ -40,13 +40,13 @@ TAREAS = [
      'Redacción de HU-01..HU-17 (docs/requisitos/historias_de_usuario.md).'),
     ('T-02', 'Repositorio, tablero de backlog y README de avance', 'Entrega 1', 'Jimena', 'Met',
      'Repo público, estructura inicial de docs y tablero de GitHub Projects.'),
-    ('T-03', 'Video demo de 5 minutos (Entrega 1)', 'Entrega 1', 'Jimena', 'In Progress',
+    ('T-03', 'Video demo de 5 minutos (Entrega 1)', 'Entrega 1', 'Jimena', 'Met',
      'Muestra funcionando las historias cumplidas; enlace en el README.'),
     ('T-04', 'Implementación: sitio, Stripe, panel y seguridad', 'Entrega 1', 'Dilian', 'Met',
      'Ver docs/equipo/dilian.md y bitácora 1-17.'),
     ('T-05', 'Mensaje al profesor: correo del comprobante (R-01) y "Donante anónimo" (R-06)', 'Entrega 1', 'Dilian', 'In Progress',
      'Registrar la respuesta en docs/preguntas_y_reportes.md.'),
-    ('T-06', 'Video demo Entrega 2: confirmación automática, aviso falso y aviso repetido', 'Entrega 2', 'Jimena', None,
+    ('T-06', 'Video demo Entrega 2: confirmación automática, aviso falso y aviso repetido', 'Entrega 2', 'Jimena', 'Met',
      'RF-V3a y RF-V3b, según la guía.'),
     ('T-07', 'Pruebas de aceptación por historia con usuarios de cada rol', 'Entrega 2', 'Jimena', None,
      'Recorrer los criterios CA/CP de cada HU en el sitio real y registrar evidencia (capturas).'),
@@ -55,7 +55,7 @@ TAREAS = [
     ('T-09', 'Resolver o documentar el correo del comprobante (R-01)', 'Entrega 2', 'Dilian', None,
      'HU-02 CA2, HU-14 CA2.'),
     ('T-10', 'Identidad por campaña: imagen y logo (Fase C)', 'Entrega 2', 'Dilian', None, ''),
-    ('T-12', 'Preparar la defensa oral (demo en vivo y preguntas)', 'Entrega 2', 'Ambos', None, '18 nov, presencial.'),
+    ('T-12', 'Preparar la defensa oral (demo en vivo y preguntas)', 'Entrega 2', 'Ambos', 'In Progress', '18 nov, presencial.'),
 ]
 for tid, titulo, hito, resp, estado, desc in TAREAS:
     if tid in por_titulo:
