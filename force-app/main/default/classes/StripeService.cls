@@ -5,6 +5,11 @@
  */
 public with sharing class StripeService {
     public static final String NAMED_CREDENTIAL = 'callout:Stripe_API';
+    /**
+     * Versión de la API con la que se crea la sesión de pago. Debe coincidir con la de Stripe.js
+     * (portal-react/src/lib/stripe.js carga js.stripe.com/endive/stripe.js). Si se cambia una, se cambian ambas.
+     */
+    public static final String VERSION_API = '2026-10-28.endive';
 
     public class StripeException extends Exception {
     }
@@ -21,7 +26,7 @@ public with sharing class StripeService {
      * a staff encontrar la donación a partir del pago de prueba (HU-03 CA2).
      * Idempotency-Key = token: si el donante reintenta, Stripe devuelve la misma sesión (HU-03 CP2).
      *
-     * embebido = true → Embedded Checkout (ui_mode=embedded): el formulario de Stripe se monta
+     * embebido = true → Embedded Checkout (ui_mode=embedded_page): el formulario de Stripe se monta
      * dentro de nuestra página y no hay redirección de ida ni de vuelta. Stripe solo regresa a
      * urlExito si el método de pago lo exige (redirect_on_completion=if_required); con tarjeta,
      * nunca. Evita la espera de hasta 2 min que tenía la redirección de la página de Stripe.
@@ -51,7 +56,7 @@ public with sharing class StripeService {
         // Los métodos de pago (tarjeta, Link, billeteras) se eligen en el dashboard de Stripe:
         // la API ya no acepta payment_method_types al crear la sesión (responde 400).
         if (embebido) {
-            agregar(params, 'ui_mode', 'embedded');
+            agregar(params, 'ui_mode', 'embedded_page');
             agregar(params, 'redirect_on_completion', 'if_required');
             agregar(params, 'return_url', urlExito);
         } else {
@@ -68,6 +73,7 @@ public with sharing class StripeService {
         req.setTimeout(20000);
         req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
         req.setHeader('Idempotency-Key', (embebido ? 'checkout-emb-' : 'checkout-') + token);
+        req.setHeader('Stripe-Version', VERSION_API);
         req.setBody(String.join(params, '&'));
 
         HttpResponse res = new Http().send(req);

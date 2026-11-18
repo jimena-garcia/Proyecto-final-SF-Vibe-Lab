@@ -26,19 +26,23 @@ export default function PagoEmbebido({ token, clientSecret, clavePublica, campan
     let checkout = null;
     setEstado('cargando');
     cargarStripe()
-      .then((Stripe) =>
-        Stripe(clavePublica).initEmbeddedCheckout({
+      .then((Stripe) => {
+        const stripe = Stripe(clavePublica);
+        const opciones = {
           fetchClientSecret: () => Promise.resolve(clientSecret),
+          // Solo se llama con redirect_on_completion=if_required (así crea la sesión Apex).
           onComplete: () => {
-            checkout?.destroy();
+            checkout?.destroy?.();
             checkout = null;
             navegar(`${window.location.pathname}?gracias=${token}`);
           }
-        })
-      )
+        };
+        // createEmbeddedCheckoutPage es el nombre actual; initEmbeddedCheckout, el de versiones anteriores.
+        return stripe.createEmbeddedCheckoutPage ? stripe.createEmbeddedCheckoutPage(opciones) : stripe.initEmbeddedCheckout(opciones);
+      })
       .then((c) => {
         if (!vivo) {
-          c.destroy(); // el componente ya se desmontó (o StrictMode en desarrollo)
+          c.destroy?.(); // el componente ya se desmontó (o StrictMode en desarrollo)
           return;
         }
         checkout = c;
@@ -48,7 +52,7 @@ export default function PagoEmbebido({ token, clientSecret, clavePublica, campan
       .catch(() => vivo && setEstado('error'));
     return () => {
       vivo = false;
-      checkout?.destroy();
+      checkout?.destroy?.();
     };
   }, [token, clientSecret, clavePublica, intento]);
 

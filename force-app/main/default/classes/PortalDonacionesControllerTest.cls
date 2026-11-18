@@ -161,7 +161,8 @@ private class PortalDonacionesControllerTest {
         Assert.areEqual('cs_test_123_secret_abc', pago.clientSecret);
         Assert.areEqual('pk_test_ClaveFicticia123', pago.clavePublica);
         String body = EncodingUtil.urlDecode(mock.ultima.getBody(), 'UTF-8');
-        Assert.isTrue(body.contains('ui_mode=embedded'));
+        Assert.isTrue(body.contains('ui_mode=embedded_page'));
+        Assert.areEqual(StripeService.VERSION_API, mock.ultima.getHeader('Stripe-Version'), 'Misma versión que Stripe.js');
         Assert.isTrue(body.contains('redirect_on_completion=if_required'));
         Assert.isTrue(body.contains('return_url=https://portal.ejemplo.test/?gracias=' + r.token));
         Assert.isFalse(body.contains('payment_method_types'), 'Stripe ya no acepta este parámetro (400)');

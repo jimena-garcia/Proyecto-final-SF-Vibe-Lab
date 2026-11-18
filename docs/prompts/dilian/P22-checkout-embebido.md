@@ -15,7 +15,7 @@ Desarrollador Salesforce y React con experiencia en Stripe Checkout.
 
 ## Tarea
 
-1. Crear la sesión en modo `ui_mode=embedded` y devolver el `client_secret`.
+1. Crear la sesión en modo `ui_mode=embedded_page` y devolver el `client_secret`.
 2. Montar el formulario de Stripe dentro de la página y mostrar "gracias" nosotros mismos al completarse.
 3. Mantener la redirección como respaldo si no hay clave publicable.
 
