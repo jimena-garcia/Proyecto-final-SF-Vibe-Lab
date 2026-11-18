@@ -1,16 +1,28 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../api.js';
 import { validar, normalizarRfc, MONTO_MINIMO, MONTO_MAXIMO } from '../validacion.js';
 import { Alerta, Boton, pesos } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
 import { MODALIDADES } from './ComoFunciona.jsx';
 import PagoEmbebido from './PagoEmbebido.jsx';
+import { navegar } from '../lib/navegacion.js';
 
 // Orden en que se enfoca el primer error.
 const ORDEN = ['monto', 'modalidad', 'nombre', 'rfc', 'email', 'privacidad'];
 const ID_CAMPO = { monto: 'donar-monto', modalidad: 'donar-modalidad-0', nombre: 'donar-nombre', rfc: 'donar-rfc', email: 'donar-email', privacidad: 'donar-privacidad' };
 
-export default function DonarForm({ campana }) {
+const PASOS = ['Monto', 'Cómo aparecer', 'Tus datos', 'Confirmar'];
+
+/** Paso en el que va el donante: avanza solo conforme llena el formulario (1-3) y llega a 4 al pagar. */
+function pasoActual(errores, enPago) {
+  if (enPago) return 4;
+  if (errores.monto) return 1;
+  if (errores.modalidad) return 2;
+  if (errores.nombre || errores.rfc || errores.email || errores.privacidad) return 3;
+  return 4; // todo listo: solo falta confirmar
+}
+
+export default function DonarForm({ campana, onPagoActivo }) {
   const [datos, setDatos] = useState({ modalidad: '', nombre: '', email: '', rfc: '', monto: '', privacidad: false });
   const [tocados, setTocados] = useState({});
   const [enviado, setEnviado] = useState(false);
@@ -19,6 +31,11 @@ export default function DonarForm({ campana }) {
   const [pago, setPago] = useState(null); // datos del Embedded Checkout
   const [aviso, setAviso] = useState(null); // aviso informativo (p. ej. pago cancelado)
   const formRef = useRef(null);
+  const raiz = useRef(null);
+  const botonEnviar = useRef(null);
+  // Donación con sesión de Stripe abierta. Si el modal se cierra (X) a medio pago, se cancela.
+  const pendiente = useRef(null);
+  const pagada = useRef(false);
 
   const sugeridos = campana.montosSugeridos || [];
   const errores = validar(datos);
@@ -26,6 +43,26 @@ export default function DonarForm({ campana }) {
   const pideNombre = datos.modalidad === 'Credito' || datos.modalidad === 'Factura';
   const modalidad = MODALIDADES.find((m) => m.valor === datos.modalidad);
   const montoValido = !errores.monto && datos.monto !== '';
+  const enPago = fase === 'pagando' && !!pago;
+  const paso = pasoActual(errores, enPago);
+
+  useEffect(() => {
+    onPagoActivo?.(enPago);
+  }, [enPago, onPagoActivo]);
+
+  // Al cerrar el modal con la X durante el pago: la donación pendiente pasa a Cancelada (sin cargo).
+  useEffect(
+    () => () => {
+      if (pendiente.current && !pagada.current) api.cancelar(pendiente.current).catch(() => {});
+    },
+    []
+  );
+
+  // El modal tiene su propio scroll: al cambiar de vista se vuelve arriba.
+  function alInicio() {
+    const contenedor = raiz.current?.closest('.modal-contribuir__panel');
+    if (contenedor) contenedor.scrollTo({ top: 0 });
+  }
 
   const cambiar = (campo) => (e) => setDatos((d) => ({ ...d, [campo]: e.target.value }));
   const tocar = (campo) => () => setTocados((t) => ({ ...t, [campo]: true }));
@@ -68,8 +105,10 @@ export default function DonarForm({ campana }) {
       }
       if (pago.clientSecret && pago.clavePublica) {
         // Embedded Checkout: Stripe se muestra aquí mismo, sin redirección.
+        pendiente.current = pago.token;
         setPago({ token: pago.token, clientSecret: pago.clientSecret, clavePublica: pago.clavePublica, monto: Number(datos.monto) });
         setFase('pagando');
+        alInicio();
         return;
       }
       setFase('redirigiendo');
@@ -80,14 +119,22 @@ export default function DonarForm({ campana }) {
     }
   }
 
-  // X del modal: la donación pendiente pasa a Cancelada (sin cargo) y el donante vuelve al
-  // formulario con sus datos intactos. Si quiere reintentar, se registra una donación nueva.
-  function cancelarPago() {
-    const token = pago?.token;
+  // "Volver a tus datos": la donación pendiente pasa a Cancelada (sin cargo) y el donante regresa al
+  // formulario con sus datos intactos. Al continuar de nuevo se registra una donación nueva.
+  function volverADatos() {
+    const token = pendiente.current;
+    pendiente.current = null;
     setPago(null);
     setFase('captura');
-    setAviso('Cancelaste el pago y no se te cobró nada. Tus datos siguen aquí por si quieres intentarlo de nuevo.');
+    setAviso('No se te cobró nada. Tus datos siguen aquí: puedes ajustarlos y continuar al pago de nuevo.');
     if (token) api.cancelar(token).catch(() => {});
+    alInicio();
+    requestAnimationFrame(() => botonEnviar.current?.focus({ preventScroll: true }));
+  }
+
+  function pagoCompletado() {
+    pagada.current = true;
+    navegar(`${window.location.pathname}?gracias=${pago.token}`);
   }
 
   const describe = (campo, ayuda) => [ayuda && `${ID_CAMPO[campo]}-ayuda`, visible(campo) && `${ID_CAMPO[campo]}-error`].filter(Boolean).join(' ') || undefined;
@@ -99,8 +146,23 @@ export default function DonarForm({ campana }) {
     ) : null;
 
   return (
-    <>
-    {fase === 'pagando' && pago && <PagoEmbebido {...pago} campana={campana.nombre} onCancelar={cancelarPago} />}
+    <div ref={raiz}>
+    <ol className="pasos-modal" aria-label="Pasos de la contribución">
+      {PASOS.map((nombre, i) => {
+        const n = i + 1;
+        const hecho = n < paso;
+        return (
+          <li key={nombre} className={hecho ? 'pasos-modal__hecho' : undefined} aria-current={n === paso ? 'step' : undefined}>
+            <span>{hecho ? <Icono nombre="check" tam={14} /> : n}</span>
+            {nombre}
+            {hecho && <span className="sr-only"> (completo)</span>}
+          </li>
+        );
+      })}
+    </ol>
+    <div className="deslizador">
+    <div className={`deslizador__pista${enPago ? ' deslizador__pista--pago' : ''}`}>
+    <div className={`deslizador__panel${enPago ? ' deslizador__panel--oculto' : ''}`} inert={enPago}>
     <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-label={`Formulario de contribución para ${campana.nombre}`}>
 
       {/* 1. Monto */}
@@ -327,7 +389,7 @@ export default function DonarForm({ campana }) {
         </p>
       )}
 
-      <Boton type="submit" tam="lg" bloque cargando={fase !== 'captura'} className="btn--contribuir" style={{ marginTop: 20 }}>
+      <Boton ref={botonEnviar} type="submit" tam="lg" bloque cargando={fase !== 'captura'} className="btn--contribuir" style={{ marginTop: 20 }}>
         {fase === 'captura' && (
           <>
             <Icono nombre="candado" /> Continuar al pago seguro
@@ -341,9 +403,17 @@ export default function DonarForm({ campana }) {
         <Icono nombre="info" tam={16} />
         {fase === 'redirigiendo'
           ? 'Te estamos llevando a Stripe. Puede tardar unos segundos; no cierres esta pestaña.'
-          : 'Pagarás tu apoyo con tarjeta en una ventana segura de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
+          : 'En el siguiente paso pagas con tarjeta en el formulario seguro de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
       </p>
     </form>
-    </>
+    </div>
+    <div className={`deslizador__panel${enPago ? '' : ' deslizador__panel--oculto'}`} inert={!enPago}>
+      {pago && (
+        <PagoEmbebido {...pago} campana={campana.nombre} onVolver={volverADatos} onCompletado={pagoCompletado} />
+      )}
+    </div>
+    </div>
+    </div>
+    </div>
   );
 }

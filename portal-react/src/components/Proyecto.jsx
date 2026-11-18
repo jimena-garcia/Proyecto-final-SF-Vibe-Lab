@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Icono from '../ui/Icono.jsx';
 import { pesos } from '../ui/basicos.jsx';
 import RutaProgreso from './RutaProgreso.jsx';
@@ -251,6 +251,14 @@ export default function Proyecto({ campana }) {
 function ModalContribucion({ campana, cerrar }) {
   const panelRef = useRef(null);
   const cerrarRef = useRef(null);
+  // Durante el pago con Stripe, solo la X cierra el modal (y cancela la donación pendiente):
+  // ni Esc ni un clic fuera, para no perder un pago a medias por accidente.
+  const [pagando, setPagando] = useState(false);
+  const pagandoRef = useRef(false);
+  const alPagoActivo = useCallback((activo) => {
+    pagandoRef.current = activo;
+    setPagando(activo);
+  }, []);
 
   useEffect(() => {
     const activo = document.activeElement;
@@ -261,14 +269,16 @@ function ModalContribucion({ campana, cerrar }) {
     const manejarTecla = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        cerrar();
+        if (!pagandoRef.current) cerrar();
         return;
       }
       if (event.key !== 'Tab') return;
-      const elementos = panelRef.current?.querySelectorAll(
-        'a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'
-      );
-      if (!elementos?.length) return;
+      const elementos = [
+        ...(panelRef.current?.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'
+        ) ?? [])
+      ].filter((el) => !el.closest('[inert]')); // la vista oculta del deslizador no recibe foco
+      if (!elementos.length) return;
       const primero = elementos[0];
       const ultimo = elementos[elementos.length - 1];
       if (event.shiftKey && document.activeElement === primero) {
@@ -292,7 +302,7 @@ function ModalContribucion({ campana, cerrar }) {
     <div
       className="modal-contribuir"
       role="presentation"
-      onMouseDown={(event) => event.target === event.currentTarget && cerrar()}
+      onMouseDown={(event) => event.target === event.currentTarget && !pagandoRef.current && cerrar()}
     >
       <section
         ref={panelRef}
@@ -306,18 +316,19 @@ function ModalContribucion({ campana, cerrar }) {
             <p className="eyebrow">Tu aporte</p>
             <h2 id="modal-apoyo-titulo">Estás apoyando: {campana.nombre}</h2>
           </div>
-          <button ref={cerrarRef} type="button" className="modal-contribuir__cerrar" onClick={cerrar} aria-label="Cerrar">
+          <button
+            ref={cerrarRef}
+            type="button"
+            className={`modal-contribuir__cerrar${pagando ? ' modal-contribuir__cerrar--peligro' : ''}`}
+            onClick={cerrar}
+            aria-label={pagando ? 'Cancelar el pago y cerrar' : 'Cerrar'}
+            title={pagando ? 'Cancelar el pago y cerrar' : undefined}
+          >
             <Icono nombre="cruz" tam={20} />
           </button>
         </header>
         <div className="modal-contribuir__cuerpo">
-          <ol className="pasos-modal" aria-label="Pasos de la contribución">
-            <li aria-current="step"><span>1</span>Monto</li>
-            <li><span>2</span>Cómo aparecer</li>
-            <li><span>3</span>Tus datos</li>
-            <li><span>4</span>Confirmar</li>
-          </ol>
-          <DonarForm campana={campana} />
+          <DonarForm campana={campana} onPagoActivo={alPagoActivo} />
         </div>
       </section>
     </div>

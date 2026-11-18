@@ -308,7 +308,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué obtuvimos:**
   - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded_page`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`.
   - `iniciarPago` usa el modo embebido solo si el custom setting tiene una clave `pk_test_` válida; si no, sigue con la redirección de siempre (cambio reversible sin desplegar).
-  - Por pedido del equipo, el formulario de Stripe se abre en un **modal** (`<dialog>` nativo: atrapa el foco y bloquea el fondo) encima del modal de contribución. Solo se cierra con la X roja de arriba: ni Esc ni un clic fuera lo cierran, para no cancelar por accidente a medio pago. Al cancelar, la donación pendiente pasa a Cancelada y el donante vuelve al formulario con sus datos intactos. En celular ocupa toda la pantalla.
+  - Unificado con el modal de contribución de Jimena: un solo modal. Los pasos (Monto, Cómo aparecer, Tus datos, Confirmar) avanzan solos con lo que se llena y marcan ✓ los completos. Al dar "Continuar al pago seguro", la vista se desliza a la derecha y queda solo el pago de Stripe (paso 4), con "Volver a tus datos" (cancela la sesión sin cargo y conserva lo capturado). Durante el pago, solo la X (en rojo) cierra el modal y cancela la donación pendiente; Esc y el clic fuera no hacen nada.
   - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar.
   - La página de gracias no cambió: solo dice "confirmado" cuando Salesforce lo registra (`verificarPago` + webhook).
 - **⚠ Errores de la IA:**
@@ -320,5 +320,6 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - 2 tests nuevos: modo embebido (parámetros enviados, sin `success_url`, devuelve `client_secret` y clave) y que una clave `pk_live_` o mal formada se ignora (M1).
   - Despliegue con `RunLocalTests`: 46/46 en verde.
   - Donaciones de prueba en el sitio real con la tarjeta 4242: DON-00030 y DON-00032 quedaron Pagadas por la pasarela y el comprobante llegó al correo.
-  - Al unir con la rama de Jimena (modal de contribución), se evitó que Esc dentro del modal de pago cierre el modal de ella a medio pago.
+  - Flujo del modal revisado con Chrome automatizado (puppeteer, a 1280 y 390 px) en modo demo (`?demoEmbebido=1` en `mock.js`): avance de pasos, Esc y clic fuera bloqueados durante el pago, y "Volver" conserva los datos.
+  - ⚠ La IA usó `useCallback` en `Proyecto.jsx` sin importarlo; `vite build` no lo detecta (no hay linter). Se vio al revisar el diff antes de probar en el navegador.
 - **Seguridad:** la clave publicable y el `client_secret` de la sesión no permiten cobrar ni leer datos; la secret key sigue solo en la Named Credential (M3).

@@ -82,6 +82,9 @@ export async function crearDonacion(datos) {
 
 export async function iniciarPago(token) {
   await esperar(500);
+  // ?demoEmbebido=1 prueba el paso 4 (deslizador con Stripe embebido). La clave es ficticia:
+  // Stripe mostrará el error de carga, pero se ve el flujo y el botón "Volver a tus datos".
+  if (q().get('demoEmbebido')) return { ok: true, token, clientSecret: 'cs_test_demo_secret_demo', clavePublica: 'pk_test_demo' };
   return { ok: true, token, urlPago: `${window.location.pathname}?gracias=${token}` };
 }
 
