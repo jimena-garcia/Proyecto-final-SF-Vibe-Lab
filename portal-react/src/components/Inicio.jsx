@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Boton, pesos } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
-import Ilustracion from '../ui/Ilustracion.jsx';
-import { CampanaCard, CampanaCardEsqueleto, DatosCampana, ImagenCampana } from './CampanaCard.jsx';
+import { CampanaCard, CampanaCardEsqueleto, ImagenCampana } from './CampanaCard.jsx';
+import { AQuienApoyas } from './Apoyo.jsx';
 import ComoFunciona from './ComoFunciona.jsx';
 import { EVENTO, construirParadas, diasPara, elegirDestacada, faltante, formatoPorcentaje, porcentaje } from '../lib/progreso.js';
 import { alClicInterno, urlCampana } from '../lib/navegacion.js';
@@ -17,9 +17,6 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
   const { campanas, error } = estado;
   const lista = campanas || [];
   const destacada = campanas ? elegirDestacada(lista) : null;
-  const total = lista.reduce((s, c) => s + (Number(c.recaudado) || 0), 0);
-  const donaciones = lista.reduce((s, c) => s + (Number(c.donacionesPagadas) || 0), 0);
-  const dias = diasPara(EVENTO.fecha);
   const q = normalizar(busqueda.trim());
   const [masAbierto, setMasAbierto] = useState(false);
   const otras = destacada ? lista.filter((c) => c !== destacada) : [];
@@ -57,42 +54,18 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
 
   return (
     <>
-      <section className="portada" aria-labelledby="portada-titulo">
-        <div className="contenedor">
-          <h1 id="portada-titulo" className="portada__titulo">
-            Ayuda a que estudiantes lleguen a la comunidad que los impulsa
-          </h1>
-          <div className="banner">
-            <div className="banner__texto">
-              <p className="banner__eyebrow">{MARCA.lema}</p>
-              <p className="banner__titular">
-                Cada aporte acerca a un alumno de Mérida a los eventos de la comunidad Salesforce.
-              </p>
-              <dl className="banner__datos">
-                <div>
-                  <dt>Recaudado en campañas abiertas</dt>
-                  <dd className="cifra">{campanas ? pesos(total) : '—'}</dd>
-                </div>
-                <div>
-                  <dt>Donaciones confirmadas</dt>
-                  <dd className="cifra">{campanas ? donaciones : '—'}</dd>
-                </div>
-                <div>
-                  <dt>{dias > 0 ? `Días para ${EVENTO.nombre}` : `${EVENTO.nombre}`}</dt>
-                  <dd className="cifra">{dias > 0 ? dias : 'Concluido'}</dd>
-                </div>
-              </dl>
-            </div>
-            <div className="banner__arte" aria-hidden="true">
-              {destacada?.imagenUrl ? (
-                <img className="banner__foto" src={destacada.imagenUrl} alt="" decoding="async" />
-              ) : (
-                <Ilustracion tipo="General" />
-              )}
-            </div>
+      {destacada ? (
+        <HeroCampana campana={destacada} />
+      ) : (
+        <section className="hero-campana hero-campana--vacio" aria-labelledby="hero-titulo">
+          <div className="contenedor">
+            <p className="hero-campana__lema">{MARCA.lema}</p>
+            <h1 id="hero-titulo" className="hero-campana__titulo">
+              Ayuda a que estudiantes lleguen a la comunidad que los impulsa
+            </h1>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {error && (
         <div className="contenedor">
@@ -122,11 +95,23 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
       )}
 
       {destacada && (
-        <section className="seccion seccion--vitrina" aria-label="Campaña principal">
-          <div>
-            <div className="contenedor vitrina vitrina--principal">
-            <h2 className="vitrina__titulo"></h2>
-            <Destacada campana={destacada} />
+        <section className="seccion portada-apoyas" aria-label={`A quién apoyas con ${destacada.nombre}`}>
+          <div className="contenedor">
+            <AQuienApoyas
+              campana={destacada}
+              id="portada-apoyas"
+              eyebrow="A quién apoyas"
+              historia={(destacada.descripcion || '').split(/\n\s*\n/).filter(Boolean).slice(1, 2)}
+              accion={
+                <a
+                  className="btn btn--contribuir btn--lg"
+                  href={`${urlCampana(destacada.id)}#contribuir`}
+                  onClick={alClicInterno(`${urlCampana(destacada.id)}#contribuir`)}
+                >
+                  <Icono nombre="corazon" tam={18} /> Quiero apoyar
+                </a>
+              }
+            />
             {otras.length > 0 && (
               <button
                 type="button"
@@ -139,7 +124,6 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
                 <Icono nombre="flecha-abajo" tam={18} className={masAbierto ? 'chevron chevron--abierto' : 'chevron'} />
               </button>
             )}
-          </div>
           </div>
         </section>
       )}
@@ -156,7 +140,7 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
               className="mas-campanas__panel"
               role="region"
               aria-hidden={!masAbierto}
-              inert={masAbierto ? undefined : ''}
+              inert={!masAbierto}
             >
               <div className="contenedor">
                 <div className="mas-campanas__cab">
@@ -199,58 +183,91 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
   );
 }
 
-function Destacada({ campana }) {
+/** Hero de la portada: la campaña principal, con avance, a quién apoyas y dos llamados a la acción. */
+function HeroCampana({ campana }) {
   const url = urlCampana(campana.id);
+  const urlContribuir = `${url}#contribuir`;
+  const urlHistoria = `${url}#a-quien-apoyas`;
   const resumen = (campana.descripcion || '').split(/\n\s*\n/)[0];
   const dias = diasPara(EVENTO.fecha);
-  const donaciones = campana.donacionesPagadas ?? 0;
-  const avance = Math.min(100, porcentaje(campana.recaudado, campana.meta));
+  const pct = porcentaje(campana.recaudado, campana.meta);
   const siguiente = construirParadas(campana).find((p) => p.siguiente);
-  const metaTexto = siguiente
-    ? `Siguiente meta: ${siguiente.titulo}`
-    : `Faltan ${pesos(faltante(campana.recaudado, campana.meta))}`;
+  const falta = faltante(campana.recaudado, campana.meta);
+  const metaTexto =
+    falta === 0
+      ? 'Meta alcanzada: cada aporte sigue sumando'
+      : siguiente && !siguiente.destino
+        ? `Faltan ${pesos(faltante(campana.recaudado, siguiente.monto))} para ${siguiente.titulo}`
+        : `Faltan ${pesos(falta)} para la meta`;
   return (
-    <article className="destacada" aria-labelledby={`dest-${campana.id}`}>
-      <a href={url} onClick={alClicInterno(url)} tabIndex={-1} aria-hidden="true" className="destacada__enlace-imagen">
-        <ImagenCampana campana={campana} className="imagen-campana--grande" />
-      </a>
-      <div className="tarjeta__cuerpo">
-        <div className="destacada__marca">
-          <span className="tarjeta__avatar" aria-hidden="true">SV</span>
-          <div>
-            <p className="tarjeta__organizador">{MARCA.organizador}</p>
-            <p className="destacada__programa">SF Vibe Lab · UADY</p>
-          </div>
-        </div>
-        <h3 id={`dest-${campana.id}`} className="destacada__titulo">
-          <a href={url} onClick={alClicInterno(url)}>
+    <section className="hero-campana" aria-labelledby="hero-titulo">
+      <div className="contenedor hero-campana__grid">
+        <div className="hero-campana__texto">
+          <p className="hero-campana__lema">
+            <span className="hero-campana__chip">Campaña principal</span> {MARCA.lema}
+          </p>
+          <h1 id="hero-titulo" className="hero-campana__titulo">
             {campana.nombre}
-          </a>
-        </h3>
-        <div className="destacada__contenido">
-          {resumen && <p className="destacada__desc">{resumen}</p>}
-          <DatosCampana campana={campana} />
-          <div
-            className="destacada__barra"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(avance)}
-            aria-label={`Avance de ${campana.nombre}: ${formatoPorcentaje(porcentaje(campana.recaudado, campana.meta))}`}
-          >
-            <div style={{ width: `${avance}%` }} />
+          </h1>
+          {resumen && <p className="hero-campana__resumen">{resumen}</p>}
+          {campana.beneficiarios && (
+            <p className="hero-campana__apoyas">
+              <Icono nombre="usuarios" tam={20} />
+              <span>
+                Apoyas a <strong>{campana.beneficiarios}</strong>
+              </span>
+            </p>
+          )}
+
+          <div className="hero-campana__avance">
+            <p className="hero-campana__monto cifra">
+              <strong>{pesos(campana.recaudado)}</strong> de {pesos(campana.meta)}
+            </p>
+            <div
+              className="hero-campana__barra"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(Math.min(100, pct))}
+              aria-label={`Avance de ${campana.nombre}: ${formatoPorcentaje(pct)}`}
+            >
+              <div style={{ width: `${Math.min(100, pct)}%` }} />
+            </div>
+            <p className="hero-campana__meta">
+              <strong>{formatoPorcentaje(pct)} financiado</strong> · {metaTexto}
+            </p>
           </div>
-          <p className="destacada__siguiente">{metaTexto}</p>
-          <dl className="destacada__franja">
-            <div><dt>Recaudado</dt><dd className="cifra">{pesos(campana.recaudado)}</dd></div>
-            <div><dt>Aportes</dt><dd className="cifra">{donaciones}</dd></div>
-            <div><dt>Días para el evento</dt><dd className="cifra">{dias > 0 ? dias : 'Concluido'}</dd></div>
+
+          <div className="hero-campana__acciones">
+            <a className="btn btn--contribuir btn--lg" href={urlContribuir} onClick={alClicInterno(urlContribuir)}>
+              <Icono nombre="corazon" tam={18} /> Contribuir ahora
+            </a>
+            <a className="btn btn--secundario btn--lg" href={urlHistoria} onClick={alClicInterno(urlHistoria)}>
+              Conoce a quién apoyas
+            </a>
+          </div>
+
+          <dl className="hero-campana__datos">
+            <div>
+              <dt>{campana.donacionesPagadas === 1 ? 'aporte confirmado' : 'aportes confirmados'}</dt>
+              <dd className="cifra">{campana.donacionesPagadas ?? 0}</dd>
+            </div>
+            <div>
+              <dt>{dias > 0 ? `${dias === 1 ? 'día' : 'días'} para ${EVENTO.nombre}` : EVENTO.nombre}</dt>
+              <dd className="cifra">{dias > 0 ? dias : 'Concluido'}</dd>
+            </div>
           </dl>
-          <a className="btn btn--contribuir btn--lg btn--bloque destacada__accion" href={url} onClick={alClicInterno(url)}>
-            Ver campaña y contribuir
-          </a>
         </div>
+
+        <a className="hero-campana__imagen" href={url} onClick={alClicInterno(url)} tabIndex={-1} aria-hidden="true">
+          <ImagenCampana campana={campana} className="imagen-campana--grande" />
+          {dias > 0 && (
+            <span className="hero-campana__cuenta">
+              <Icono nombre="reloj" tam={16} /> {dias === 1 ? 'Falta 1 día' : `Faltan ${dias} días`} para {EVENTO.nombre}
+            </span>
+          )}
+        </a>
       </div>
-    </article>
+    </section>
   );
 }

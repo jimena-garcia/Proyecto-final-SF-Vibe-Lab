@@ -75,6 +75,9 @@ public with sharing class AdminPortalController {
         public String imagenAlt;
         public String montosSugeridos;
         public Integer donacionesPagadas;
+        public String beneficiarios;
+        public String impacto;
+        public String mensajeGracias;
         public List<HitoAdmin> hitos = new List<HitoAdmin>();
     }
 
@@ -151,6 +154,7 @@ public with sharing class AdminPortalController {
             SELECT
                 Id, Name, Descripcion__c, Meta__c, Recaudado__c, Activa__c, Destacada__c, Ilustracion__c,
                 Imagen_URL__c, Imagen_Alt__c, Montos_Sugeridos__c, Donaciones_Pagadas__c,
+                Beneficiarios__c, Impacto__c, Mensaje_Gracias__c,
                 (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC)
             FROM Campana__c
             WITH USER_MODE
@@ -169,6 +173,9 @@ public with sharing class AdminPortalController {
             dto.imagenUrl = c.Imagen_URL__c;
             dto.imagenAlt = c.Imagen_Alt__c;
             dto.montosSugeridos = c.Montos_Sugeridos__c;
+            dto.beneficiarios = c.Beneficiarios__c;
+            dto.impacto = c.Impacto__c;
+            dto.mensajeGracias = c.Mensaje_Gracias__c;
             dto.donacionesPagadas = c.Donaciones_Pagadas__c == null ? 0 : c.Donaciones_Pagadas__c.intValue();
             for (Hito__c h : c.Hitos__r) {
                 HitoAdmin hito = new HitoAdmin();
@@ -216,7 +223,10 @@ public with sharing class AdminPortalController {
                 Destacada__c = e.destacada == true,
                 Ilustracion__c = String.isBlank(e.ilustracion) ? 'General' : e.ilustracion,
                 Imagen_Alt__c = String.isBlank(e.imagenAlt) ? null : e.imagenAlt.trim().abbreviate(255),
-                Montos_Sugeridos__c = String.isBlank(e.montosSugeridos) ? null : e.montosSugeridos.deleteWhitespace()
+                Montos_Sugeridos__c = String.isBlank(e.montosSugeridos) ? null : e.montosSugeridos.deleteWhitespace(),
+                Beneficiarios__c = String.isBlank(e.beneficiarios) ? null : e.beneficiarios.trim().abbreviate(255),
+                Impacto__c = String.isBlank(e.impacto) ? null : e.impacto.trim().abbreviate(2000),
+                Mensaje_Gracias__c = String.isBlank(e.mensajeGracias) ? null : e.mensajeGracias.trim().abbreviate(1000)
             );
             if (String.isNotBlank(e.id)) {
                 c.Id = Id.valueOf(e.id);

@@ -71,6 +71,28 @@ private class PortalDonacionesControllerTest {
     }
 
     @IsTest
+    static void historiaDeLaCampanaEnElSitioYEnGracias() {
+        Campana__c c = activa();
+        c.Beneficiarios__c = 'Alumnos de SF Vibe Lab';
+        c.Impacto__c = '- Su boleto\r\n\r\n• Su viaje a CDMX\n';
+        c.Mensaje_Gracias__c = 'Gracias por creer en nosotros';
+        update c;
+        PortalDonacionesController.CampanaDTO dto;
+        for (PortalDonacionesController.CampanaDTO x : PortalDonacionesController.getCampanas()) {
+            if (x.id == c.Id) {
+                dto = x;
+            }
+        }
+        Assert.areEqual('Alumnos de SF Vibe Lab', dto.beneficiarios);
+        Assert.areEqual(new List<String>{ 'Su boleto', 'Su viaje a CDMX' }, dto.impacto, 'Una idea por línea, sin viñetas ni renglones vacíos');
+        Assert.areEqual('Gracias por creer en nosotros', dto.mensajeGracias);
+
+        PortalDonacionesController.Resultado r = PortalDonacionesController.crearDonacion(entrada('Anonima', null, null, 100));
+        Assert.isNotNull(PortalDonacionesController.getEstado(r.token).campanaId, 'Gracias puede mostrar la campaña');
+        Assert.areEqual(0, PortalDonacionesController.lineas(null).size());
+    }
+
+    @IsTest
     static void hitoNoPuedeSuperarLaMeta() {
         Database.SaveResult sr = Database.insert(new Hito__c(Campana__c = activa().Id, Name = 'Imposible', Monto__c = 999999), false);
         Assert.isFalse(sr.isSuccess());

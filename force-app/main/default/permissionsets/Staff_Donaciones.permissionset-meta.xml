@@ -12,6 +12,9 @@
     <fieldPermissions><editable>false</editable><field>Campana__c.Ilustracion__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Imagen_URL__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Imagen_Alt__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Beneficiarios__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Impacto__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Campana__c.Mensaje_Gracias__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Destacada__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Campana__c.Donaciones_Pagadas__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Hito__c.Descripcion__c</field><readable>true</readable></fieldPermissions>

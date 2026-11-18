@@ -124,6 +124,9 @@ function CampanaForm({ campana, alGuardar }) {
     imagenUrl: campana?.imagenUrl || null,
     imagenAlt: campana?.imagenAlt || '',
     montosSugeridos: campana?.montosSugeridos || '',
+    beneficiarios: campana?.beneficiarios || '',
+    impacto: campana?.impacto || '',
+    mensajeGracias: campana?.mensajeGracias || '',
     hitos: (campana?.hitos || []).map((h) => ({ ...h, descripcion: h.descripcion || '' }))
   }));
   const [enviado, setEnviado] = useState(false);
@@ -218,6 +221,26 @@ function CampanaForm({ campana, alGuardar }) {
               <label className="adm-check">
                 <input type="checkbox" checked={c.destacada} onChange={set('destacada')} /> Destacada (campaña principal de la portada)
               </label>
+            </div>
+          </fieldset>
+
+          <fieldset className="adm-grupo">
+            <legend>A quién apoyas</legend>
+            <p className="campo__ayuda" style={{ marginTop: 0 }}>Estos textos cuentan a quién ayuda el donante. Se ven en la portada, en la campaña y en la página de gracias.</p>
+            <div className="campo">
+              <label htmlFor="c-benef">A quién apoyas</label>
+              <input id="c-benef" className="input" value={c.beneficiarios} onChange={set('beneficiarios')} maxLength={255} />
+              <p className="campo__ayuda">Una frase. Ej.: "Alumnos del programa SF Vibe Lab de la UADY que van a su primer evento de la comunidad". Se ve en la portada, la campaña y la página de gracias.</p>
+            </div>
+            <div className="campo">
+              <label htmlFor="c-impacto">Lo que hace posible tu aporte</label>
+              <textarea id="c-impacto" className="input adm-textarea" rows={4} value={c.impacto} onChange={set('impacto')} maxLength={2000} />
+              <p className="campo__ayuda">Una idea por línea. Si lo dejas vacío, el sitio muestra las metas de la campaña.</p>
+            </div>
+            <div className="campo">
+              <label htmlFor="c-gracias">Mensaje de agradecimiento</label>
+              <textarea id="c-gracias" className="input adm-textarea" rows={3} value={c.mensajeGracias} onChange={set('mensajeGracias')} maxLength={1000} />
+              <p className="campo__ayuda">Aparece en la página de gracias cuando el aporte se confirma. Puedes firmarlo, por ejemplo: "— Alumnos de SF Vibe Lab".</p>
             </div>
           </fieldset>
 

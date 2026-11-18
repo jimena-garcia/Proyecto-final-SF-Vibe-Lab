@@ -35,6 +35,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 25 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J23](prompts/jimena/J23-ajuste-portada-acordeon.md) | — | ~1 h → 20 min |
 | 26 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J24](prompts/jimena/J24-paleta-mexico-dreamin.md) | — | ~30 min → 10 min |
 | 27 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | [P22](prompts/dilian/P22-checkout-embebido.md) | ⚠ | ~4 h → 40 min |
+| 28 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-04, HU-08, HU-11 | [P23](prompts/dilian/P23-empatia-gracias-hero.md) | ⚠ | ~6 h → 1 h |
 
 ---
 
@@ -323,3 +324,18 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Flujo del modal revisado con Chrome automatizado (puppeteer, a 1280 y 390 px) en modo demo (`?demoEmbebido=1` en `mock.js`): avance de pasos, Esc y clic fuera bloqueados durante el pago, y "Volver" conserva los datos.
   - ⚠ La IA usó `useCallback` en `Proyecto.jsx` sin importarlo; `vite build` no lo detecta (no hay linter). Se vio al revisar el diff antes de probar en el navegador.
 - **Seguridad:** la clave publicable y el `client_secret` de la sesión no permiten cobrar ni leer datos; la secret key sigue solo en la Named Credential (M3).
+
+### 28 · "A quién apoyas": empatía en portada, campaña y gracias — [P23](prompts/dilian/P23-empatia-gracias-hero.md)
+- **Qué obtuvimos:**
+  - **Datos editables:** 3 campos nuevos en `Campana__c` (`Beneficiarios__c`, `Impacto__c`, `Mensaje_Gracias__c`). Coordinación los edita en Panel → Campañas → "A quién apoyas"; el staff base solo los lee. Salen al sitio por `PortalDonacionesController` (lista blanca, sin datos de donantes).
+  - **Campaña:** junto a "Contribuir", el botón "Conoce a quién apoyas" baja a una sección nueva con a quién apoyas, la historia y "Lo que hace posible tu aporte", que cierra con "Quiero apoyar".
+  - **Gracias:** deja de sonar a compra ("¡Gracias por sumarte!"). Muestra el mensaje de agradecimiento, el avance con el aporte ya sumado, a quién apoyó, las metas, a quiénes se sumó y un botón para compartir la campaña.
+  - **Portada:** la campaña principal pasa a ser el hero, con "Contribuir ahora" (abre el modal en la campaña) y "Conoce a quién apoyas" (baja a la historia). Debajo, la sección de empatía con "Quiero apoyar".
+  - Se corrigió "Sumarte puede ayudar a alcanzar Transporte Mérida–CDMX: faltan $0" (el monto restante de la siguiente meta se calculaba con un campo inexistente).
+- **⚠ Errores de la IA:**
+  1. Dos veces generó expresiones regulares con saltos de línea reales al escribir código desde Python (`split(/\n\s*\n/)` quedó partido). En la portada se vio al revisar el archivo; en Gracias, por el error de Vite en la captura del navegador.
+  2. Usó la clase `.hero`, que ya existía en `base.css` con texto blanco: el título y las cifras del hero no se veían. Se detectó en la captura y se renombró a `.hero-campana`.
+- **Qué verificamos y cómo:**
+  - Test nuevo `historiaDeLaCampanaEnElSitioYEnGracias` (lista sin viñetas ni renglones vacíos; `getEstado` devuelve la campaña) y el de Coordinación guarda los 3 campos. Despliegue con `RunLocalTests`: 47/47.
+  - Capturas con Chrome automatizado a 1280 y 390 px de portada, campaña y gracias (modo demo).
+  - Script que hace clic en "Contribuir ahora" (abre el modal), "Conoce a quién apoyas" (la sección queda arriba) y "Quiero apoyar" (abre el modal).

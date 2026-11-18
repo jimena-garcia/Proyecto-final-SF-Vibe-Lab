@@ -29,6 +29,8 @@ const RUTAS = {
     </>
   ),
   cruz: <path d="M7 7l10 10M17 7L7 17" />,
+  corazon: <path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" />,
+  compartir: <path d="M12 15V3M7.5 7.5L12 3l4.5 4.5M5 12v7.5h14V12" />,
   ruta: (
     <>
       <circle cx="6" cy="18" r="2.2" />

@@ -17,6 +17,14 @@ const campanas = [
     destacada: true,
     ilustracion: 'General',
     montosSugeridos: [200, 500, 1000],
+    beneficiarios: 'Alumnos del programa SF Vibe Lab de la UADY que van a su primer evento de la comunidad Salesforce',
+    impacto: [
+      'Su boleto para Mexico Dreamin 2026',
+      'El viaje redondo de Mérida a la Ciudad de México',
+      'Hospedaje cerca de la sede del evento',
+      'Conocer en persona a la comunidad Salesforce y a quienes contratan talento'
+    ],
+    mensajeGracias: 'Gracias por creer en nosotros. Cada aporte nos acerca a vivir Mexico Dreamin y a traer lo aprendido de vuelta a Mérida. — Alumnos de SF Vibe Lab',
     hitos: [
       { monto: 30000, titulo: 'Boletos para el grupo', descripcion: 'Cubre la entrada al evento para los alumnos participantes.' },
       { monto: 75000, titulo: 'Transporte Mérida–CDMX', descripcion: 'Suma el viaje redondo a la Ciudad de México.' },
@@ -92,7 +100,7 @@ export async function getEstado() {
   await esperar(400);
   const estado = q().get('demoEstado') || 'Pendiente';
   if (estado === 'Desconocido') return null;
-  return { estado, monto: 500, campana: campanas[0].nombre, folio: 'DON-DEMO' };
+  return { estado, monto: 500, campana: campanas[0].nombre, campanaId: campanas[0].id, folio: 'DON-DEMO' };
 }
 
 export const verificarPago = getEstado;

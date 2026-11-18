@@ -25,6 +25,9 @@ Stripe_Config__c                   (custom setting protegido, jerárquico)
 | `Imagen_URL__c` | Texto largo | Enlace público de la imagen de la campaña. Lo escribe Apex al subirla desde el panel (desde el 12 nov) |
 | `Imagen_Alt__c` | Texto | Descripción de la imagen para lectores de pantalla (desde el 12 nov) |
 | `Montos_Sugeridos__c` | Texto | Botones rápidos del formulario (`200;500;1000`) |
+| `Beneficiarios__c` | Texto (255) | "A quién apoyas": una frase. Portada, campaña y página de gracias (desde el 17 nov) |
+| `Impacto__c` | Texto largo (2000) | "Lo que hace posible tu aporte": una idea por línea. Si está vacío, el sitio muestra las metas (desde el 17 nov) |
+| `Mensaje_Gracias__c` | Texto largo (1000) | Mensaje de agradecimiento en la página de gracias tras un pago confirmado (desde el 17 nov) |
 
 **Validación:** `Meta_Positiva` (la meta debe ser mayor que cero).
 

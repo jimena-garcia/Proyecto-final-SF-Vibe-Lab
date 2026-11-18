@@ -4,6 +4,7 @@ import { pesos } from '../ui/basicos.jsx';
 import RutaProgreso from './RutaProgreso.jsx';
 import DonarForm from './DonarForm.jsx';
 import { ImagenCampana } from './CampanaCard.jsx';
+import { AQuienApoyas, QuienesApoyan } from './Apoyo.jsx';
 import { EVENTO, construirParadas, diasPara, faltante } from '../lib/progreso.js';
 import { MARCA } from '../marca.js';
 
@@ -47,43 +48,46 @@ export default function Proyecto({ campana }) {
   const donantes = campana.donantes || [];
   const tituloId = `proyecto-${campana.id}`;
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [carruselPausado, setCarruselPausado] = useState(false);
 
   useEffect(() => {
     document.title = `${campana.nombre} · ${MARCA.nombre}`;
   }, [campana.nombre]);
 
+  // Llegada desde la portada: #contribuir abre el modal; #a-quien-apoyas baja a la historia.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === '#contribuir') {
+      setModalAbierto(true);
+      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    } else if (hash === '#a-quien-apoyas') {
+      requestAnimationFrame(() => irAHistoria());
+    }
+  }, []);
+
   const abrirContribucion = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setModalAbierto(true);
   };
+
+  function irAHistoria(e) {
+    e?.preventDefault();
+    const destino = document.getElementById('a-quien-apoyas');
+    if (!destino) return;
+    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    destino.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'start' });
+    destino.focus({ preventScroll: true });
+  }
 
   return (
     <article className="proyecto con-barra" aria-labelledby={tituloId}>
       <header className="proyecto__cabecera contenedor">
         <h1 id={tituloId}>{campana.nombre}</h1>
         {resumen && <p className="proyecto__resumen">{resumen}</p>}
-        <div className="proyecto__motivacion">
-          {siguiente && !siguiente.destino ? (
-            <>
-              <p>Tu aporte acerca a un alumno de la UADY a la comunidad Salesforce.</p>
-              <p>{`Sumarte puede ayudar a alcanzar ${siguiente.titulo}: faltan ${pesos(faltante(campana.recaudado, siguiente.destino))}.`}</p>
-              <p>Cada contribución abre más oportunidades de aprendizaje y contacto en el programa.</p>
-            </>
-          ) : falta > 0 ? (
-            <>
-              <p>Tu aporte acerca a un alumno de la UADY a la comunidad Salesforce.</p>
-              <p>{`Apoyar esta campaña contribuye a cubrir la meta; faltan ${pesos(falta)}.`}</p>
-              <p>Cada contribución suma a la participación estudiantil en el evento.</p>
-            </>
-          ) : (
-            <>
-              <p>Tu aporte reconoce la participación de un alumno de la UADY en la comunidad Salesforce.</p>
-              <p>La meta ya está cubierta con los apoyos confirmados.</p>
-              <p>Sumarte sigue fortaleciendo la participación estudiantil en el programa.</p>
-            </>
-          )}
-        </div>
+        {campana.beneficiarios && (
+          <p className="proyecto__apoyas">
+            <Icono nombre="usuarios" tam={20} /> <span>Apoyas a <strong>{campana.beneficiarios}</strong></span>
+          </p>
+        )}
       </header>
 
       <div className="contenedor proyecto__top">
@@ -103,6 +107,9 @@ export default function Proyecto({ campana }) {
           </dl>
           <a className="btn btn--contribuir btn--lg btn--bloque btn--cuadrado" href="#contribuir" onClick={abrirContribucion}>
             Contribuir
+          </a>
+          <a className="btn btn--secundario btn--lg btn--bloque btn--cuadrado proyecto__conocer" href="#a-quien-apoyas" onClick={irAHistoria}>
+            Conoce a quién apoyas <Icono nombre="flecha-abajo" tam={18} />
           </a>
           <p className="proyecto__nota">
             Solo cuentan los movimientos confirmados por la pasarela. Eliges si tu nombre aparece o no.
@@ -126,7 +133,7 @@ export default function Proyecto({ campana }) {
 
       <nav className="pestanas" aria-label="Secciones de la campaña">
         <div className="contenedor pestanas__lista">
-          <a href="#historia">Campaña</a>
+          <a href="#a-quien-apoyas">A quién apoyas</a>
           <a href="#metas">Metas</a>
           <a href="#apoyan">
             Quiénes apoyan <span className="pestanas__num cifra">{donantes.length}</span>
@@ -137,14 +144,17 @@ export default function Proyecto({ campana }) {
 
       <div className="contenedor proyecto__cuerpo">
         <div className="proyecto__principal">
-          <section className="bloque bloque--primero" id="historia" aria-labelledby="historia-titulo">
-            <h2 id="historia-titulo">La historia</h2>
-            {(historia.length ? historia : [resumen]).filter(Boolean).map((p, i) => (
-              <p key={i} className="detalle__historia">
-                {p}
-              </p>
-            ))}
-          </section>
+          <AQuienApoyas
+            campana={campana}
+            id="a-quien-apoyas"
+            className="bloque bloque--primero"
+            historia={historia.length ? historia : []}
+            accion={
+              <a className="btn btn--contribuir btn--lg" href="#contribuir" onClick={abrirContribucion}>
+                <Icono nombre="corazon" tam={18} /> Quiero apoyar
+              </a>
+            }
+          />
 
           <section className="bloque" id="metas" aria-labelledby="metas-titulo" tabIndex={-1}>
             <h2 id="metas-titulo">{(campana.hitos || []).length > 1 ? 'Metas de la campaña' : 'Meta de la campaña'}</h2>
@@ -158,52 +168,7 @@ export default function Proyecto({ campana }) {
             </div>
           </section>
 
-          <section className="bloque" id="apoyan" aria-labelledby="donantes-titulo">
-            <h2 id="donantes-titulo">Quiénes apoyan</h2>
-            {(() => {
-              const anonimos = donantes.filter((d) => d.anonimo).length;
-              const publicos = donantes.filter((d) => !d.anonimo && d.nombre);
-              const estatica = publicos.length <= 3;
-              return (
-                <>
-                  <div className="apoyan-total">
-                    <strong className="cifra">{anonimos}</strong>
-                    <span>{anonimos === 1 ? 'persona apoyó sin dar su nombre' : 'personas apoyaron sin dar su nombre'}</span>
-                  </div>
-                  {publicos.length === 0 ? (
-                    <p className="proyecto__vacio">Aún no hay nombres públicos registrados.</p>
-                  ) : (
-                    <div className="apoyan-carrusel">
-                      {publicos.length > 3 && (
-                        <button
-                          type="button"
-                          className="carrusel-pausa"
-                          onClick={() => setCarruselPausado((v) => !v)}
-                          aria-pressed={carruselPausado}
-                        >
-                          {carruselPausado ? 'Reanudar nombres' : 'Pausar nombres'}
-                        </button>
-                      )}
-                      <div
-                        className={`carrusel-apoyo ${estatica ? 'carrusel-apoyo--estatico' : ''} ${carruselPausado ? 'carrusel-apoyo--pausado' : ''}`}
-                        tabIndex={0}
-                        aria-label="Nombres públicos de apoyo"
-                      >
-                        <ul className="carrusel-apoyo__lista">
-                          {[...publicos, ...(estatica ? [] : publicos)].map((d, i) => (
-                            <li key={`${d.nombre}-${i}`}>{d.nombre}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-                </>
-              );
-            })()}
-            {donantes.length === 0 && (
-              <p className="proyecto__vacio">Aún no hay apoyos confirmados. Puedes ser la primera persona en sumarte.</p>
-            )}
-          </section>
+          <QuienesApoyan campana={campana} />
 
           <section className="bloque" id="preguntas" aria-labelledby="preguntas-titulo">
             <h2 id="preguntas-titulo">Preguntas frecuentes</h2>

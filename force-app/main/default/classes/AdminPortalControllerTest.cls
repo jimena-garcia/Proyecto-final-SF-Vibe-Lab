@@ -27,6 +27,9 @@ private class AdminPortalControllerTest {
         e.destacada = true;
         e.ilustracion = 'Boletos';
         e.montosSugeridos = '100; 200';
+        e.beneficiarios = 'Alumnos del programa';
+        e.impacto = 'Su boleto\nSu viaje';
+        e.mensajeGracias = 'Gracias por sumarte';
         for (Decimal m : metas) {
             AdminPortalController.HitoAdmin h = new AdminPortalController.HitoAdmin();
             h.titulo = 'Meta ' + m;
@@ -92,8 +95,11 @@ private class AdminPortalControllerTest {
         System.runAs(coordinacion()) {
             AdminPortalController.Resultado r = AdminPortalController.guardarCampana(campanaJson(null, 'Viáticos', 15000, new List<Decimal>{ 5000, 15000 }));
             Assert.isTrue(r.ok, r.mensaje);
-            Campana__c c = [SELECT Destacada__c, Montos_Sugeridos__c, (SELECT Monto__c FROM Hitos__r) FROM Campana__c WHERE Id = :r.id];
+            Campana__c c = [SELECT Destacada__c, Montos_Sugeridos__c, Beneficiarios__c, Impacto__c, Mensaje_Gracias__c, (SELECT Monto__c FROM Hitos__r) FROM Campana__c WHERE Id = :r.id];
             Assert.areEqual(2, c.Hitos__r.size());
+            Assert.areEqual('Alumnos del programa', c.Beneficiarios__c, 'Coordinación edita "A quién apoyas"');
+            Assert.areEqual('Su boleto\nSu viaje', c.Impacto__c);
+            Assert.areEqual('Gracias por sumarte', c.Mensaje_Gracias__c);
             Assert.areEqual('100;200', c.Montos_Sugeridos__c);
             Assert.areEqual(1, [SELECT COUNT() FROM Campana__c WHERE Destacada__c = TRUE], 'Solo una destacada');
 

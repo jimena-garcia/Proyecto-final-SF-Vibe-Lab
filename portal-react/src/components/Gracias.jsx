@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import api from '../api.js';
 import { Boton, EstadoBadge, pesos } from '../ui/basicos.jsx';
 import Icono from '../ui/Icono.jsx';
-import { alClicInterno, urlInicio } from '../lib/navegacion.js';
+import { alClicInterno, urlCampana, urlInicio } from '../lib/navegacion.js';
+import RutaProgreso from './RutaProgreso.jsx';
+import { AQuienApoyas, QuienesApoyan } from './Apoyo.jsx';
 
 // Sondeo: cada 2 s durante el primer minuto (cuando suele llegar el aviso de Stripe)
 // y luego cada 5 s hasta completar ~3 minutos. Cada consulta es una lectura ligera por token.
@@ -17,6 +19,7 @@ export default function Gracias({ token }) {
   const [intento, setIntento] = useState(0);
   const [consultando, setConsultando] = useState(false);
   const titulo = useRef(null);
+  const [campana, setCampana] = useState(null);
 
   const consultar = useCallback(async (verificar = false) => {
     setConsultando(true);
@@ -48,6 +51,21 @@ export default function Gracias({ token }) {
   useEffect(() => {
     if (estado) titulo.current?.focus();
   }, [estado?.estado]);
+
+  // Con el aporte confirmado, se carga la campaña (ya con este aporte sumado) para mostrar
+  // a quién apoyó, cómo va y quiénes más se sumaron. Si falla, la tarjeta de gracias basta.
+  const pagada = estado?.estado === 'Pagada';
+  useEffect(() => {
+    if (!pagada || !estado?.campanaId) return;
+    let vivo = true;
+    api
+      .getCampanas()
+      .then((lista) => vivo && setCampana((lista || []).find((c) => c.id === estado.campanaId) || null))
+      .catch(() => {});
+    return () => {
+      vivo = false;
+    };
+  }, [pagada, estado?.campanaId]);
 
   const datos = estado && estado.folio && (
     <dl className="estado__datos">
@@ -86,10 +104,23 @@ export default function Gracias({ token }) {
         <div className="estado__icono estado__icono--exito">
           <Icono nombre="check" tam={28} />
         </div>
-        <h1 tabIndex={-1} ref={titulo}>¡Gracias! Tu pago está confirmado.</h1>
-        <p className="estado__texto">Tu aporte ya cuenta en el avance de la campaña. Enviaremos el comprobante al correo que registraste.</p>
+        <p className="eyebrow">Ya eres parte de esta campaña</p>
+        <h1 tabIndex={-1} ref={titulo}>¡Gracias por sumarte!</h1>
+        <p className="estado__texto">
+          Tu apoyo de <strong>{pesos(estado.monto)}</strong> a <strong>{estado.campana}</strong> ya está confirmado y cuenta en el avance.
+          Te enviamos el comprobante al correo que registraste.
+        </p>
+        {campana?.mensajeGracias && (
+          <blockquote className="gracias__mensaje">
+            <Icono nombre="corazon" tam={22} />
+            <p>{campana.mensajeGracias}</p>
+          </blockquote>
+        )}
         {datos}
-        <div className="estado__acciones">{volver}</div>
+        <div className="estado__acciones">
+          {campana && <Compartir campana={campana} />}
+          {volver}
+        </div>
       </>
     );
   } else if (estado.estado === 'Pendiente') {
@@ -173,6 +204,77 @@ export default function Gracias({ token }) {
           {contenido}
         </div>
       </div>
+      {pagada && campana && <TuApoyoEnLaCampana campana={campana} />}
     </main>
+  );
+}
+
+/** Después de las gracias: a quién apoyaste, cómo va la campaña con tu aporte y quiénes más se sumaron. */
+function TuApoyoEnLaCampana({ campana }) {
+  const url = urlCampana(campana.id);
+  return (
+    <div className="contenedor gracias__campana">
+      <section className="gracias__avance" aria-labelledby="gracias-avance-titulo">
+        <p className="eyebrow">Así va {campana.nombre}</p>
+        <h2 id="gracias-avance-titulo">Tu aporte ya está en el avance</h2>
+        <RutaProgreso campana={campana} grande />
+      </section>
+
+      <AQuienApoyas
+        campana={campana}
+        id="gracias-apoyas"
+        eyebrow="A quién apoyaste"
+        historia={(campana.descripcion || '').split(/\n\s*\n/).filter(Boolean).slice(1, 2)}
+        className="gracias__bloque"
+        accion={
+          <a className="btn btn--secundario" href={url} onClick={alClicInterno(url)}>
+            Ver la campaña completa <Icono nombre="flecha" tam={18} />
+          </a>
+        }
+      />
+
+      <section className="gracias__bloque" aria-labelledby="gracias-metas-titulo">
+        <h2 id="gracias-metas-titulo">{(campana.hitos || []).length > 1 ? 'Las metas que estás ayudando a cumplir' : 'La meta que estás ayudando a cumplir'}</h2>
+        <div style={{ marginTop: 20 }}>
+          <RutaProgreso campana={campana} soloMetas />
+        </div>
+      </section>
+
+      <div className="gracias__bloque">
+        <QuienesApoyan campana={campana} id="gracias-apoyan" titulo="Te sumaste a estas personas" />
+      </div>
+
+      <section className="gracias__cierre" aria-labelledby="gracias-cierre-titulo">
+        <h2 id="gracias-cierre-titulo">¿Nos ayudas a llegar más lejos?</h2>
+        <p>Comparte la campaña con alguien que también quiera impulsar a estos estudiantes.</p>
+        <div className="estado__acciones">
+          <Compartir campana={campana} principal />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/** Comparte el enlace de la campaña (menú nativo del celular o copia al portapapeles). */
+function Compartir({ campana, principal = false }) {
+  const [copiado, setCopiado] = useState(false);
+  const enlace = `${window.location.origin}${urlCampana(campana.id)}`;
+  async function compartir() {
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: campana.nombre, text: `Apoya a ${campana.beneficiarios || 'estudiantes de SF Vibe Lab'}`, url: enlace });
+        return;
+      }
+      await navigator.clipboard.writeText(enlace);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2500);
+    } catch {
+      /* el donante cerró el menú de compartir */
+    }
+  }
+  return (
+    <button type="button" className={`btn ${principal ? 'btn--contribuir' : 'btn--primario'}`} onClick={compartir}>
+      <Icono nombre="compartir" tam={18} /> <span aria-live="polite">{copiado ? 'Enlace copiado' : 'Compartir la campaña'}</span>
+    </button>
   );
 }

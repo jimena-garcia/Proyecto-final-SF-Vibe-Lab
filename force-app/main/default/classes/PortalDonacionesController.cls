@@ -49,6 +49,9 @@ public without sharing class PortalDonacionesController {
         public String imagenAlt;
         public Boolean destacada;
         public Integer donacionesPagadas;
+        public String beneficiarios; // "A quién apoyas"
+        public List<String> impacto = new List<String>(); // una idea por línea
+        public String mensajeGracias;
     }
 
     public class DonacionInput {
@@ -74,6 +77,7 @@ public without sharing class PortalDonacionesController {
         public String estado;
         public Decimal monto;
         public String campana;
+        public String campanaId; // para mostrar la campaña (metas, quiénes apoyan) en la página de gracias
         public String folio;
     }
 
@@ -96,6 +100,9 @@ public without sharing class PortalDonacionesController {
                 Imagen_Alt__c,
                 Destacada__c,
                 Donaciones_Pagadas__c,
+                Beneficiarios__c,
+                Impacto__c,
+                Mensaje_Gracias__c,
                 (SELECT Name, Descripcion__c, Monto__c FROM Hitos__r ORDER BY Monto__c ASC LIMIT 10),
                 (
                     SELECT Nombre__c, Monto__c, Modalidad__c
@@ -121,6 +128,9 @@ public without sharing class PortalDonacionesController {
             dto.imagenAlt = c.Imagen_Alt__c;
             dto.destacada = c.Destacada__c;
             dto.donacionesPagadas = c.Donaciones_Pagadas__c == null ? 0 : c.Donaciones_Pagadas__c.intValue();
+            dto.beneficiarios = c.Beneficiarios__c;
+            dto.impacto = lineas(c.Impacto__c);
+            dto.mensajeGracias = c.Mensaje_Gracias__c;
             for (Hito__c h : c.Hitos__r) {
                 HitoDTO hito = new HitoDTO();
                 hito.titulo = h.Name;
@@ -245,6 +255,7 @@ public without sharing class PortalDonacionesController {
         e.estado = d.Estado__c;
         e.monto = d.Monto__c;
         e.campana = d.Campana__r.Name;
+        e.campanaId = d.Campana__c;
         e.folio = d.Name;
         return e;
     }
@@ -388,12 +399,28 @@ public without sharing class PortalDonacionesController {
             return null;
         }
         List<Donacion__c> filas = [
-            SELECT Id, Name, Estado__c, Monto__c, Email__c, Token_Publico__c, Stripe_Session_Id__c, Campana__r.Name
+            SELECT Id, Name, Estado__c, Monto__c, Email__c, Token_Publico__c, Stripe_Session_Id__c, Campana__c, Campana__r.Name
             FROM Donacion__c
             WHERE Token_Publico__c = :token
             LIMIT 1
         ];
         return filas.isEmpty() ? null : filas[0];
+    }
+
+    /** Texto de varias líneas → lista sin renglones vacíos ni viñetas escritas a mano. */
+    @TestVisible
+    private static List<String> lineas(String texto) {
+        List<String> salida = new List<String>();
+        if (String.isBlank(texto)) {
+            return salida;
+        }
+        for (String l : texto.split('\\r?\\n')) {
+            String limpia = l.trim().removeStart('-').removeStart('•').removeStart('*').trim();
+            if (String.isNotBlank(limpia)) {
+                salida.add(limpia);
+            }
+        }
+        return salida;
     }
 
     @TestVisible

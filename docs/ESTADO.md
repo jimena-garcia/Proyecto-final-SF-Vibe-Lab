@@ -23,7 +23,8 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
   - Página de campaña con metas escalonadas.
   - Donación anónima, con reconocimiento o con factura (RFC con patrón del SAT).
   - Stripe Checkout por el monto exacto, **embebido** en la página (sin redirección) si está capturada la clave publicable; si no, con redirección.
-  - Página de gracias (pendiente, confirmado o cancelado).
+  - Página de gracias (pendiente, confirmado o cancelado). Con el aporte confirmado muestra a quién apoyó, el avance, las metas, quiénes apoyan y un botón para compartir.
+  - "A quién apoyas": portada (hero de la campaña principal), campaña y gracias. Los textos los edita Coordinación en Panel → Campañas.
   - Lista "Quiénes apoyan": las anónimas y con factura aparecen como "Donante anónimo".
 - **Pagos:**
   - Webhook firmado (HMAC), idempotente, que soporta eventos snapshot y thin.

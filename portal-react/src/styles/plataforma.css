@@ -349,3 +349,80 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; font-variation-setti
   .deslizador__pista, .pasos-modal li, .pasos-modal li > span { transition: none; }
   .deslizador__panel--oculto { transition: none; }
 }
+
+/* ---------- Portada: la campaña principal es el hero ---------- */
+.hero-campana { padding: var(--e-6) 0 var(--e-7); background: linear-gradient(180deg, var(--contribuir-suave) 0%, var(--papel) 85%); }
+.hero-campana--vacio { text-align: center; }
+.hero-campana__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-6); align-items: center; }
+.hero-campana__texto { display: flex; flex-direction: column; gap: var(--e-4); min-width: 0; }
+.hero-campana__lema { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); color: var(--texto-2); font-size: var(--t-sm); font-weight: 600; }
+.hero-campana__chip { display: inline-flex; align-items: center; min-height: 26px; padding: 0 var(--e-3); border-radius: var(--r-full); background: var(--contribuir); color: #fff; font-size: var(--t-xs); letter-spacing: .02em; text-transform: uppercase; }
+.hero-campana__titulo { font-size: clamp(2.1rem, 5.2vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0; }
+.hero-campana__resumen { font-size: var(--t-lg); line-height: 1.5; color: var(--texto); max-width: 52ch; margin: 0; }
+.hero-campana__apoyas { display: flex; gap: var(--e-3); align-items: flex-start; margin: 0; padding: var(--e-3) var(--e-4); border-left: 4px solid var(--contribuir); background: var(--superficie); border-radius: 0 var(--r-md) var(--r-md) 0; box-shadow: var(--sombra); }
+.hero-campana__apoyas svg { flex: none; margin-top: 2px; color: var(--contribuir); }
+.hero-campana__avance { display: grid; gap: var(--e-2); }
+.hero-campana__monto { margin: 0; color: var(--texto-2); font-size: var(--t-lg); }
+.hero-campana__monto strong { color: var(--texto); font-size: var(--t-2xl); font-weight: 800; margin-right: 4px; }
+.hero-campana__barra { height: 10px; border-radius: var(--r-full); background: var(--linea-fuerte); overflow: hidden; }
+.hero-campana__barra > div { height: 100%; border-radius: var(--r-full); background: var(--contribuir); transition: width .4s ease; }
+.hero-campana__meta { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+.hero-campana__meta strong { color: var(--texto); }
+.hero-campana__acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); }
+.hero-campana__acciones .btn { flex: 1 1 220px; justify-content: center; }
+.hero-campana__datos { display: flex; gap: var(--e-6); margin: 0; }
+.hero-campana__datos div { display: flex; flex-direction: column-reverse; }
+.hero-campana__datos dt { color: var(--texto-2); font-size: var(--t-sm); }
+.hero-campana__datos dd { margin: 0; font-size: var(--t-xl); font-weight: 800; }
+.hero-campana__imagen { position: relative; display: block; min-width: 0; border-radius: var(--r-lg); overflow: hidden; box-shadow: 0 18px 48px rgb(0 0 0 / 0.14); }
+.hero-campana__imagen .imagen-campana { border-radius: 0; }
+.hero-campana__imagen .imagen-campana__media { aspect-ratio: 4 / 3.4; }
+.hero-campana__cuenta { position: absolute; top: var(--e-4); left: var(--e-4); display: inline-flex; align-items: center; gap: 6px; padding: 6px var(--e-3); border-radius: var(--r-full); background: rgb(255 255 255 / 0.94); color: var(--texto); font-size: var(--t-sm); font-weight: 700; box-shadow: var(--sombra); }
+@media (min-width: 960px) {
+  .hero-campana { padding: var(--e-7) 0 var(--e-8); }
+  .hero-campana__grid { grid-template-columns: minmax(0, 52fr) minmax(0, 48fr); gap: var(--e-7); }
+}
+@media (max-width: 959px) {
+  .hero-campana__imagen { order: -1; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-campana__barra > div { transition: none; } }
+
+/* ---------- A quién apoyas (portada, campaña y gracias) ---------- */
+.apoyas { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-5); outline: none; scroll-margin-top: var(--e-6); }
+.apoyas__titulo { font-size: clamp(1.5rem, 3.2vw, var(--t-2xl)); line-height: 1.2; margin: var(--e-2) 0 0; max-width: 30ch; }
+.apoyas__historia { font-size: var(--t-lg); line-height: 1.6; color: var(--texto); margin: var(--e-3) 0 0; max-width: var(--ancho-lectura); white-space: pre-line; }
+.apoyas__impacto { padding: var(--e-5); border-radius: var(--r-lg); background: var(--contribuir-suave); }
+.apoyas__subtitulo { display: flex; align-items: center; gap: var(--e-2); font-size: var(--t-lg); margin: 0 0 var(--e-4); color: var(--texto); }
+.apoyas__subtitulo svg { color: var(--contribuir); }
+.apoyas__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
+.apoyas__lista li { display: flex; gap: var(--e-3); align-items: flex-start; font-size: var(--t-md); line-height: 1.45; font-weight: 600; }
+.apoyas__check { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--contribuir); color: #fff; }
+.apoyas__detalle { display: block; font-weight: 400; color: var(--texto-2); font-size: var(--t-sm); margin-top: 2px; }
+.apoyas__accion { margin-top: var(--e-5); }
+.portada-apoyas { padding: var(--e-7) 0 var(--e-6); }
+.portada-apoyas .apoyas { padding-bottom: var(--e-2); }
+@media (min-width: 900px) {
+  .apoyas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--e-6); align-items: start; }
+  .proyecto__principal .apoyas { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Página de campaña: a quién apoyas y empuje a contribuir ---------- */
+.proyecto__apoyas { display: inline-flex; gap: var(--e-2); align-items: flex-start; margin: var(--e-4) auto 0; max-width: 60ch; padding: var(--e-3) var(--e-4); border-radius: var(--r-md); background: var(--contribuir-suave); color: var(--texto); text-align: left; }
+.proyecto__apoyas svg { flex: none; margin-top: 2px; color: var(--contribuir); }
+.proyecto__empuje { margin: 0; font-weight: 600; color: var(--texto); }
+.proyecto__conocer { gap: var(--e-2); }
+
+/* ---------- Gracias: ya eres parte de la campaña ---------- */
+.gracias__mensaje { display: flex; gap: var(--e-3); margin: var(--e-5) 0 0; padding: var(--e-4) var(--e-5); border-radius: var(--r-md); background: var(--contribuir-suave); text-align: left; }
+.gracias__mensaje svg { flex: none; color: var(--contribuir); margin-top: 2px; }
+.gracias__mensaje p { margin: 0; font-size: var(--t-md); line-height: 1.55; font-style: italic; color: var(--texto); }
+.gracias__campana { max-width: 880px; margin-top: var(--e-7); display: grid; gap: var(--e-6); }
+.gracias__avance { padding: var(--e-5); border-radius: var(--r-lg); background: var(--superficie); box-shadow: var(--sombra); }
+.gracias__avance h2 { font-size: var(--t-xl); margin: var(--e-1) 0 var(--e-4); }
+.gracias__bloque { padding-top: var(--e-5); border-top: 1px solid var(--linea); }
+.gracias__bloque > .bloque { border-top: 0; padding-top: 0; margin-top: 0; }
+.gracias__bloque h2 { font-size: var(--t-xl); }
+.gracias__cierre { text-align: center; padding: var(--e-6) var(--e-5); border-radius: var(--r-lg); background: var(--contribuir-suave); }
+.gracias__cierre h2 { font-size: var(--t-xl); margin: 0 0 var(--e-2); }
+.gracias__cierre p { margin: 0 0 var(--e-4); color: var(--texto-2); }
+.gracias__cierre .estado__acciones { justify-content: center; }
