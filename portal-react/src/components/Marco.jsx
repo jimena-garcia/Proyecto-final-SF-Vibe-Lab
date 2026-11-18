@@ -1,5 +1,5 @@
 import Icono from '../ui/Icono.jsx';
-import { alClicInterno, navegar, urlInicio } from '../lib/navegacion.js';
+import { alClicInterno, navegar, urlInicio, urlMasCampanas } from '../lib/navegacion.js';
 import { MARCA } from '../marca.js';
 
 /** Header claro: marca de la plataforma y buscador de campañas. El acceso del equipo no se anuncia en el sitio público. */
@@ -53,6 +53,9 @@ export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
           )}
 
           <nav className="header__nav" aria-label="Secciones">
+            <a href={urlMasCampanas()} onClick={alClicInterno(urlMasCampanas())}>
+              Más campañas
+            </a>
             <a href={`${urlInicio()}#como-funciona`} onClick={alClicInterno(urlInicio(), 'como-funciona')}>
               Cómo funciona
             </a>

@@ -25,7 +25,7 @@ function useCampanas(activo) {
 
 export default function App() {
   const ruta = useRuta();
-  const necesitaCampanas = ruta.vista === 'inicio' || ruta.vista === 'campana';
+  const necesitaCampanas = ruta.vista === 'inicio' || ruta.vista === 'campana' || ruta.vista === 'mas';
   const [estado, recargar] = useCampanas(necesitaCampanas);
   const [busqueda, setBusqueda] = useState('');
 
@@ -46,7 +46,13 @@ export default function App() {
         {ruta.vista === 'campana' ? (
           <CampanaDetalle id={ruta.id} estado={estado} reintentar={recargar} />
         ) : (
-          <Inicio estado={estado} reintentar={recargar} busqueda={busqueda} limpiarBusqueda={() => setBusqueda('')} />
+          <Inicio
+            estado={estado}
+            reintentar={recargar}
+            busqueda={busqueda}
+            limpiarBusqueda={() => setBusqueda('')}
+            masCampanas={ruta.vista === 'mas'}
+          />
         )}
       </main>
       <Pie />

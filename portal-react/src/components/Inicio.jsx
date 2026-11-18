@@ -3,23 +3,19 @@ import Icono from '../ui/Icono.jsx';
 import Ilustracion from '../ui/Ilustracion.jsx';
 import { CampanaCard, CampanaCardEsqueleto, DatosCampana, ImagenCampana } from './CampanaCard.jsx';
 import ComoFunciona from './ComoFunciona.jsx';
-import { EVENTO, diasPara, elegirDestacada, porcentaje } from '../lib/progreso.js';
-import { alClicInterno, urlCampana } from '../lib/navegacion.js';
+import { EVENTO, diasPara, elegirDestacada } from '../lib/progreso.js';
+import { alClicInterno, urlCampana, urlMasCampanas } from '../lib/navegacion.js';
 import { MARCA } from '../marca.js';
 
 const normalizar = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 /**
- * Portada de descubrimiento: titular, banner del programa, campaña destacada +
- * recomendadas, y todas las campañas (filtradas por el buscador del header).
- * "Recomendadas" no es personalizado (no hay login): se ordena por avance y se dice así.
+ * Portada de descubrimiento: titular, banner del programa y una sola campaña principal.
  */
-export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqueda }) {
+export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqueda, masCampanas = false }) {
   const { campanas, error } = estado;
   const lista = campanas || [];
   const destacada = campanas ? elegirDestacada(lista) : null;
-  const otras = lista.filter((c) => c !== destacada);
-  const recomendadas = [...otras].sort((a, b) => porcentaje(b.recaudado, b.meta) - porcentaje(a.recaudado, a.meta)).slice(0, 4);
   const total = lista.reduce((s, c) => s + (Number(c.recaudado) || 0), 0);
   const donaciones = lista.reduce((s, c) => s + (Number(c.donacionesPagadas) || 0), 0);
   const dias = diasPara(EVENTO.fecha);
@@ -81,10 +77,6 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
         <section className="seccion contenedor" aria-busy="true" aria-label="Cargando campañas">
           <div className="vitrina">
             <CampanaCardEsqueleto />
-            <div className="rejilla rejilla--recomendadas">
-              <CampanaCardEsqueleto />
-              <CampanaCardEsqueleto />
-            </div>
           </div>
         </section>
       )}
@@ -96,39 +88,24 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
         </div>
       )}
 
-      {destacada && !q && (
-        <section className="seccion seccion--vitrina" aria-label="Campaña destacada y recomendadas">
-          <div className={`contenedor vitrina ${recomendadas.length ? '' : 'vitrina--sola'}`}>
-            <div>
-              <h2 className="vitrina__titulo">Campaña destacada</h2>
-              <Destacada campana={destacada} />
-            </div>
-            {recomendadas.length > 0 && (
-              <div>
-                <div className="vitrina__cab">
-                  <h2 className="vitrina__titulo">Recomendadas</h2>
-                  <a className="vitrina__mas" href="#campanas" onClick={alClicInterno(window.location.pathname, 'campanas')}>
-                    Ver todas
-                  </a>
-                </div>
-                <p className="vitrina__sub">Las que van más avanzadas hacia su meta.</p>
-                <div className="rejilla rejilla--recomendadas">
-                  {recomendadas.map((c) => (
-                    <CampanaCard key={c.id} campana={c} />
-                  ))}
-                </div>
-              </div>
-            )}
+      {destacada && !q && !masCampanas && (
+        <section className="seccion seccion--vitrina" aria-label="Campaña principal">
+          <div className="contenedor vitrina vitrina--principal">
+            <h2 className="vitrina__titulo">Objetivo principal</h2>
+            <Destacada campana={destacada} />
+            <a className="vitrina__mas" href={urlMasCampanas()} onClick={alClicInterno(urlMasCampanas())}>
+              Más campañas
+            </a>
           </div>
         </section>
       )}
 
-      {campanas && lista.length > 0 && (otras.length > 0 || q) && (
+      {campanas && lista.length > 0 && (masCampanas || q) && (
         <section className="seccion seccion--explorar" id="campanas" aria-labelledby="explorar-titulo" tabIndex={-1}>
           <div className="contenedor">
             <div className="vitrina__cab">
               <h2 className="vitrina__titulo" id="explorar-titulo">
-                {q ? `Resultados para “${busqueda.trim()}”` : 'Todas las campañas abiertas'}
+                {q ? `Resultados para “${busqueda.trim()}”` : 'Más campañas'}
               </h2>
               {q && (
                 <button type="button" className="btn btn--texto" onClick={limpiarBusqueda}>
@@ -157,6 +134,8 @@ export default function Inicio({ estado, reintentar, busqueda = '', limpiarBusqu
 function Destacada({ campana }) {
   const url = urlCampana(campana.id);
   const resumen = (campana.descripcion || '').split(/\n\s*\n/)[0];
+  const dias = diasPara(EVENTO.fecha);
+  const donaciones = campana.donacionesPagadas ?? 0;
   return (
     <article className="destacada" aria-labelledby={`dest-${campana.id}`}>
       <a href={url} onClick={alClicInterno(url)} tabIndex={-1} aria-hidden="true" className="destacada__enlace-imagen">
@@ -175,6 +154,14 @@ function Destacada({ campana }) {
           <p className="tarjeta__organizador">{MARCA.organizador}</p>
           {resumen && <p className="destacada__desc">{resumen}</p>}
           <DatosCampana campana={campana} />
+          <dl className="destacada__franja">
+            <div><dt>Recaudado</dt><dd className="cifra">{pesos(campana.recaudado)}</dd></div>
+            <div><dt>Aportes confirmados</dt><dd className="cifra">{donaciones}</dd></div>
+            <div><dt>Días para {EVENTO.nombre}</dt><dd className="cifra">{dias > 0 ? dias : 'Concluido'}</dd></div>
+          </dl>
+          <a className="btn btn--contribuir btn--lg btn--bloque destacada__accion" href={url} onClick={alClicInterno(url)}>
+            Ver campaña y contribuir
+          </a>
         </div>
       </div>
     </article>

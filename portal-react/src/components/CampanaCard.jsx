@@ -60,6 +60,8 @@ export function DatosCampana({ campana }) {
 /** Tarjeta del listado: toda la tarjeta enlaza a la página de la campaña. */
 export function CampanaCard({ campana }) {
   const url = urlCampana(campana.id);
+  const descripcion = (campana.descripcion || '').replace(/\s+/g, ' ').trim();
+  const cubre = descripcion.split(/[.!?]/)[0] || (campana.meta ? `Meta: ${pesos(campana.meta)}` : '');
   return (
     <article className="tarjeta">
       <ImagenCampana campana={campana} />
@@ -74,6 +76,7 @@ export function CampanaCard({ campana }) {
             </a>
           </h3>
           <p className="tarjeta__organizador">{MARCA.organizador}</p>
+          {cubre && <p className="tarjeta__cubre"><strong>Cubre:</strong> {cubre}</p>}
           <DatosCampana campana={campana} />
         </div>
       </div>
