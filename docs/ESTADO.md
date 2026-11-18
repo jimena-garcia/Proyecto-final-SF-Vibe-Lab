@@ -64,3 +64,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 - Portada con una sola campaña principal elegida por `elegirDestacada`, cifras compactas y acceso a “Más campañas” por una ruta aparte.
 - Página de campaña con aporte motivador basado en metas reales, modal de contribución accesible y reconocimiento público sin montos.
 - Modal con los cuatro pasos, aviso de privacidad borrador y casilla obligatoria; carrusel de nombres públicos con pausa.
+
+## Ajuste de portada (17 nov 2026)
+- La campaña principal ocupa el contenedor completo en un layout horizontal: imagen 55 % e información 45 %.
+- “Más campañas” funciona como acordeón en la misma portada y el encabezado abre y lleva a esa sección sin cambiar de ruta.

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import api from './api.js';
-import { useRuta } from './lib/navegacion.js';
+import { useRuta, urlInicio } from './lib/navegacion.js';
 import { Encabezado, Pie } from './components/Marco.jsx';
 import Inicio from './components/Inicio.jsx';
 import CampanaDetalle from './components/CampanaDetalle.jsx';
@@ -25,9 +25,19 @@ function useCampanas(activo) {
 
 export default function App() {
   const ruta = useRuta();
-  const necesitaCampanas = ruta.vista === 'inicio' || ruta.vista === 'campana' || ruta.vista === 'mas';
+  const necesitaCampanas = ruta.vista === 'inicio' || ruta.vista === 'campana';
   const [estado, recargar] = useCampanas(necesitaCampanas);
   const [busqueda, setBusqueda] = useState('');
+  const [solicitudMas, setSolicitudMas] = useState(0);
+
+  const abrirMasCampanas = () => {
+    if (ruta.vista !== 'inicio') {
+      window.history.pushState({}, '', urlInicio());
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+    window.history.replaceState({}, '', `${urlInicio()}#mas-campanas`);
+    setSolicitudMas((valor) => valor + 1);
+  };
 
   if (ruta.vista === 'gracias' || ruta.vista === 'cancelado') {
     return (
@@ -41,7 +51,7 @@ export default function App() {
 
   return (
     <>
-      <Encabezado busqueda={busqueda} setBusqueda={setBusqueda} />
+      <Encabezado busqueda={busqueda} setBusqueda={setBusqueda} onMasCampanas={abrirMasCampanas} />
       <main id="contenido">
         {ruta.vista === 'campana' ? (
           <CampanaDetalle id={ruta.id} estado={estado} reintentar={recargar} />
@@ -51,7 +61,8 @@ export default function App() {
             reintentar={recargar}
             busqueda={busqueda}
             limpiarBusqueda={() => setBusqueda('')}
-            masCampanas={ruta.vista === 'mas'}
+            setBusqueda={setBusqueda}
+            solicitudMas={solicitudMas}
           />
         )}
       </main>

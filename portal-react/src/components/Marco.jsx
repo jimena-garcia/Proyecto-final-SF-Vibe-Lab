@@ -1,9 +1,9 @@
 import Icono from '../ui/Icono.jsx';
-import { alClicInterno, navegar, urlInicio, urlMasCampanas } from '../lib/navegacion.js';
+import { alClicInterno, urlInicio } from '../lib/navegacion.js';
 import { MARCA } from '../marca.js';
 
 /** Header claro: marca de la plataforma y buscador de campañas. El acceso del equipo no se anuncia en el sitio público. */
-export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
+export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true, onMasCampanas }) {
   return (
     <>
       <a className="saltar" href="#contenido">
@@ -34,7 +34,7 @@ export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
               role="search"
               onSubmit={(e) => {
                 e.preventDefault();
-                navegar(urlInicio(), 'campanas');
+                onMasCampanas?.();
               }}
             >
               <label htmlFor="buscar-campanas" className="sr-only">
@@ -53,7 +53,7 @@ export function Encabezado({ busqueda = '', setBusqueda, conBuscador = true }) {
           )}
 
           <nav className="header__nav" aria-label="Secciones">
-            <a href={urlMasCampanas()} onClick={alClicInterno(urlMasCampanas())}>
+            <a href="#mas-campanas" onClick={(event) => { event.preventDefault(); onMasCampanas?.(); }}>
               Más campañas
             </a>
             <a href={`${urlInicio()}#como-funciona`} onClick={alClicInterno(urlInicio(), 'como-funciona')}>

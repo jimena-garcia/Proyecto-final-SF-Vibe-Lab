@@ -10,7 +10,7 @@ export default function CampanaDetalle({ id, estado, reintentar }) {
 
   const volver = (
     <div className="contenedor" style={{ paddingTop: 20 }}>
-      <a className="enlace-volver" href={urlInicio()} onClick={alClicInterno(urlInicio())}>
+      <a className="enlace-volver" href={`${urlInicio()}#mas-campanas`} onClick={alClicInterno(`${urlInicio()}#mas-campanas`, 'mas-campanas')}>
         <Icono nombre="volver" tam={18} /> Más campañas
       </a>
     </div>

@@ -32,6 +32,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
 | 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
 | 24 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-02, HU-05, HU-11 | [J22](prompts/jimena/J22-portada-objetivo-modal.md) | — | ~3 h → 45 min |
+| 25 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J23](prompts/jimena/J23-ajuste-portada-acordeon.md) | — | ~1 h → 20 min |
 
 ---
 
@@ -290,4 +291,9 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué obtuvimos:** portada con la campaña principal y ruta `?mas=1`, campaña con modal accesible, cuatro pasos, aviso de privacidad y reconocimiento público con carrusel.
 - **Qué verificamos y cómo:** `npm run build` terminó sin errores; revisamos `mock.js`, que tiene tres nombres públicos y dos apoyos anónimos en la campaña principal y una campaña secundaria sin donantes.
 - **Qué corregimos:** se eliminaron los listados recomendados de la portada, se quitó el formulario lateral y se validó la casilla de privacidad antes de continuar.
+
+### 25 · Ajuste horizontal y acordeón de la portada — [J23](prompts/jimena/J23-ajuste-portada-acordeon.md)
+- **Qué obtuvimos:** objetivo principal horizontal 55/45 en escritorio, apilado en móvil y “Más campañas” como acordeón accesible en la misma página.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores y se revisaron las referencias residuales de la ruta separada y los estilos de recomendadas.
+- **Qué corregimos:** se eliminó `?mas=1`, se agregó la navegación por `#mas-campanas` y se compactaron los espaciados de la portada.
 

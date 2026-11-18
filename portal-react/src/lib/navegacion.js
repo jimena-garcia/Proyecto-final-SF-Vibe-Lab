@@ -13,17 +13,14 @@ function leer() {
   const gracias = q.get('gracias');
   const cancelado = q.get('cancelado');
   const campana = q.get('campana');
-  const mas = q.get('mas');
   if (gracias && TOKEN.test(gracias)) return { vista: 'gracias', token: gracias };
   if (cancelado && TOKEN.test(cancelado)) return { vista: 'cancelado', token: cancelado };
   if (campana && ID_SF.test(campana)) return { vista: 'campana', id: campana };
-  if (mas === '1') return { vista: 'mas' };
   return { vista: 'inicio' };
 }
 
 export const urlCampana = (id) => `${window.location.pathname}?campana=${encodeURIComponent(id)}`;
 export const urlInicio = () => window.location.pathname;
-export const urlMasCampanas = () => `${window.location.pathname}?mas=1`;
 
 export function navegar(url, ancla) {
   window.history.pushState({}, '', url);
