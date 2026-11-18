@@ -17,6 +17,7 @@ export default function DonarForm({ campana }) {
   const [servidor, setServidor] = useState(null);
   const [fase, setFase] = useState('captura'); // captura | registrando | redirigiendo | pagando
   const [pago, setPago] = useState(null); // datos del Embedded Checkout
+  const [aviso, setAviso] = useState(null); // aviso informativo (p. ej. pago cancelado)
   const formRef = useRef(null);
 
   const sugeridos = campana.montosSugeridos || [];
@@ -39,6 +40,7 @@ export default function DonarForm({ campana }) {
     if (fase !== 'captura') return; // evita doble envío (HU-03 CP2)
     setEnviado(true);
     setServidor(null);
+    setAviso(null);
     if (Object.keys(errores).length) {
       enfocarPrimerError(errores);
       return;
@@ -78,6 +80,16 @@ export default function DonarForm({ campana }) {
     }
   }
 
+  // X del modal: la donación pendiente pasa a Cancelada (sin cargo) y el donante vuelve al
+  // formulario con sus datos intactos. Si quiere reintentar, se registra una donación nueva.
+  function cancelarPago() {
+    const token = pago?.token;
+    setPago(null);
+    setFase('captura');
+    setAviso('Cancelaste el pago y no se te cobró nada. Tus datos siguen aquí por si quieres intentarlo de nuevo.');
+    if (token) api.cancelar(token).catch(() => {});
+  }
+
   const describe = (campo, ayuda) => [ayuda && `${ID_CAMPO[campo]}-ayuda`, visible(campo) && `${ID_CAMPO[campo]}-error`].filter(Boolean).join(' ') || undefined;
   const MensajeError = ({ campo }) =>
     visible(campo) ? (
@@ -88,7 +100,7 @@ export default function DonarForm({ campana }) {
 
   return (
     <>
-    {fase === 'pagando' && pago && <PagoEmbebido {...pago} campana={campana.nombre} />}
+    {fase === 'pagando' && pago && <PagoEmbebido {...pago} campana={campana.nombre} onCancelar={cancelarPago} />}
     <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-labelledby="donar-titulo">
       <p className="eyebrow">Donar a</p>
       <h2 id="donar-titulo" style={{ marginTop: 4 }}>
@@ -265,6 +277,9 @@ export default function DonarForm({ campana }) {
         </dl>
       </div>
 
+      {aviso && !servidor && (
+        <Alerta tipo="info" titulo={aviso} role="status" />
+      )}
       {servidor && (
         <Alerta tipo="error" titulo={servidor.texto} role="alert">
           {servidor.lista?.length > 0 && (
