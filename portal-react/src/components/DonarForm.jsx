@@ -86,11 +86,9 @@ export default function DonarForm({ campana }) {
       </p>
     ) : null;
 
-  if (fase === 'pagando' && pago) {
-    return <PagoEmbebido {...pago} campana={campana.nombre} />;
-  }
-
   return (
+    <>
+    {fase === 'pagando' && pago && <PagoEmbebido {...pago} campana={campana.nombre} />}
     <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-labelledby="donar-titulo">
       <p className="eyebrow">Donar a</p>
       <h2 id="donar-titulo" style={{ marginTop: 4 }}>
@@ -292,6 +290,7 @@ export default function DonarForm({ campana }) {
         )}
         {fase === 'registrando' && 'Registrando tu donación…'}
         {fase === 'redirigiendo' && 'Abriendo Stripe…'}
+        {fase === 'pagando' && 'Pago en curso…'}
       </Boton>
       <p className="nota-pago" aria-live="polite">
         <Icono nombre="info" tam={16} />
@@ -300,5 +299,6 @@ export default function DonarForm({ campana }) {
           : 'Pagarás con tarjeta a través de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
       </p>
     </form>
+    </>
   );
 }

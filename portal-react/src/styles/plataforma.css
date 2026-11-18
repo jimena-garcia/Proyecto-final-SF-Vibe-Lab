@@ -167,3 +167,38 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; font-variation-setti
 
 .avatar--anonimo { background: var(--papel-2); color: var(--texto-2); }
 .donantes__nombre--anonimo { color: var(--texto-2); font-style: italic; }
+
+/* ---------- Modal de pago (Stripe Embedded Checkout) ---------- */
+.modal-pago {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--papel);
+  color: var(--texto);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.25);
+  overflow: hidden;
+}
+.modal-pago[open] { display: flex; flex-direction: column; }
+.modal-pago::backdrop { background: rgb(17 17 17 / 0.55); backdrop-filter: blur(2px); }
+.modal-pago__cabecera {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--e-4);
+  padding: var(--e-5) var(--e-5) var(--e-4);
+  border-bottom: 1px solid var(--linea);
+}
+.modal-pago__cabecera h2 { margin: 4px 0 0; font-size: var(--t-lg); }
+.modal-pago__cerrar {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px;
+  border: none; border-radius: var(--r-full); background: transparent; color: var(--texto-2); cursor: pointer;
+}
+.modal-pago__cerrar:hover { background: var(--papel-2); color: var(--texto); }
+.modal-pago__cerrar:focus-visible { outline: none; box-shadow: var(--foco); }
+.modal-pago__cuerpo { flex: 1; overflow-y: auto; padding: var(--e-4) var(--e-5); }
+.modal-pago__stripe { margin-top: var(--e-3); }
+.modal-pago__pie { padding: var(--e-3) var(--e-5) var(--e-5); border-top: 1px solid var(--linea); display: flex; justify-content: flex-end; }
+@media (max-width: 480px) {
+  .modal-pago { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; border-radius: 0; }
+  .modal-pago__cabecera, .modal-pago__cuerpo, .modal-pago__pie { padding-left: var(--e-4); padding-right: var(--e-4); }
+  .modal-pago__pie .btn { width: 100%; }
+}

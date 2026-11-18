@@ -290,6 +290,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 - **Qué obtuvimos:**
   - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded_page`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`.
   - `iniciarPago` usa el modo embebido solo si el custom setting tiene una clave `pk_test_` válida; si no, sigue con la redirección de siempre (cambio reversible sin desplegar).
+  - Por pedido del equipo, el formulario de Stripe se abre en un **modal** (`<dialog>` nativo: atrapa el foco y bloquea el fondo) en lugar de reemplazar el formulario de la barra lateral. Esc no lo cierra, para no cancelar por accidente a medio pago; en celular ocupa toda la pantalla.
   - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar. Botón "Cancelar y no donar" reutiliza `?cancelado=`.
   - La página de gracias no cambió: solo dice "confirmado" cuando Salesforce lo registra (`verificarPago` + webhook).
 - **⚠ Errores de la IA:**
