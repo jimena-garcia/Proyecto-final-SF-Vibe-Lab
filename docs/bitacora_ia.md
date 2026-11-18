@@ -31,6 +31,7 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
 | 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
 | 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
+| 24 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-02, HU-05, HU-11 | [J22](prompts/jimena/J22-portada-objetivo-modal.md) | — | ~3 h → 45 min |
 
 ---
 
@@ -284,4 +285,9 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Capturas de la portada y de la página de campaña en el sitio real.
   - Tests del comprobante en verde.
 - **Nota:** cambia la decisión de la Fase B ("un solo verde propio de la plataforma"). Ahora la plataforma usa los colores del evento principal, por decisión del equipo.
+
+### 24 · Portada de objetivo y contribución en modal — [J22](prompts/jimena/J22-portada-objetivo-modal.md)
+- **Qué obtuvimos:** portada con la campaña principal y ruta `?mas=1`, campaña con modal accesible, cuatro pasos, aviso de privacidad y reconocimiento público con carrusel.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores; revisamos `mock.js`, que tiene tres nombres públicos y dos apoyos anónimos en la campaña principal y una campaña secundaria sin donantes.
+- **Qué corregimos:** se eliminaron los listados recomendados de la portada, se quitó el formulario lateral y se validó la casilla de privacidad antes de continuar.
 

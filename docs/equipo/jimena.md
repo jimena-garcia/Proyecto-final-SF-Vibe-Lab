@@ -18,4 +18,4 @@ Detalle personal; el resumen va en su fila de [`../contribucion.md`](../contribu
 ## Entrega 2 (17 nov 2026)
 | Tarea | Historias | Evidencia | Horas aprox. |
 |---|---|---|---|
-| | | | |
+| P22: portada de un objetivo, Más campañas, modal de contribución y carrusel de apoyos | HU-01, HU-02, HU-05, HU-11 | `portal-react/src`; [J22](../prompts/jimena/J22-portada-objetivo-modal.md); build de Vite válido | 1 h |

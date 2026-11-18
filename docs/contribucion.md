@@ -12,4 +12,4 @@
 | Integrante | Historias y tareas | Evidencia (commits, bitácora, capturas) | Horas aprox. |
 |---|---|---|---|
 | Dilian | | | |
-| Jimena | | | |
+| Jimena | P22: portada de objetivo, ruta de Más campañas, modal de contribución, privacidad, reconocimiento con carrusel y estados demo. | Código React en `portal-react/src`; commit P22; bitácora J22; `npm run build` válido; mock con 3 nombres públicos y 2 apoyos anónimos. | 1 h |
