@@ -1,7 +1,9 @@
 # Proyecto-final-SF-Vibe-Lab
 Portal de donaciones para Mexico Dreamin (SF Vibe Lab, UADY × Salesforce)
 
-*Video Demo Entrega 1:* <[video_Entrega_1]https://canva.link/w2418fk6s50we1w>
+**Video demo Entrega 1:** https://canva.link/w2418fk6s50we1w
+
+**Video demo Entrega 2:** https://canva.link/bm5ahenbao2jfl3
 > **¿Eres del equipo o usas un asistente de IA?** Empieza por [`docs/ESTADO.md`](docs/ESTADO.md) (qué funciona hoy y qué falta) y [`AGENTS.md`](AGENTS.md) (reglas, arquitectura, despliegue y registro de IA). Claude Code, Gemini, Codex, Cursor y Copilot los cargan solos.
 ## Backlog
 Tablero: [Backlog en GitHub Projects](https://github.com/users/jimena-garcia/projects/1)

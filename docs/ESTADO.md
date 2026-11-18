@@ -37,6 +37,7 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
   - El visitante no tiene permisos de objeto.
   - 10 pruebas sin sesión pasan; ver `docs/seguridad.md` y `scripts/prueba_seguridad.py`.
 - **Tests:** 47 tests de Apex en verde (`sf apex run test --test-level RunLocalTests`).
+- **Demo Entrega 2:** video en https://canva.link/bm5ahenbao2jfl3 (enlazado en el README).
 - **Demo Entrega 1:** guion de video en `docs/video/guion_entrega1.md`, con recorrido público y panel de máximo cinco minutos.
 - **Contribución de Jimena:** documentada en `docs/equipo/jimena.md`, `docs/contribucion.md` y la bitácora de IA.
 
