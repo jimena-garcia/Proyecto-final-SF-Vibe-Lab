@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-> **Actualizado:** 2026-11-10 (Entrega 1). **Quien cambie algo importante actualiza este archivo en el mismo commit.**
+> **Actualizado:** 2026-11-17 (Entrega 2). **Quien cambie algo importante actualiza este archivo en el mismo commit.**
 
 ## En una frase
 Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** para que alumnos asistan a **Mexico Dreamin 2026** (20 nov, CDMX). Sitio público en React servido desde un Salesforce Site; pagos con Stripe en **modo de prueba**; panel de administración propio con roles.
@@ -59,3 +59,16 @@ Plataforma de crowdfunding del programa **SF Vibe Lab (UADY × Salesforce)** par
 3. Fase D: actualizaciones de campaña y estado "finalizada".
 4. Fase E: filtros por campaña y fecha en Donaciones; actividad reciente en Resumen.
 5. Que **cada integrante** registre sus entradas en la bitácora de IA, en reportes y en contribución.
+
+## Rediseño P22 (17 nov 2026)
+- Portada con una sola campaña principal elegida por `elegirDestacada`, cifras compactas y acceso a “Más campañas” por una ruta aparte.
+- Página de campaña con aporte motivador basado en metas reales, modal de contribución accesible y reconocimiento público sin montos.
+- Modal con los cuatro pasos, aviso de privacidad borrador y casilla obligatoria; carrusel de nombres públicos con pausa.
+
+## Ajuste de portada (17 nov 2026)
+- La campaña principal ocupa el contenedor completo en un layout horizontal: imagen 55 % e información 45 %.
+- “Más campañas” funciona como acordeón en la misma portada y el encabezado abre y lleva a esa sección sin cambiar de ruta.
+
+## Paleta Mexico Dreamin (17 nov 2026)
+- Azul `#245494` para acción y navegación; Navy `#16305A` para el banner.
+- Magenta `#CC2484` para progreso, metas, ilustraciones y el llamado final a aportar.

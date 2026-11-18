@@ -7,11 +7,11 @@ import { MODALIDADES } from './ComoFunciona.jsx';
 import PagoEmbebido from './PagoEmbebido.jsx';
 
 // Orden en que se enfoca el primer error.
-const ORDEN = ['monto', 'modalidad', 'nombre', 'rfc', 'email'];
-const ID_CAMPO = { monto: 'donar-monto', modalidad: 'donar-modalidad-0', nombre: 'donar-nombre', rfc: 'donar-rfc', email: 'donar-email' };
+const ORDEN = ['monto', 'modalidad', 'nombre', 'rfc', 'email', 'privacidad'];
+const ID_CAMPO = { monto: 'donar-monto', modalidad: 'donar-modalidad-0', nombre: 'donar-nombre', rfc: 'donar-rfc', email: 'donar-email', privacidad: 'donar-privacidad' };
 
 export default function DonarForm({ campana }) {
-  const [datos, setDatos] = useState({ modalidad: '', nombre: '', email: '', rfc: '', monto: '' });
+  const [datos, setDatos] = useState({ modalidad: '', nombre: '', email: '', rfc: '', monto: '', privacidad: false });
   const [tocados, setTocados] = useState({});
   const [enviado, setEnviado] = useState(false);
   const [servidor, setServidor] = useState(null);
@@ -101,11 +101,7 @@ export default function DonarForm({ campana }) {
   return (
     <>
     {fase === 'pagando' && pago && <PagoEmbebido {...pago} campana={campana.nombre} onCancelar={cancelarPago} />}
-    <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-labelledby="donar-titulo">
-      <p className="eyebrow">Donar a</p>
-      <h2 id="donar-titulo" style={{ marginTop: 4 }}>
-        {campana.nombre}
-      </h2>
+    <form ref={formRef} className="form-donar" onSubmit={enviar} noValidate aria-label={`Formulario de contribución para ${campana.nombre}`}>
 
       {/* 1. Monto */}
       <fieldset className="paso">
@@ -255,6 +251,40 @@ export default function DonarForm({ campana }) {
         </div>
       </fieldset>
 
+      <section className="aviso-privacidad" aria-labelledby="privacidad-titulo">
+        <p className="aviso-privacidad__titulo" id="privacidad-titulo">
+          <Icono nombre="candado" tam={18} /> Aviso de privacidad · borrador pendiente de revisión legal
+        </p>
+        <p>
+          Pedimos nombre, correo y, solo con factura, RFC; se usan para el comprobante, el reconocimiento opcional y la solicitud de factura.
+          No publicamos tu correo ni RFC. Los datos de tarjeta los maneja solo Stripe y este sitio es una práctica en modo de prueba.
+        </p>
+        <details>
+          <summary>Leer aviso completo</summary>
+          <p>
+            La contribución registra monto, modalidad y los datos necesarios para tu comprobante o solicitud de factura.
+            El correo y el RFC no se publican; las modalidades anónima y con factura aparecen como “Donante anónimo”.
+            La tarjeta se captura en Stripe, no en Salesforce. El proyecto no usa dinero real ni emite CFDI.
+          </p>
+        </details>
+        <label className="aviso-privacidad__casilla" htmlFor="donar-privacidad">
+          <input
+            id="donar-privacidad"
+            type="checkbox"
+            checked={datos.privacidad}
+            onChange={(event) => setDatos((d) => ({ ...d, privacidad: event.target.checked }))}
+            onBlur={tocar('privacidad')}
+            aria-invalid={visible('privacidad') ? 'true' : undefined}
+          />
+          <span>He leído el aviso de privacidad</span>
+        </label>
+        {visible('privacidad') && (
+          <p className="campo__error" role="alert">
+            <Icono nombre="alerta" tam={16} /> {errores.privacidad}
+          </p>
+        )}
+      </section>
+
       {/* Resumen: el donante ve exactamente qué va a pasar */}
       <div className="resumen" aria-live="polite">
         <dl>
@@ -271,7 +301,7 @@ export default function DonarForm({ campana }) {
                 : 'Nada'}
           </dd>
           <div className="resumen__total">
-            <dt>Total</dt>
+            <dt>Aporte</dt>
             <dd className="cifra">{montoValido ? pesos(datos.monto) : '—'}</dd>
           </div>
         </dl>
@@ -297,13 +327,13 @@ export default function DonarForm({ campana }) {
         </p>
       )}
 
-      <Boton type="submit" tam="lg" bloque cargando={fase !== 'captura'} style={{ marginTop: 20 }}>
+      <Boton type="submit" tam="lg" bloque cargando={fase !== 'captura'} className="btn--contribuir" style={{ marginTop: 20 }}>
         {fase === 'captura' && (
           <>
             <Icono nombre="candado" /> Continuar al pago seguro
           </>
         )}
-        {fase === 'registrando' && 'Registrando tu donación…'}
+        {fase === 'registrando' && 'Registrando tu apoyo…'}
         {fase === 'redirigiendo' && 'Abriendo Stripe…'}
         {fase === 'pagando' && 'Pago en curso…'}
       </Boton>
@@ -311,7 +341,7 @@ export default function DonarForm({ campana }) {
         <Icono nombre="info" tam={16} />
         {fase === 'redirigiendo'
           ? 'Te estamos llevando a Stripe. Puede tardar unos segundos; no cierres esta pestaña.'
-          : 'Pagarás con tarjeta a través de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
+          : 'Pagarás tu apoyo con tarjeta en una ventana segura de Stripe (modo de prueba). Nunca vemos tu tarjeta.'}
       </p>
     </form>
     </>

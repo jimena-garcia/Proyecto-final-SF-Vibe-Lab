@@ -1,6 +1,7 @@
 // Iconos SVG propios (trazo 1.75, 24px). Decorativos por defecto: aria-hidden.
 const RUTAS = {
   flecha: <path d="M5 12h14M13 6l6 6-6 6" />,
+  'flecha-abajo': <path d="M6 9l6 6 6-6" />,
   volver: <path d="M19 12H5M11 18l-6-6 6-6" />,
   candado: (
     <>

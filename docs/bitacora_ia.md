@@ -31,7 +31,10 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
 | 21 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-02, HU-14, HU-06 | [P19](prompts/dilian/P19-comprobante-html.md) | ⚠ | ~2 h → 20 min |
 | 22 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-08, HU-01, HU-11, HU-12 | [P20](prompts/dilian/P20-imagen-campana.md) | ⚠ | ~5 h → 1 h |
 | 23 | 2026-11-12 | Dilian | Claude Code (Claude Opus 5.5) | HU-01, HU-11 (UX) | [P21](prompts/dilian/P21-paleta-azul-morado.md) | — | ~1.5 h → 15 min |
-| 24 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | [P22](prompts/dilian/P22-checkout-embebido.md) | ⚠ | ~4 h → 40 min |
+| 24 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-02, HU-05, HU-11 | [J22](prompts/jimena/J22-portada-objetivo-modal.md) | — | ~3 h → 45 min |
+| 25 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J23](prompts/jimena/J23-ajuste-portada-acordeon.md) | — | ~1 h → 20 min |
+| 26 | 2026-11-17 | Jimena | GitHub Copilot (VS Code) | HU-01, HU-11 | [J24](prompts/jimena/J24-paleta-mexico-dreamin.md) | — | ~30 min → 10 min |
+| 27 | 2026-11-17 | Dilian | Claude Code (Claude Opus 5.5) | HU-03, HU-04, HU-13 | [P22](prompts/dilian/P22-checkout-embebido.md) | ⚠ | ~4 h → 40 min |
 
 ---
 
@@ -286,12 +289,27 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Tests del comprobante en verde.
 - **Nota:** cambia la decisión de la Fase B ("un solo verde propio de la plataforma"). Ahora la plataforma usa los colores del evento principal, por decisión del equipo.
 
-### 24 · Stripe Embedded Checkout (sin redirección) — [P22](prompts/dilian/P22-checkout-embebido.md)
+### 24 · Portada de objetivo y contribución en modal — [J22](prompts/jimena/J22-portada-objetivo-modal.md)
+- **Qué obtuvimos:** portada con la campaña principal y ruta `?mas=1`, campaña con modal accesible, cuatro pasos, aviso de privacidad y reconocimiento público con carrusel.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores; revisamos `mock.js`, que tiene tres nombres públicos y dos apoyos anónimos en la campaña principal y una campaña secundaria sin donantes.
+- **Qué corregimos:** se eliminaron los listados recomendados de la portada, se quitó el formulario lateral y se validó la casilla de privacidad antes de continuar.
+
+### 25 · Ajuste horizontal y acordeón de la portada — [J23](prompts/jimena/J23-ajuste-portada-acordeon.md)
+- **Qué obtuvimos:** objetivo principal horizontal 55/45 en escritorio, apilado en móvil y “Más campañas” como acordeón accesible en la misma página.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores y se revisaron las referencias residuales de la ruta separada y los estilos de recomendadas.
+- **Qué corregimos:** se eliminó `?mas=1`, se agregó la navegación por `#mas-campanas` y se compactaron los espaciados de la portada.
+
+### 26 · Paleta visual de Mexico Dreamin — [J24](prompts/jimena/J24-paleta-mexico-dreamin.md)
+- **Qué obtuvimos:** azul `#245494`, Navy `#16305A` y magenta `#CC2484` aplicados a los tokens existentes y las ilustraciones.
+- **Qué verificamos y cómo:** `npm run build` terminó sin errores; calculamos contraste de los pares principales, todos con al menos 5.02:1 para texto normal blanco o oscuro.
+- **Qué corregimos:** reemplazamos colores directos restantes por variables y conservamos semánticos del sistema.
+
+### 27 · Stripe Embedded Checkout (sin redirección) — [P22](prompts/dilian/P22-checkout-embebido.md)
 - **Qué obtuvimos:**
   - `StripeService.crearCheckout` crea la sesión con `ui_mode=embedded_page`, `redirect_on_completion=if_required` y `return_url`, y devuelve el `client_secret`.
   - `iniciarPago` usa el modo embebido solo si el custom setting tiene una clave `pk_test_` válida; si no, sigue con la redirección de siempre (cambio reversible sin desplegar).
-  - Por pedido del equipo, el formulario de Stripe se abre en un **modal** (`<dialog>` nativo: atrapa el foco y bloquea el fondo) en lugar de reemplazar el formulario de la barra lateral. Solo se cierra con la X roja de arriba: ni Esc ni un clic fuera lo cierran, para no cancelar por accidente a medio pago. Al cancelar, la donación pendiente pasa a Cancelada y el donante vuelve al formulario con sus datos intactos. En celular ocupa toda la pantalla.
-  - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar. Botón "Cancelar y no donar" reutiliza `?cancelado=`.
+  - Por pedido del equipo, el formulario de Stripe se abre en un **modal** (`<dialog>` nativo: atrapa el foco y bloquea el fondo) encima del modal de contribución. Solo se cierra con la X roja de arriba: ni Esc ni un clic fuera lo cierran, para no cancelar por accidente a medio pago. Al cancelar, la donación pendiente pasa a Cancelada y el donante vuelve al formulario con sus datos intactos. En celular ocupa toda la pantalla.
+  - React: `PagoEmbebido.jsx` carga Stripe.js desde `js.stripe.com` solo al pagar, monta el formulario y, al completarse, muestra `?gracias=<token>` sin recargar.
   - La página de gracias no cambió: solo dice "confirmado" cuando Salesforce lo registra (`verificarPago` + webhook).
 - **⚠ Errores de la IA:**
   1. La IA agregó `payment_method_types[0]=card` para pedir "solo tarjeta". Stripe respondió 400 porque ese parámetro ya no se acepta (los métodos se eligen en el dashboard). Lo detectamos en la primera donación de prueba (DON-00025, cancelada sin cobro, con el motivo guardado en la donación). Se quitó el parámetro y un test verifica que no se envíe.
@@ -301,5 +319,6 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - El sitio solo manda `frame-ancestors 'self'` como CSP (revisado con `curl -I`): no bloquea el script ni el iframe de Stripe.
   - 2 tests nuevos: modo embebido (parámetros enviados, sin `success_url`, devuelve `client_secret` y clave) y que una clave `pk_live_` o mal formada se ignora (M1).
   - Despliegue con `RunLocalTests`: 46/46 en verde.
-  - _(pendiente)_ Donación de prueba en el sitio real con la tarjeta 4242 tras capturar la clave publicable.
+  - Donaciones de prueba en el sitio real con la tarjeta 4242: DON-00030 y DON-00032 quedaron Pagadas por la pasarela y el comprobante llegó al correo.
+  - Al unir con la rama de Jimena (modal de contribución), se evitó que Esc dentro del modal de pago cierre el modal de ella a medio pago.
 - **Seguridad:** la clave publicable y el `client_secret` de la sesión no permiten cobrar ni leer datos; la secret key sigue solo en la Named Credential (M3).

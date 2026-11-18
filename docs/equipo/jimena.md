@@ -18,4 +18,6 @@ Detalle personal; el resumen va en su fila de [`../contribucion.md`](../contribu
 ## Entrega 2 (17 nov 2026)
 | Tarea | Historias | Evidencia | Horas aprox. |
 |---|---|---|---|
-| | | | |
+| P22: portada de un objetivo, Más campañas, modal de contribución y carrusel de apoyos | HU-01, HU-02, HU-05, HU-11 | `portal-react/src`; [J22](../prompts/jimena/J22-portada-objetivo-modal.md); build de Vite válido | 1 h |
+| Ajuste P23: objetivo horizontal y Más campañas como acordeón | HU-01, HU-11 | `portal-react/src/components/Inicio.jsx`, `portal-react/src/styles/plataforma.css`; [J23](../prompts/jimena/J23-ajuste-portada-acordeon.md); build de Vite válido | 20 min |
+| Paleta Mexico Dreamin P24 | HU-01, HU-11 | `portal-react/src/styles/tokens.css` y estilos relacionados; [J24](../prompts/jimena/J24-paleta-mexico-dreamin.md); contraste y build válidos | 10 min |

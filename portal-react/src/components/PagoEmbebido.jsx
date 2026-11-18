@@ -73,6 +73,9 @@ export default function PagoEmbebido({ token, clientSecret, clavePublica, campan
       // cancelaría la donación. (<dialog> nativo no se cierra al hacer clic en el fondo.)
       closedby="none"
       onCancel={(e) => e.preventDefault()}
+      // Las teclas no salen del modal de pago: el modal de contribución (Proyecto.jsx) escucha Esc
+      // en todo el documento y, si le llegara, se cerraría junto con la pasarela a medio pago.
+      onKeyDown={(e) => e.stopPropagation()}
     >
       <header className="modal-pago__cabecera">
         <div>

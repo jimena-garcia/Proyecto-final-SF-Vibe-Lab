@@ -72,7 +72,7 @@ Formato de cada entrada (guía, sección 12): autor · fecha · 1) qué intentá
 4. **Qué pasó:** en DON-00009 el pago se confirmó a las 01:33:41 UTC y el navegador pidió la página a las 01:35:41 (120 s exactos). En DON-00010 fue instantáneo.
 5. **Qué consultamos:** con la IA descartamos nuestro sitio (responde en menos de 0.1 s) y el webhook (0.6 s). Mejoramos el sondeo y agregamos la verificación con Stripe al regresar.
 
-**Después:** el 12 nov se confirmó que el comprobante llega rápido y lo lento es solo la redirección de la página de Stripe. El 17 nov se implementó **Stripe Embedded Checkout** (bitácora #24): el formulario de Stripe se muestra dentro de nuestra página con `redirect_on_completion=if_required` y, al confirmarse el pago, nuestra app muestra la página de gracias sin esperar a Stripe.
+**Después:** el 12 nov se confirmó que el comprobante llega rápido y lo lento es solo la redirección de la página de Stripe. El 17 nov se implementó **Stripe Embedded Checkout** (bitácora #27): el formulario de Stripe se muestra dentro de nuestra página con `redirect_on_completion=if_required` y, al confirmarse el pago, nuestra app muestra la página de gracias sin esperar a Stripe.
 
 ## R-06 · Decisión: mostrar las donaciones anónimas como "Donante anónimo"
 **Autor:** Dilian · **Fecha:** 2026-11-10 · **Historias:** HU-02 CP1, HU-06 CP3, HU-05, HU-11 · **Tipo:** pregunta al cliente

@@ -36,6 +36,9 @@ Biblioteca de prompts usados con IA, en formato de prompt engineering. Cada arch
 | P17 | [Marca de la plataforma y diseño claro](dilian/P17-marca-plataforma.md) | HU-01, HU-04, HU-05, HU-11 |
 | J01 | [Guion del video de la Entrega 1](jimena/J01-guion-video-entrega1.md) | HU-01, HU-03, HU-04, HU-05, HU-06, HU-07, HU-08, HU-09, HU-11, HU-12, HU-15 |
 | J02 | [Documentar la contribución de Jimena](jimena/J02-documentar-contribucion-entrega1.md) | HU-01 a HU-17 |
+| J22 | [Portada de objetivo y contribución en modal](jimena/J22-portada-objetivo-modal.md) | HU-01, HU-02, HU-05, HU-11 |
+| J23 | [Ajuste horizontal y acordeón de la portada](jimena/J23-ajuste-portada-acordeon.md) | HU-01, HU-11 |
+| J24 | [Paleta visual de Mexico Dreamin](jimena/J24-paleta-mexico-dreamin.md) | HU-01, HU-11 |
 
 ## Plantilla para un prompt nuevo
 

@@ -12,4 +12,4 @@
 | Integrante | Historias y tareas | Evidencia (commits, bitácora, capturas) | Horas aprox. |
 |---|---|---|---|
 | Dilian | | | |
-| Jimena | | | |
+| Jimena | P22/P23 y paleta Mexico Dreamin: objetivo horizontal, acordeón Más campañas, modal de contribución, privacidad, reconocimiento con carrusel y estados demo. | Código React en `portal-react/src`; commits P22/P23/P24; bitácoras J22/J23/J24; `npm run build` válido; mock con 3 nombres públicos y 2 apoyos anónimos. | 1 h |
