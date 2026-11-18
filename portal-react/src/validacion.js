@@ -7,14 +7,15 @@ const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 export const normalizarRfc = (rfc) => (rfc || '').replace(/\s+/g, '').toUpperCase();
 
-export function validar({ modalidad, nombre, email, rfc, monto }) {
+export function validar({ modalidad, nombre, email, rfc, monto, privacidad = false }) {
   const errores = {};
-  if (!modalidad) errores.modalidad = 'Elige cómo quieres donar.';
+  if (!modalidad) errores.modalidad = 'Elige cómo quieres aparecer.';
   const m = Number(monto);
   if (!monto || Number.isNaN(m) || m < MONTO_MINIMO || m > MONTO_MAXIMO) {
     errores.monto = `El monto debe estar entre $${MONTO_MINIMO} y $${MONTO_MAXIMO.toLocaleString('es-MX')} MXN.`;
   }
   if (!email || !EMAIL_REGEX.test(email.trim())) errores.email = 'Escribe un correo válido para enviarte tu comprobante.';
+  if (!privacidad) errores.privacidad = 'Acepta el aviso de privacidad para continuar.';
   if ((modalidad === 'Credito' || modalidad === 'Factura') && !nombre?.trim()) errores.nombre = 'Escribe tu nombre.';
   if (modalidad === 'Factura') {
     const r = normalizarRfc(rfc);

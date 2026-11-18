@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icono from '../ui/Icono.jsx';
 import { pesos } from '../ui/basicos.jsx';
 import RutaProgreso from './RutaProgreso.jsx';
 import DonarForm from './DonarForm.jsx';
 import { ImagenCampana } from './CampanaCard.jsx';
-import { EVENTO, construirParadas, diasPara, faltante, iniciales } from '../lib/progreso.js';
+import { EVENTO, construirParadas, diasPara, faltante } from '../lib/progreso.js';
 import { MARCA } from '../marca.js';
 
 const PREGUNTAS = [
   {
-    p: '¿Se cobra dinero real?',
-    r: 'No. Es un sitio de práctica del programa: los pagos usan Stripe en modo de prueba con tarjetas de prueba.'
+    p: '¿El aporte usa dinero real?',
+    r: 'No. Es un sitio de práctica: los movimientos usan Stripe en modo de prueba con tarjetas de prueba.'
   },
   {
-    p: '¿Cuándo cuenta mi donación en el avance?',
-    r: 'Cuando la pasarela confirma el pago. Las donaciones pendientes o canceladas no suman al avance.'
+    p: '¿Cuándo cuenta mi aporte en el avance?',
+    r: 'Cuando la pasarela confirma el movimiento. Los aportes pendientes o cancelados no suman al avance.'
   },
   {
     p: '¿Qué datos míos se publican?',
@@ -22,15 +22,15 @@ const PREGUNTAS = [
   },
   {
     p: '¿Recibo comprobante?',
-    r: 'Sí, al correo que registras, cuando el pago queda confirmado. No es un comprobante fiscal.'
+    r: 'Sí, al correo que registras, cuando el apoyo queda confirmado. No es un comprobante fiscal.'
   },
   {
     p: '¿Puedo pedir factura?',
     r: 'Puedes registrar tu solicitud con nombre y RFC; tesorería la ve marcada. En este sitio de práctica no se emiten CFDI.'
   },
   {
-    p: '¿Qué pasa si cancelo en la pantalla de pago?',
-    r: 'No se te cobra nada y la donación queda cancelada. Puedes intentarlo de nuevo cuando quieras.'
+    p: '¿Qué pasa si cancelo en la pantalla de Stripe?',
+    r: 'No se registra un movimiento efectivo y el apoyo queda cancelado. Puedes intentarlo de nuevo cuando quieras.'
   }
 ];
 
@@ -46,16 +46,16 @@ export default function Proyecto({ campana }) {
   const siguiente = construirParadas(campana).find((p) => p.siguiente);
   const donantes = campana.donantes || [];
   const tituloId = `proyecto-${campana.id}`;
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [carruselPausado, setCarruselPausado] = useState(false);
 
   useEffect(() => {
     document.title = `${campana.nombre} · ${MARCA.nombre}`;
   }, [campana.nombre]);
 
-  const irADonar = (e) => {
+  const abrirContribucion = (e) => {
     e.preventDefault();
-    const panel = document.getElementById('donar');
-    panel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    panel?.focus({ preventScroll: true });
+    setModalAbierto(true);
   };
 
   return (
@@ -63,6 +63,27 @@ export default function Proyecto({ campana }) {
       <header className="proyecto__cabecera contenedor">
         <h1 id={tituloId}>{campana.nombre}</h1>
         {resumen && <p className="proyecto__resumen">{resumen}</p>}
+        <div className="proyecto__motivacion">
+          {siguiente && !siguiente.destino ? (
+            <>
+              <p>Tu aporte acerca a un alumno de la UADY a la comunidad Salesforce.</p>
+              <p>{`Sumarte puede ayudar a alcanzar ${siguiente.titulo}: faltan ${pesos(faltante(campana.recaudado, siguiente.destino))}.`}</p>
+              <p>Cada contribución abre más oportunidades de aprendizaje y contacto en el programa.</p>
+            </>
+          ) : falta > 0 ? (
+            <>
+              <p>Tu aporte acerca a un alumno de la UADY a la comunidad Salesforce.</p>
+              <p>{`Apoyar esta campaña contribuye a cubrir la meta; faltan ${pesos(falta)}.`}</p>
+              <p>Cada contribución suma a la participación estudiantil en el evento.</p>
+            </>
+          ) : (
+            <>
+              <p>Tu aporte reconoce la participación de un alumno de la UADY en la comunidad Salesforce.</p>
+              <p>La meta ya está cubierta con los apoyos confirmados.</p>
+              <p>Sumarte sigue fortaleciendo la participación estudiantil en el programa.</p>
+            </>
+          )}
+        </div>
       </header>
 
       <div className="contenedor proyecto__top">
@@ -80,11 +101,11 @@ export default function Proyecto({ campana }) {
               <dt>{dias === 1 ? `día para ${EVENTO.nombre}` : dias > 0 ? `días para ${EVENTO.nombre}` : 'el evento ya ocurrió'}</dt>
             </div>
           </dl>
-          <a className="btn btn--primario btn--lg btn--bloque btn--cuadrado" href="#donar" onClick={irADonar}>
-            Donar a esta campaña
+          <a className="btn btn--contribuir btn--lg btn--bloque btn--cuadrado" href="#contribuir" onClick={abrirContribucion}>
+            Contribuir
           </a>
           <p className="proyecto__nota">
-            Solo cuentan los pagos confirmados por la pasarela. Eliges si tu nombre aparece o no.
+            Solo cuentan los movimientos confirmados por la pasarela. Eliges si tu nombre aparece o no.
           </p>
         </div>
       </div>
@@ -92,10 +113,10 @@ export default function Proyecto({ campana }) {
       <section className="confianza" aria-label="Cómo protegemos tu donación">
         <div className="contenedor confianza__grid">
           <p>
-            <Icono nombre="candado" tam={22} /> Pagas en Stripe; nunca vemos ni guardamos tu tarjeta.
+            <Icono nombre="candado" tam={22} /> Contribuyes por Stripe; nunca vemos ni guardamos tu tarjeta.
           </p>
           <p>
-            <Icono nombre="escudo" tam={22} /> El avance solo suma pagos confirmados por la pasarela.
+            <Icono nombre="escudo" tam={22} /> El avance solo suma movimientos confirmados por la pasarela.
           </p>
           <p>
             <Icono nombre="usuarios" tam={22} /> Tú decides: anónima, con reconocimiento o con factura.
@@ -129,7 +150,7 @@ export default function Proyecto({ campana }) {
             <h2 id="metas-titulo">{(campana.hitos || []).length > 1 ? 'Metas de la campaña' : 'Meta de la campaña'}</h2>
             <p className="bloque__sub">
               {(campana.hitos || []).length > 1
-                ? 'Son acumulativas: cada una se alcanza cuando el total recaudado llega a su monto.'
+                ? 'Son acumulativas: cada una se alcanza cuando el avance acumulado llega a su monto.'
                 : 'Solo cuentan los pagos confirmados por la pasarela.'}
             </p>
             <div style={{ marginTop: 20 }}>
@@ -139,25 +160,48 @@ export default function Proyecto({ campana }) {
 
           <section className="bloque" id="apoyan" aria-labelledby="donantes-titulo">
             <h2 id="donantes-titulo">Quiénes apoyan</h2>
-            <p className="bloque__sub">
-              Todas las donaciones confirmadas. Solo quienes eligieron reconocimiento aparecen con su nombre; el resto se muestra como donante anónimo.
-            </p>
-            {donantes.length === 0 ? (
-              <p className="proyecto__vacio">Aún no hay donaciones confirmadas. Puedes ser la primera persona en apoyar.</p>
-            ) : (
-              <ul className="donantes">
-                {donantes.map((d, i) => (
-                  <li key={`${d.nombre}-${d.monto}-${i}`}>
-                    <span className={`avatar ${d.anonimo ? 'avatar--anonimo' : ''}`} aria-hidden="true">
-                      {d.anonimo ? <Icono nombre="usuarios" tam={16} /> : iniciales(d.nombre)}
-                    </span>
-                    <span className={`donantes__nombre ${d.anonimo ? 'donantes__nombre--anonimo' : ''}`}>
-                      {d.anonimo ? 'Donante anónimo' : d.nombre}
-                    </span>
-                    <span className="cifra">{pesos(d.monto)}</span>
-                  </li>
-                ))}
-              </ul>
+            {(() => {
+              const anonimos = donantes.filter((d) => d.anonimo).length;
+              const publicos = donantes.filter((d) => !d.anonimo && d.nombre);
+              const estatica = publicos.length <= 3;
+              return (
+                <>
+                  <div className="apoyan-total">
+                    <strong className="cifra">{anonimos}</strong>
+                    <span>{anonimos === 1 ? 'persona apoyó sin dar su nombre' : 'personas apoyaron sin dar su nombre'}</span>
+                  </div>
+                  {publicos.length === 0 ? (
+                    <p className="proyecto__vacio">Aún no hay nombres públicos registrados.</p>
+                  ) : (
+                    <div className="apoyan-carrusel">
+                      {publicos.length > 3 && (
+                        <button
+                          type="button"
+                          className="carrusel-pausa"
+                          onClick={() => setCarruselPausado((v) => !v)}
+                          aria-pressed={carruselPausado}
+                        >
+                          {carruselPausado ? 'Reanudar nombres' : 'Pausar nombres'}
+                        </button>
+                      )}
+                      <div
+                        className={`carrusel-apoyo ${estatica ? 'carrusel-apoyo--estatico' : ''} ${carruselPausado ? 'carrusel-apoyo--pausado' : ''}`}
+                        tabIndex={0}
+                        aria-label="Nombres públicos de apoyo"
+                      >
+                        <ul className="carrusel-apoyo__lista">
+                          {[...publicos, ...(estatica ? [] : publicos)].map((d, i) => (
+                            <li key={`${d.nombre}-${i}`}>{d.nombre}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+            {donantes.length === 0 && (
+              <p className="proyecto__vacio">Aún no hay apoyos confirmados. Puedes ser la primera persona en sumarte.</p>
             )}
           </section>
 
@@ -187,9 +231,6 @@ export default function Proyecto({ campana }) {
             </div>
             <p className="organizador__desc">{MARCA.descripcionOrganizador}</p>
           </div>
-          <div className="panel" id="donar" tabIndex={-1}>
-            <DonarForm campana={campana} />
-          </div>
         </aside>
       </div>
 
@@ -198,10 +239,87 @@ export default function Proyecto({ campana }) {
           <strong className="cifra">{pesos(campana.recaudado)}</strong>
           {falta === 0 ? 'Meta alcanzada' : siguiente && !siguiente.destino ? `Siguiente meta: ${siguiente.titulo}` : `Faltan ${pesos(falta)}`}
         </p>
-        <a className="btn btn--primario" href="#donar" onClick={irADonar}>
-          Donar
+        <a className="btn btn--contribuir" href="#contribuir" onClick={abrirContribucion}>
+          Contribuir
         </a>
       </div>
+      {modalAbierto && <ModalContribucion campana={campana} cerrar={() => setModalAbierto(false)} />}
     </article>
+  );
+}
+
+function ModalContribucion({ campana, cerrar }) {
+  const panelRef = useRef(null);
+  const cerrarRef = useRef(null);
+
+  useEffect(() => {
+    const activo = document.activeElement;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    cerrarRef.current?.focus();
+
+    const manejarTecla = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        cerrar();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const elementos = panelRef.current?.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!elementos?.length) return;
+      const primero = elementos[0];
+      const ultimo = elementos[elementos.length - 1];
+      if (event.shiftKey && document.activeElement === primero) {
+        event.preventDefault();
+        ultimo.focus();
+      } else if (!event.shiftKey && document.activeElement === ultimo) {
+        event.preventDefault();
+        primero.focus();
+      }
+    };
+
+    document.addEventListener('keydown', manejarTecla);
+    return () => {
+      document.removeEventListener('keydown', manejarTecla);
+      document.body.style.overflow = overflow;
+      activo?.focus();
+    };
+  }, [cerrar]);
+
+  return (
+    <div
+      className="modal-contribuir"
+      role="presentation"
+      onMouseDown={(event) => event.target === event.currentTarget && cerrar()}
+    >
+      <section
+        ref={panelRef}
+        className="modal-contribuir__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-apoyo-titulo"
+      >
+        <header className="modal-contribuir__cab">
+          <div>
+            <p className="eyebrow">Tu aporte</p>
+            <h2 id="modal-apoyo-titulo">Estás apoyando: {campana.nombre}</h2>
+          </div>
+          <button ref={cerrarRef} type="button" className="modal-contribuir__cerrar" onClick={cerrar} aria-label="Cerrar">
+            <Icono nombre="cruz" tam={20} />
+          </button>
+        </header>
+        <div className="modal-contribuir__cuerpo">
+          <ol className="pasos-modal" aria-label="Pasos de la contribución">
+            <li aria-current="step"><span>1</span>Monto</li>
+            <li><span>2</span>Cómo aparecer</li>
+            <li><span>3</span>Tus datos</li>
+            <li><span>4</span>Confirmar</li>
+          </ol>
+          <DonarForm campana={campana} />
+        </div>
+      </section>
+    </div>
   );
 }
