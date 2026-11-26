@@ -354,3 +354,13 @@ Una entrada por uso relevante de IA, en orden cronológico. Cada entrada enlaza 
   - Se confirmó antes que ninguna de las campañas reutilizadas tenía donaciones (consulta por campaña y estado).
   - El script del repo se ejecutó contra la org y dejó los mismos datos (sin duplicados).
   - Captura del sitio real con "Más campañas" abierto.
+
+### 30 · Los comprobantes con factura no llegaban al correo
+- **Qué obtuvimos:**
+  - Diagnóstico: Salesforce sí enviaba los comprobantes de las donaciones con factura (DON-00021 y DON-00035 con `Comprobante_Enviado__c = true`, `sendEmail` sin errores), pero Gmail los descartaba sin dejarlos en Spam. Los anónimos y con crédito sí llegaban.
+  - Prueba por variantes (mismo correo de DON-00035): sin el aviso "Solicitud de factura… comprobante fiscal (CFDI)" llegó; con el aviso y sin el nombre no llegó. La causa era ese texto.
+  - `ComprobanteService`: el aviso ahora dice "Tu solicitud quedó registrada; el equipo de tesorería te contactará." y la modalidad se muestra como "Con datos fiscales". HU-06 CA3 se sigue cumpliendo: el sistema no emite CFDI.
+- **⚠ Errores de la IA:** ninguno en el cambio. Al inicio buscó DON-00025, que era una donación anónima cancelada; la donación con factura afectada era DON-00035.
+- **Qué verificamos y cómo:**
+  - Despliegue con `RunSpecifiedTests` (DonacionTriggerHandlerTest, StripeWebhookServiceTest, PortalDonacionesControllerTest): 30/30.
+  - Reenvío del comprobante real de DON-00035 con el código nuevo.

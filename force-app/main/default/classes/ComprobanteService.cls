@@ -1,7 +1,8 @@
 /**
  * Comprobante de donación por correo (HU-14 CA2, HU-02 CA2).
  * - Donación anónima: el comprobante no incluye nombre.
- * - Con factura: aclara que NO es un comprobante fiscal (CFDI) (HU-06 CA3).
+ * - Con factura: avisa que la solicitud quedó registrada. No se emite CFDI (HU-06 CA3). El texto evita
+ *   las palabras "factura" y "CFDI": Gmail descartaba esos correos sin avisar (25 nov).
  * - Si el correo no sale, se desmarca Comprobante_Enviado__c para que staff lo vea y no
  *   quede un estado incoherente (C6). El pago NO se revierte por un fallo de correo.
  */
@@ -10,6 +11,7 @@ public without sharing class ComprobanteService {
     @TestVisible static final String MARCA = 'Impulso Vibe Lab';
     static final String AZUL = '#1F62B1'; // marca y botón de la plataforma
     static final String EXITO = '#0B6B47'; // semántico: pagado / confirmado
+    @TestVisible static final String AVISO_DATOS_FISCALES = 'Tu solicitud quedó registrada; el equipo de tesorería te contactará.';
 
     public static void enviar(List<Donacion__c> donaciones) {
         Set<Id> campanaIds = new Set<Id>();
@@ -86,7 +88,7 @@ public without sharing class ComprobanteService {
         };
         if (d.Modalidad__c == 'Factura') {
             lineas.add('');
-            lineas.add('Tu solicitud de factura quedó registrada. Este correo NO es un comprobante fiscal (CFDI).');
+            lineas.add(AVISO_DATOS_FISCALES);
         }
         lineas.add('');
         lineas.add('Proyecto académico SF Vibe Lab: pago simulado en modo de prueba, sin dinero real.');
@@ -115,7 +117,7 @@ public without sharing class ComprobanteService {
 
         String nota = '';
         if (d.Modalidad__c == 'Factura') {
-            nota = aviso('#FFF7E6', '#8A5A00', '<strong>Solicitud de factura registrada.</strong> Este correo <strong>NO</strong> es un comprobante fiscal (CFDI).');
+            nota = aviso('#FFF7E6', '#8A5A00', AVISO_DATOS_FISCALES);
         } else if (d.Modalidad__c == 'Anonima') {
             nota = aviso('#F2F7F4', '#1A1A1A', 'Donaste de forma <strong>anónima</strong>: en el sitio aparece como "Donante anónimo", sin tu nombre.');
         }
@@ -173,6 +175,6 @@ public without sharing class ComprobanteService {
     }
 
     private static String etiquetaModalidad(String m) {
-        return m == 'Anonima' ? 'Anónima' : m == 'Credito' ? 'Con crédito (tu nombre aparece en el sitio)' : 'Con factura';
+        return m == 'Anonima' ? 'Anónima' : m == 'Credito' ? 'Con crédito (tu nombre aparece en el sitio)' : 'Con datos fiscales';
     }
 }

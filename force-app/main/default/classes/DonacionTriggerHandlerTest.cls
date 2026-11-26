@@ -47,7 +47,7 @@ private class DonacionTriggerHandlerTest {
         Assert.isTrue(a.contains('Donante anónimo'));
         Assert.isTrue(cr.contains('&lt;b&gt;Ana&lt;/b&gt;'), 'El nombre capturado se escapa');
         Assert.isFalse(cr.contains('<b>Ana</b>'));
-        Assert.isTrue(f.contains('comprobante fiscal (CFDI)'), 'Sin CFDI (HU-06 CA3)');
+        Assert.isTrue(f.contains(ComprobanteService.AVISO_DATOS_FISCALES) && !f.contains('CFDI'), 'Aviso sin palabras que Gmail descarta');
         Assert.isTrue(a.contains(ComprobanteService.MARCA) && a.contains('MODO DE PRUEBA'));
     }
 
@@ -60,6 +60,6 @@ private class DonacionTriggerHandlerTest {
         String f = ComprobanteService.cuerpo(factura, c);
         Assert.isTrue(a.startsWith('Hola:'), 'El comprobante anónimo no lleva nombre (HU-02 CA2)');
         Assert.isTrue(f.contains('Empresa Ficticia'));
-        Assert.isTrue(f.contains('NO es un comprobante fiscal'), 'Sin CFDI (HU-06 CA3)');
+        Assert.isTrue(f.contains(ComprobanteService.AVISO_DATOS_FISCALES) && !f.contains('CFDI'), 'Aviso sin palabras que Gmail descarta');
     }
 }
